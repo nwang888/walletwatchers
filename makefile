@@ -7,7 +7,7 @@ build:
 
 run:
 	docker volume create --name node_modules
-	docker run --name wallet-container -dp 4000:3000 -v $(PWD):/usr/src/app -v node_modules:/usr/src/app/node_modules wallet-watchers
+	docker run --name wallet-container -dp 4000:3000 -v $(PWD):/usr/src/app wallet-watchers
 
 stop:
 	docker stop wallet-container
