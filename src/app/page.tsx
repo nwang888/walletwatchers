@@ -4,6 +4,8 @@ import Image from 'next/image';
 import Button from '@mui/material/Button';
 import { useState } from 'react';
 
+import FoodRating from './components/food-rating';
+
 export default function Home() {
 
   const [data, setData] = useState("");
@@ -41,6 +43,8 @@ export default function Home() {
       <Button variant="contained" onClick={getData}>get data</Button>
 
       <Button variant="contained" onClick={postData}>post data</Button>
+
+      <FoodRating />
     </>
   )
 }
