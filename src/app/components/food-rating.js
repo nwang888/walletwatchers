@@ -48,7 +48,7 @@ export default function FoodRating() {
         <Rating
             name="simple-controlled"
             value={rating}
-            onChange={(event, newValue: any) => {
+            onChange={(event, newValue) => {
                 setRating(newValue);
             }
         }
@@ -69,7 +69,7 @@ export default function FoodRating() {
 
 
         {
-            data.map((item: any) => {
+            data.map((item) => {
                 return (
                     <div key={item.food}>
                         <h2>{item.food}</h2>
