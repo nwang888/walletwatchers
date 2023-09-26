@@ -1,8 +1,7 @@
 import sqlite3 from 'sqlite3';
 import { open, Database } from 'sqlite';
-import type { NextApiRequest, NextApiResponse } from "next";
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(req, res) {
 
     if (req.method === 'GET') {
         // retrieve data
@@ -25,7 +24,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
             return res.status(200).json(foods);
         }
-        catch (err: any) {
+        catch (err) {
             return res.status(500).json({ error: err.message });
         }
     }
@@ -54,7 +53,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
             return res.status(200).json(payload);
         }
-        catch (err: any) {
+        catch (err) {
             return res.status(500).json({ error: err.message });
         }
     }
