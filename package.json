@@ -13,8 +13,11 @@
     "@emotion/styled": "^11.11.0",
     "@mui/material": "^5.14.10",
     "next": "latest",
+    "next-iron-session": "^4.2.0",
+    "plaid": "^16.0.0",
     "react": "latest",
     "react-dom": "latest",
+    "react-plaid-link": "^3.4.1",
     "sqlite": "^5.0.1",
     "sqlite3": "^5.1.6"
   },

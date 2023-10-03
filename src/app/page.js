@@ -5,6 +5,7 @@ import Button from '@mui/material/Button';
 import { useState } from 'react';
 
 import FoodRating from './components/food-rating';
+import PlaidLink from './components/plaid-link';
 
 export default function Home() {
 
@@ -12,7 +13,7 @@ export default function Home() {
 
   return (
     <>
-      <FoodRating />
+      <PlaidLink />
     </>
   )
 }
