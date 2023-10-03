@@ -4,8 +4,6 @@ import { parseUrl } from 'next/dist/shared/lib/router/utils/parse-url';
 
 export default async function token_handler(req, res) {
 
-    console.log("IN TOKENDB");
-
     if (req.method == 'GET') {
         //get the data
         try {
@@ -37,7 +35,6 @@ export default async function token_handler(req, res) {
     }
     else if (req.method === 'POST') {
         try {
-            console.log("POSTING");
             const db = await open({
                 filename: './sql/tokens.db',
                 driver: sqlite3.Database
@@ -56,9 +53,6 @@ export default async function token_handler(req, res) {
                 INSERT OR REPLACE INTO bank_token (token_name, access_token)
                 VALUES (?, ?)
             `, [payload.token_name, payload.access_token]);
-
-            console.log("tokens payload " + payload);
-            console.log("tokens post " + payload.token_name + payload.access_token);
 
             await db.close();
 

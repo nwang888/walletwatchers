@@ -14,12 +14,9 @@ export default async function balance_handler(req, res) {
             const response = await fetch('http://localhost:3000/api/plaid/tokens');
             const token_res = await response.json();
             access_token = token_res[0].access_token;
-            console.log("FINAL Fetched Access Token" + access_token);
         } catch (error) {
             console.error(error);
         }
-
-        console.log("OUTSIDE OF FETCH " + access_token);
 
         if (access_token) {
             try {
