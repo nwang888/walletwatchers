@@ -23,7 +23,7 @@ export default async function token_handler(req, res) {
                 )
             `);
             
-            const tokens = await db.all('SELECT access_token FROM bank_token LIMIT 1');
+            const tokens = await db.all('SELECT access_token FROM bank_token WHERE bank_token.access_token = "access_token"');
 
             await db.close();
 

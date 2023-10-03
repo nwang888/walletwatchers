@@ -25,18 +25,6 @@ export default async function handler(req, res) {
         req.body = JSON.stringify(dataToSend);
 
         const token_res = token_handler(req,res);
-        console.log("TOKEN RESPONSE" + token_res);
-
-        // Make a POST request to localhost:3000/api/token
-        // const token_res = await fetch('http://localhost:3000/api/token', {
-        //     method: 'POST',
-        //     headers: {
-        //     'Content-Type': 'application/json',
-        //     // Add any other headers if needed
-        //     },
-        //     body: JSON.stringify(dataToSend),
-        // });
-        console.log("TOKEN RESPONSE" + token_res);
         
 
         // prints response from plaid exchange

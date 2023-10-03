@@ -7,20 +7,29 @@ import token_handler from './tokens';
 const client = new PlaidApi(config);
 
 export default async function balance_handler(req, res) {
-    // Get auth token from tokens.db, this is backend-backend
     if (req.method === 'GET') {
-        const token_res = token_handler(req ,res);
+        let access_token = null;
 
-        console.log("RETRIEVEAL OF TOKEN");
+        try {
+            const response = await fetch('http://localhost:3000/api/plaid/tokens');
+            const token_res = await response.json();
+            access_token = token_res[0].access_token;
+            console.log("FINAL Fetched Access Token" + access_token);
+        } catch (error) {
+            console.error(error);
+        }
 
-        const access_token = token_res.data.access_token;
+        console.log("OUTSIDE OF FETCH " + access_token);
 
-        const balanceResponse = await client.accountsBalanceGet({ access_token });
-        res.json({
-            Balance: balanceResponse.data,
-        });
+        if (access_token) {
+            try {
+                const balanceResponse = await client.accountsBalanceGet({ access_token });
+                res.json({
+                    Balance: balanceResponse.data,
+                });
+            } catch (error) {
+                console.error(error);
+            }
+        }
     }
-    
-    // Get balance data from Plaid
-    // Send balance data from Plaid into Big.db
 }
