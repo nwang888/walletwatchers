@@ -20,6 +20,7 @@ export default async function balance_handler(req, res) {
             Balance: balanceResponse.data,
         });
     }
+    
     // Get balance data from Plaid
     // Send balance data from Plaid into Big.db
 }

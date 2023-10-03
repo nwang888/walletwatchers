@@ -18,24 +18,25 @@ export default async function handler(req, res) {
             access_token: exchangeResponse.data.access_token
         };
 
-        console.log("data to be sent: " + dataToSend[token_name] + dataToSend[access_token]);
+        console.log("data to be sent: " + dataToSend.token_name + dataToSend.access_token);
 
         // send access token to db
-        // req.method = 'POST';
-        // req.body = JSON.stringify(dataToSend);
+        req.method = 'POST';
+        req.body = JSON.stringify(dataToSend);
 
-        // const token_res = token_handler(req,res);
-        // console.log("TOKEN RESPONSE" + token_res);
+        const token_res = token_handler(req,res);
+        console.log("TOKEN RESPONSE" + token_res);
 
         // Make a POST request to localhost:3000/api/token
-        const response = await fetch('http://localhost:3000/api/token', {
-            method: 'POST',
-            headers: {
-            'Content-Type': 'application/json',
-            // Add any other headers if needed
-            },
-            body: JSON.stringify(dataToSend),
-        });
+        // const token_res = await fetch('http://localhost:3000/api/token', {
+        //     method: 'POST',
+        //     headers: {
+        //     'Content-Type': 'application/json',
+        //     // Add any other headers if needed
+        //     },
+        //     body: JSON.stringify(dataToSend),
+        // });
+        console.log("TOKEN RESPONSE" + token_res);
         
 
         // prints response from plaid exchange

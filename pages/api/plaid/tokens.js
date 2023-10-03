@@ -50,15 +50,15 @@ export default async function token_handler(req, res) {
                 )
             `);
 
-            const payload = JSON.stringify(req.body);
-            console.log("payload " + payload.access_token);
+            const payload = JSON.parse(req.body);
 
             await db.run(`
-                INSERT INTO bank_token (token_name, access_token)
+                INSERT OR REPLACE INTO bank_token (token_name, access_token)
                 VALUES (?, ?)
             `, [payload.token_name, payload.access_token]);
 
-            console.log("successfully stored " + payload.access_token + " in db");
+            console.log("tokens payload " + payload);
+            console.log("tokens post " + payload.token_name + payload.access_token);
 
             await db.close();
 
