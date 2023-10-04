@@ -117,6 +117,7 @@ export default async function handler(req, res) {
                     country VARCHAR(256),
                     date VARCHAR(256) NOT NULL,
                     cursor VARCHAR(256) NOT NULL,
+                    next_cursor VARCHAR(256) NOT NULL,
                     PRIMARY KEY (transaction_id),
                     FOREIGN KEY (account_id) REFERENCES Accounts(account_id)
                 )
