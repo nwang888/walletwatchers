@@ -6,7 +6,7 @@ import { usePlaidLink } from "react-plaid-link";
 export default function PlaidLink() {
 
     const [token, setToken] = useState(null);
-    const [data, setData] = useState(null);
+    const [accountData, setAccountData] = useState(null);
     const [loading, setLoading] = useState(true);
 
     // gets called after a successful Plaid Link flow
@@ -20,7 +20,7 @@ export default function PlaidLink() {
           },
           body: JSON.stringify({ public_token: publicToken }),
         });
-        await getBalance();
+        await initiateAuth();
     }, []);
 
 
@@ -51,15 +51,15 @@ export default function PlaidLink() {
         
     }, [setToken]);
 
-    // fetch balance data
-    const getBalance = React.useCallback(async () => {
+    // fetch auth data
+    const initiateAuth = React.useCallback(async () => {
         setLoading(true);
-        console.log('fetching balance');
-        const response = await fetch("/api/plaid/balance", {});
+        console.log('fetching auth endpoint');
+        const response = await fetch("/api/plaid/auth", {});
         const data = await response.json();
-        setData(data);
+        setAccountData(data);
         setLoading(false);
-    }, [setData, setLoading]);
+    }, [setAccountData, setLoading]);
 
     return (
         <div>
@@ -71,13 +71,15 @@ export default function PlaidLink() {
             </div>
     
             {
-                !loading && data && 
-                Object.entries(data).map((entry, i) => (
+                !loading && accountData && 
+                Object.entries(accountData).map((entry, i) => (
                     <div key={i}>
                         {JSON.stringify(entry[1], null, 2)}
                     </div>
                 ))
             }
+
+            <button onClick={() => console.log(accountData)}>log account data</button>
 
         </div>
 

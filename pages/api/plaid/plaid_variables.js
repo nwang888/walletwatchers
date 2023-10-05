@@ -11,4 +11,14 @@ let config = new Configuration({
   },
 });
 
-export default config;
+let access_token = null;
+
+try {
+  const response = await fetch("http://localhost:3000/api/plaid/tokens");
+  const token_res = await response.json();
+  access_token = token_res[0].access_token;
+} catch (error) {
+  console.error(error);
+}
+
+export { config, access_token };
