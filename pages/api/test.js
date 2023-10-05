@@ -12,7 +12,7 @@ export default async function handler(req, res) {
             });
 
 
-            const payload = await db.all('SELECT * FROM Accounts');
+            const payload = await db.all('SELECT * FROM Budgets');
 
             await db.close();
 
