@@ -69,14 +69,14 @@ export default async function budget_Category_handler(req, res) {
   }
   // Handling POST request
   if (req.method === "POST") {
-      const {budget_name, time_window } = req.body;
+      const {category_name, category_budget_percentage } = req.body;
       
       //the id for the budget
       const category_id = Math.floor(Math.random);
 
       // Post the budget to the database
       try {
-          post_Budget_Categoy({ category_id, category_name, category_id });
+          post_Budget_Categoy({ category_id, category_name, category_budget_percentage});
           res.status(200).json({ message: "Category set successfully!" });
       } catch (error) {
           res.status(500).json({ message: "Failed to set Category.", error: error.message });
