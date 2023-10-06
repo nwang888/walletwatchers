@@ -58,30 +58,21 @@ export default function PlaidLink() {
 		setLoading(false);
 	}, [setAccountData, setLoading]);
 
-    return (
-        <div>
-            
-            <div>
-                <button onClick={() => open()} disabled={!ready}>
-                    Link Account
-                </button>
-            </div>
-    
-            {
-                !loading && accountData && 
-                Object.entries(accountData).map((entry, i) => (
-                    <div key={i}>
-                        {JSON.stringify(entry[1], null, 2)}
-                    </div>
-                ))
-            }
+	return (
+		<div>
+			<div>
+				<button onClick={() => open()} disabled={!ready}>
+					Link Account
+				</button>
+			</div>
 
-            <button onClick={() => console.log(accountData)}>log account data</button>
+			{!loading &&
+				accountData &&
+				Object.entries(accountData).map((entry, i) => (
+					<div key={i}>{JSON.stringify(entry[1], null, 2)}</div>
+				))}
 
-        </div>
-
-
-    );
-
-    
+			<button onClick={() => console.log(accountData)}>log account data</button>
+		</div>
+	);
 }
