@@ -6,6 +6,7 @@ import { useState } from 'react';
 
 import FoodRating from './components/food-rating';
 import PlaidLink from './components/plaid-link';
+import Budget from './components/budget-category';
 
 export default function Home() {
 
@@ -14,6 +15,7 @@ export default function Home() {
   return (
     <>
       <PlaidLink />
+      <Budget />
     </>
   )
 }
