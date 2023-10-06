@@ -78,7 +78,7 @@ export default async function instantiateBigDB(req, res) {
                 budget_name VARCHAR(256) NOT NULL,
                 start_date DATETIME NOT NULL,
                 end_date DATETIME NOT NULL,
-                budget_ammount INTEGER NOT NULL,
+                budget_amount INTEGER NOT NULL,
                 PRIMARY KEY (budget_id)
             );
         `);
