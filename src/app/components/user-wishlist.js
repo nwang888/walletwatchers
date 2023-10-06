@@ -65,8 +65,6 @@ export default function WishList() {
   return (
     <>
 
-        <Button variant="contained" onClick={postData}>submit</Button>
-
         <TextField
             id="outlined-basic"
             label="Name"
@@ -89,7 +87,8 @@ export default function WishList() {
         }
         />
 
-        <Button variant="contained" onClick={getData}>retrieve data</Button>
+        <Button onClick={getData}>get wishlist</Button>
+        <Button onClick={postData}>post wishlist</Button>
 
         {
             id.map((item, idx) => {

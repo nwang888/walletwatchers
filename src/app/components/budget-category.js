@@ -172,8 +172,8 @@ export default function BudgetCategory() {
                 }}
             />
 
-            <Button variant="contained" onClick={getBudget}>get budgets</Button>
-            <Button variant="contained" onClick={postBudget}>post budgets</Button>
+            <Button onClick={getBudget}>get budgets</Button>
+            <Button onClick={postBudget}>post budgets</Button>
 
 
             {
@@ -215,8 +215,8 @@ export default function BudgetCategory() {
                 }}
             />
 
-            <Button variant="contained" onClick={getCategory}>get category</Button>
-            <Button variant="contained" onClick={postCategory}>post category</Button>
+            <Button onClick={getCategory}>get category</Button>
+            <Button onClick={postCategory}>post category</Button>
 
             {
                 categoryID.map((item, idx) => {
@@ -240,7 +240,7 @@ export default function BudgetCategory() {
     <>
         <h1>BUDGET</h1>
         {BudgetComponents()}
-        
+
         <hr></hr>
 
         <h1>CATEGORY</h1>

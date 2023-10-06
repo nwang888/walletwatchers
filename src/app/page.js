@@ -14,9 +14,23 @@ export default function Home() {
 	return (
 		<>
 			<PlaidLink />
-			<WishList />
-			<TransactionDisplay />
-			<Budget />
+			<hr></hr>
+
+			<div className="my-[20%]">
+				<h1>TRANSACTIONS</h1>
+				<TransactionDisplay />
+				<hr></hr>
+			</div>
+
+			<div className="my-[20%]">
+				<h1>WISHLIST</h1>
+				<WishList />
+				<hr></hr>
+			</div>
+
+			<div className="my-[20%]">
+				<Budget />
+			</div>
 		</>
 	);
 }
