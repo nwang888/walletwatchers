@@ -31,7 +31,8 @@ export default async function handler(req, res) {
         }
     }
     else if (req.method === 'POST') {
-        console.log("posted!")
+        console.log("posted!");
+        console.log(req.body);
         try {
             const db = await open({
                 filename: './sql/wishlists.db',
@@ -47,9 +48,12 @@ export default async function handler(req, res) {
                 )
             `);
 
-            const requestData = JSON.parse(req.body); // Access data sent in the request body
+            const requestData = req.body; // Access data sent in the request body
             res.json({ message: 'Data received successfully', data: requestData });
 
+            console.log(requestData);
+
+            const wishlist_id = Math.floor(Math.random);
             try {
 
                 console.log(requestData.wishlist_id);
@@ -57,7 +61,7 @@ export default async function handler(req, res) {
             await db.run(`
                 INSERT INTO wishlists (wishlist_id, item_name, item_price)
                 VALUES (?, ?, ?)
-            `, [requestData.wishlist_id, requestData.item_name, requestData.item_price]);
+            `, [wishlist_id, requestData.name, requestData.price]);
             console.log("added");
             } catch (error) {
             console.error("Error adding item:", error.message);
