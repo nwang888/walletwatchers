@@ -4,21 +4,21 @@ import { open, Database } from "sqlite";
 export default async function instantiateBigDB(req, res) {
 	// retrieve data
 	try {
-        console.log("opening db");
+		console.log("opening db");
 		const db = await open({
 			filename: "./sql/big.db",
-			driver: sqlite3.Database,
+			driver: sqlite3.Database
 		});
 
-        console.log("opened db");
+		console.log("opened db");
 
 		// await db.run(`
-        //     CREATE TABLE IF NOT EXISTS big (
-        //         balance INTEGER PRIMARY KEY
-        //     );
-        // `);
+		//     CREATE TABLE IF NOT EXISTS big (
+		//         balance INTEGER PRIMARY KEY
+		//     );
+		// `);
 
-        await db.run(`
+		await db.run(`
             CREATE TABLE IF NOT EXISTS Accounts (
                 account_id VARCHAR(256) NOT NULL,
                 routing_number INTEGER NOT NULL,
@@ -30,7 +30,7 @@ export default async function instantiateBigDB(req, res) {
             );
         `);
 
-        await db.run(`
+		await db.run(`
             CREATE TABLE IF NOT EXISTS Transactions (
                 transaction_id VARCHAR(256) NOT NULL,
                 account_id VARCHAR(256) NOT NULL,
@@ -45,16 +45,16 @@ export default async function instantiateBigDB(req, res) {
                 region VARCHAR(256),
                 postal_code VARCHAR(256),
                 country VARCHAR(256),
-                datetime DATETIME NOT NULL,
+                datetime DATETIME,
                 payment_channel VARCHAR(16),
-                cursor VARCHAR(256) NOT NULL,
-                next_cursor VARCHAR(256) NOT NULL,
+                cursor VARCHAR(256),
+                next_cursor VARCHAR(256),
                 PRIMARY KEY (transaction_id),
                 FOREIGN KEY (account_id) REFERENCES Accounts(account_id)
             );
         `);
 
-        await db.run(`
+		await db.run(`
             CREATE TABLE IF NOT EXISTS CategoryDescription (
                 category_primary VARCHAR(256) NOT NULL,
                 category_detailed VARCHAR(256) NOT NULL,
@@ -62,8 +62,8 @@ export default async function instantiateBigDB(req, res) {
                 PRIMARY KEY (category_detailed)
             );
         `);
-        
-        await db.run(`
+
+		await db.run(`
             CREATE TABLE IF NOT EXISTS Wishlists (
                 wishlist_id INTEGER NOT NULL,
                 item_name VARCHAR(256) NOT NULL,
@@ -72,7 +72,7 @@ export default async function instantiateBigDB(req, res) {
             );
         `);
 
-        await db.run(`
+		await db.run(`
             CREATE TABLE IF NOT EXISTS Budgets (
                 budget_id INTEGER NOT NULL,
                 budget_name VARCHAR(256) NOT NULL,
@@ -83,7 +83,7 @@ export default async function instantiateBigDB(req, res) {
             );
         `);
 
-        await db.run(`
+		await db.run(`
             CREATE TABLE IF NOT EXISTS BudgetCategories (
                 category_id INTEGER NOT NULL,
                 category_name VARCHAR(256) NOT NULL,
