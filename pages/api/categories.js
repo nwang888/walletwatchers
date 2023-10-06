@@ -1,12 +1,5 @@
-
-import { Configuration, PlaidApi, PlaidEnvironments } from "plaid";
-import { config, access_token } from "./plaid/plaid_variables";
 import sqlite3 from 'sqlite3';
-import { open, Database } from 'sqlite';
-import { v4 as uuidv4 } from 'uuid';
-
-
-
+import { open } from 'sqlite';
 
 // create an async function that posts the budget to the assiociated account in the database
 async function post_Budget_Categoy(category){
