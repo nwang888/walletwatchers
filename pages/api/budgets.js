@@ -18,9 +18,9 @@ async function PostBudget(budget){
     try{
       console.log("Inserting budget:", budget);
       await db.run(`
-      INSERT INTO Budgets (budget_id, budget_name, time_window)
+      INSERT INTO Budgets (budget_id, budget_name, start_date, end_date, budget_ammount)
       VALUES (?, ?, ?)
-      `,[budget.budget_id, budget.budget_name, budget.time_window]);
+      `,[budget.budget_id, budget.budget_name, budget.start_date, budget.end_date, budget.budget_ammount]);
     }
     catch(e){
       console.log("error inserting budget:", e);
@@ -68,14 +68,14 @@ export default async function budget_handler(req, res) {
   }
   // Handling POST request
   if (req.method === "POST") {
-      const {budget_name, time_window } = req.body;
+      const {budget_name, start_date, end_date, budget_ammount} = req.body;
       
       //the id for the budget
       const budget_id = Math.floor(Math.random);
 
       // Post the budget to the database
       try {
-          PostBudget({ budget_id, budget_name, time_window });
+          PostBudget({ budget_id, budget_name, start_date, end_date, budget_ammount});
           res.status(200).json({ message: "Budget set successfully!" });
       } catch (error) {
           res.status(500).json({ message: "Failed to set budget.", error: error.message });
