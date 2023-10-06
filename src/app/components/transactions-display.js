@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
+import Button from '@mui/material/Button';
 import { usePlaidLink } from "react-plaid-link";
 
 export default function TransactionDisplay() {
@@ -30,7 +31,7 @@ export default function TransactionDisplay() {
 					<div key={i}>{JSON.stringify(entry[1], null, 2)}</div>
 				))}
 
-			<button onClick={handleClick}>Fetch transaction data</button>
+			<Button onClick={handleClick}>Fetch transaction data</Button>
 		</div>
 	);
 }
