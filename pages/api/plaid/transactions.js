@@ -12,12 +12,17 @@ async function postTransaction(access_token) {
 	const db = await open({
 		//declare the db
 		filename: "./sql/big.db",
-		driver: sqlite3.Database,
+		driver: sqlite3.Database
 	});
 
 	let cursor = await db.all(
 		"SELECT cursor FROM Transactions ORDER BY Transactions.cursor DESC LIMIT 1"
 	);
+
+	// if there is no cursor, set it to null
+	if (cursor.length === 0) {
+		cursor = null;
+	}
 
 	let hasMore = true;
 	// Iterate through each page of new transaction updates for item
@@ -27,7 +32,7 @@ async function postTransaction(access_token) {
 			"cursor": cursor,
 			"client_id": process.env.PLAID_CLIENT_ID,
 			"secret": process.env.PLAID_SECRET,
-			"count": 500,
+			"count": 500
 		});
 		const new_transactions = transactionResponse.data.added;
 
@@ -43,7 +48,7 @@ async function postTransaction(access_token) {
 				location: { address, city, region, postal_code, country },
 				datetime,
 				payment_channel,
-				next_cursor,
+				next_cursor
 			} = transaction;
 
 			await db.run(
@@ -86,7 +91,7 @@ async function postTransaction(access_token) {
 					datetime,
 					payment_channel,
 					cursor,
-					next_cursor,
+					next_cursor
 				]
 			);
 		}
@@ -105,7 +110,7 @@ async function postTransaction(access_token) {
 				location: { address, city, region, postal_code, country },
 				datetime,
 				payment_channel,
-				next_cursor,
+				next_cursor
 			} = transaction;
 
 			await db.run(
@@ -143,7 +148,7 @@ async function postTransaction(access_token) {
 					datetime,
 					payment_channel,
 					next_cursor,
-					transaction_id,
+					transaction_id
 				]
 			);
 		}
@@ -176,7 +181,7 @@ async function getTransaction() {
 	const db = await open({
 		//declare the db
 		filename: "./sql/big.db",
-		driver: sqlite3.Database,
+		driver: sqlite3.Database
 	});
 
 	const payload = await db.all(`
