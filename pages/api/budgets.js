@@ -1,10 +1,8 @@
 import sqlite3 from 'sqlite3';
 import { open } from 'sqlite';
 
-
-
 // create an async function that posts the budget to the assiociated account in the database
-async function PostBudget(budget){
+async function postBudget(budget){
     // open the database
     const db = await open({
         filename: "./sql/big.db",
@@ -43,7 +41,7 @@ async function getBudget(){
 
 
 
-export default async function budget_handler(req, res) {
+export default async function budgetHandler(req, res) {
   // Handling Get request
   if (req.method == "GET") {
     try{
@@ -70,18 +68,11 @@ export default async function budget_handler(req, res) {
 
       // Post the budget to the database
       try {
-          PostBudget({ budget_id, budget_name, start_date, end_date, budget_amount});
+          postBudget({ budget_id, budget_name, start_date, end_date, budget_amount});
           res.status(200).json({ message: "Budget set successfully!" });
       } catch (error) {
           res.status(500).json({ message: "Failed to set budget.", error: error.message });
       }
   }
 }
-
-
-
-//need a way to get the current numbers from the database
-//need a way to set the budget, and ask for a number 
-//need a way to return a flag if the budget is exceeded(to the front end)
-//display budget if we are in range
 
