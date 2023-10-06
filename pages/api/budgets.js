@@ -1,7 +1,7 @@
 import sqlite3 from 'sqlite3';
 import { open } from 'sqlite';
 
-// create an async function that posts the budget to the assiociated account in the database
+// create an async function that posts the budget to the associated account in the database
 async function postBudget(budget){
     // open the database
     const db = await open({
@@ -22,7 +22,7 @@ async function postBudget(budget){
     await db.close();
 }
 
-// the async function that gets all of the budget informatoin from the database
+// the async function that gets all of the budget information from the database
 
 async function getBudget(){
     const db = await open({

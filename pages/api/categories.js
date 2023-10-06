@@ -22,7 +22,7 @@ async function postBudgetCategoy(category){
     await db.close();
 }
 
-// the async function that gets all of the budget informatoin from the database
+// the async function that gets all of the budget information from the database
 
 async function getBudgetCategory(){
     const db = await open({
@@ -45,7 +45,6 @@ export default async function budgetCategoryHandler(req, res) {
   // Handling Get request
   if (req.method == "GET") {
     try{
-      //this may not be needed
       const payload = await getBudgetCategory();
       console.log(payload);
       if(payload.length == 0){
