@@ -64,6 +64,7 @@ export default async function budgetHandler(req, res) {
       const {budget_name, start_date, end_date, budget_amount} = req.body;
       
       //the id for the budget
+      console.log(req.body);
       const budget_id = Math.floor(Math.random);
 
       // Post the budget to the database

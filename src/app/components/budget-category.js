@@ -37,27 +37,27 @@ export default function BudgetCategory() {
         const response = await fetch('/api/budgets');
         const payload = await response.json();
 
-        console.log(payload[0]);
+        console.log(payload);
+        let newID = [];
         let newName = [];
-        let newPrice = [];
         let newStartDate = [];
         let newEndDate = [];
-        let budgetAmount = [];
+        let newBudgetAmount = [];
         
         for(let i = 0; i<payload.length;i++){
-
+            newID.push(payload[i].budget_id);
             newName.push(payload[i].budget_name);
             newStartDate.push(payload[i].start_date);
             newEndDate.push(payload[i].end_date);
-            budgetAmount.push(payload[i].budget_amount);
+            newBudgetAmount.push(payload[i].budget_amount);
             
         }
 
-        setBudgetName(budgetName);
-        setPrice(newPrice);
-        setStartDate(startDate);
+        setBudgetID(newID);
+        setBudgetName(newName);
+        setStartDate(newStartDate);
         setEndDate(newEndDate);
-        setBudgetAmount(budgetAmount);
+        setBudgetAmount(newBudgetAmount);
     }
     
     const getCategory = async () => {
@@ -66,24 +66,29 @@ export default function BudgetCategory() {
         const payload = await response.json();
 
         console.log(payload[0]);
+        let newID = [];
         let newName = [];
-        let newPrecentage = [];
+        let newPercentage = [];
         
         for(let i = 0; i<payload.length;i++){
-            newName.push(payload[i].budget_name);
+            newID.push(payload[i].category_id);
+            newName.push(payload[i].category_name);
             newPercentage.push(payload[i].category_budget_percentage);            
         }
 
-        setCategoryName(categoryName);
-        setCategoryBudgetPercentage(categoryBudgetPercentage);
+        setCategoryID(newID);
+        setCategoryName(newName);
+        setCategoryBudgetPercentage(newPercentage);
     }
 
   const postBudget = async () => {
 
     console.log("hello");
     const dataToSend = {
-        "category_name": categoryID,
-        "category_budget_percentage": categoryBudgetPercentage,
+        "budget_name": budgetNameInput,
+        "start_date": startDateInput,
+        "end_date": endDateInput,
+        "budget_amount": budgetAmountInput
     };
 
     console.log(dataToSend);
@@ -102,8 +107,8 @@ export default function BudgetCategory() {
 
   const postCategory = async () => {
     const dataToSend = {
-        "category_name": categoryID,
-        "category_budget_percentage": categoryBudgetPercentage,
+        "category_name": categoryNameInput,
+        "category_budget_percentage": categoryBudgetPercentageInput
     };
 
     console.log(dataToSend);
@@ -195,18 +200,18 @@ export default function BudgetCategory() {
             <TextField
                 label="Category Name"
                 variant="outlined"
-                value={categoryName}
+                value={categoryNameInput}
                 onChange={(event) => {
-                setCategoryName(event.target.value);
+                setCategoryNameInput(event.target.value);
                 }}
             />
 
             <TextField
                 label="Category Budget Percentage"
                 variant="outlined"
-                value={categoryBudgetPercentage}
+                value={categoryBudgetPercentageInput}
                 onChange={(event) => {
-                setCategoryBudgetPercentage(event.target.value);
+                setCategoryBudgetPercentageInput(event.target.value);
                 }}
             />
 
@@ -234,108 +239,13 @@ export default function BudgetCategory() {
   return (
     <>
         <h1>BUDGET</h1>
-        <div>
-            <TextField
-                label="Budget Name"
-                variant="outlined"
-                value={budgetNameInput}
-                onChange={(event) => {
-                    setBudgetNameInput(event.target.value);
-                }}
-            />
-
-            <TextField
-                label="Start Date"
-                variant="outlined"
-                type="date"
-                InputLabelProps={{
-                shrink: true,
-                }}
-                value={startDateInput}
-                onChange={(event) => {
-                setStartDateInput(event.target.value);
-                }}
-            />
-
-            <TextField
-                label="End Date"
-                variant="outlined"
-                type="date"
-                InputLabelProps={{
-                shrink: true,
-                }}
-                value={endDateInput}
-                onChange={(event) => {
-                setEndDateInput(event.target.value);
-                }}
-            />
-
-            <TextField
-                label="Budget Amount"
-                variant="outlined"
-                value={budgetAmountInput}
-                onChange={(event) => {
-                setBudgetAmountInput(event.target.value);
-                }}
-            />
-
-            <Button variant="contained" onClick={getBudget}>get budgets</Button>
-            <Button variant="contained" onClick={postBudget}>post budgets</Button>
-
-
-            {
-                budgetID.map((item, idx) => {
-                    return (
-                        <div key={budgetID[idx]}>
-                            <h2>{budgetName[idx]}</h2>
-                            <h3>{startDate[idx]}</h3>
-                            <h3>{endDate[idx]}</h3>
-                            <h3>{budgetAmount[idx]}</h3>
-                            <hr></hr>
-                        </div>
-                    )
-                })
-            }
-        </div>
-
+        {BudgetComponents()}
+        
         <hr></hr>
 
         <h1>CATEGORY</h1>
-        <div>
-            <TextField
-                label="Category Name"
-                variant="outlined"
-                value={categoryName}
-                onChange={(event) => {
-                setCategoryName(event.target.value);
-                }}
-            />
+        {CategoryComponents()}
 
-            <TextField
-                label="Category Budget Percentage"
-                variant="outlined"
-                value={categoryBudgetPercentage}
-                onChange={(event) => {
-                setCategoryBudgetPercentage(event.target.value);
-                }}
-            />
-
-            <Button variant="contained" onClick={getCategory}>get category</Button>
-            <Button variant="contained" onClick={postCategory}>post category</Button>
-
-            {
-                categoryID.map((item, idx) => {
-                    return (
-                        <div key={categoryID[idx]}>
-                            <h2>{categoryName[idx]}</h2>
-                            <h3>{categoryBudgetPercentage[idx]}</h3>
-                            <hr></hr>
-                        </div>
-                    )
-                })
-            }
-            
-        </div>
     </>
   )
 }
