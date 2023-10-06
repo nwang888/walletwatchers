@@ -1,5 +1,5 @@
 import { Configuration, PlaidApi, PlaidEnvironments } from "plaid";
-import config from './plaid_variables';
+import { config, access_token } from "./plaid_variables";
 
 // Instantiate the Plaid client with the configuration
 const client = new PlaidApi(config);

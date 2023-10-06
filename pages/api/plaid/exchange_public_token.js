@@ -1,5 +1,5 @@
 import { Configuration, PlaidApi, PlaidEnvironments } from "plaid";
-import config from './plaid_variables';
+import { config, access_token } from "./plaid_variables";
 
 import token_handler from './tokens';
 
@@ -29,7 +29,6 @@ export default async function handler(req, res) {
 
         // prints response from plaid exchange
         const data = await res.json();
-        console.log('Response (from client):', data);
         res.json(true);
     }
 }
