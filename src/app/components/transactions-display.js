@@ -25,6 +25,7 @@ export default function TransactionDisplay() {
 
 	return (
 		<div>
+			
 			{!loading &&
 				transactionData &&
 				Object.entries(transactionData).map((entry, i) => (

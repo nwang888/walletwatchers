@@ -49,7 +49,6 @@ export default async function instantiateBigDB(req, res) {
                 payment_channel VARCHAR(16),
                 cursor VARCHAR(256),
                 next_cursor VARCHAR(256),
-                PRIMARY KEY (transaction_id),
                 FOREIGN KEY (account_id) REFERENCES Accounts(account_id)
             );
         `);
