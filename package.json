@@ -12,6 +12,7 @@
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@mui/material": "^5.14.10",
+    "iron-session": "^6.3.1",
     "next": "latest",
     "plaid": "^16.0.0",
     "react": "latest",
