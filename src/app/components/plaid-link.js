@@ -26,6 +26,7 @@ export default function PlaidLink() {
 		token,
 		onSuccess
 	};
+
 	const { open, ready } = usePlaidLink(config);
 
 	// on page load, we fetch a link token and store it in state
