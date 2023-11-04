@@ -39,7 +39,10 @@ jspm_packages
 
 # .env
 .env
+sql
 
 # db files
 .db
+
+.swp
 ```

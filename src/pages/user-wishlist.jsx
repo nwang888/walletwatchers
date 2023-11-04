@@ -8,10 +8,10 @@ import Rating from '@mui/material/Rating';
 import { useState } from 'react';
 
 export default function WishList() {
-    const [data, setData] = useState([]);
+  const [data, setData] = useState([]);
 
   const [nameTextBox, setNameTextBox] = useState("");
-  const [priceTextBox, setPriceTextBox] = useState();
+  const [priceTextBox, setPriceTextBox] = useState(0);
   const [idTextBox, setIDTextBox] = useState(0);
 
   const [name, setName] = useState([]);
@@ -47,8 +47,6 @@ export default function WishList() {
       price: priceTextBox
     };
 
-    console.log(dataToSend);
-
     const res = await fetch('/api/wishlist', {
       method: 'POST',
       headers: {
@@ -60,7 +58,6 @@ export default function WishList() {
     const data = await res.json();
     console.log('Response (from client):', data);
   }
-
 
   return (
     <>
