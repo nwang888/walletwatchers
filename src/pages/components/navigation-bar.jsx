@@ -6,7 +6,7 @@ export default function NavBar({ setPageNum }) {
 
   return (
     <>
-      <Flex direction="row" gap="2">
+      <Flex direction="row" gap="3">
         <Button onClick={() => setPageNum(0)}>
             Home
         </Button>
