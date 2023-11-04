@@ -23,7 +23,7 @@ export default function HomePage({ balance }) {
 
   return (
     <>
-      <h1>Home</h1>
+      <h1 className='underline'>Home</h1>
       {
         accountData.map((account, index) => {
           return (
