@@ -1,21 +1,24 @@
 import { useEffect, useState } from 'react';
+import { Flex, Button } from '@radix-ui/themes';
 
 export default function NavBar({ setPageNum }) {
 
 
   return (
     <>
-        <button onClick={() => setPageNum(0)}>
+      <Flex direction="row" gap="2">
+        <Button onClick={() => setPageNum(0)}>
             Home
-        </button>
+        </Button>
 
-        <button onClick={() => setPageNum(1)}>
+        <Button onClick={() => setPageNum(1)}>
             Transactions
-        </button>
+        </Button>
 
-        <button onClick={() => setPageNum(2)}>
+        <Button onClick={() => setPageNum(2)}>
             Wishlist
-        </button>
+        </Button>
+      </Flex>
     </>
   )
 }
