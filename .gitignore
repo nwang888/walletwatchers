@@ -43,4 +43,6 @@ sql
 
 # db files
 .db
+
+.swp
 ```
