@@ -7,7 +7,7 @@ import { Theme, ThemePanel } from '@radix-ui/themes';
 
 export default function MyApp({ Component, pageProps }) {
   return (
-    <Theme appearance="light" accentColor="iris">
+    <Theme className="m-3" appearance="light" accentColor="iris">
       <Component {...pageProps} />
 
       {/* <Flex className="w-[30%]" direction="column" gap="2">
