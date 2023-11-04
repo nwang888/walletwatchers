@@ -12,7 +12,7 @@ export default function Dashboard({ balance }) {
         ))
       }
     </>
-  );
+  )
 }
 
 export const getServerSideProps = withIronSessionSsr(
@@ -28,10 +28,10 @@ export const getServerSideProps = withIronSessionSsr(
       };
     }
 
-    const response = await plaidClient.accountsBalanceGet({ access_token });
+    const accountBalance = await plaidClient.accountsBalanceGet({ access_token });
     return {
       props: {
-        balance: response.data,
+        balance: accountBalance.data,
       },
     };
   },

@@ -103,6 +103,9 @@ export default function WishList() {
                 )
             })
         }
+
+
+        <Button onClick={() => fetch('/api/plaid/fetch-balance')}>aowfytuoytwu</Button>
     </>
   )
 }
