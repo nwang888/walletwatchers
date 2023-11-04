@@ -42,25 +42,25 @@ export default function WishList() {
   }
 
   const postData = async () => {
-    const dataToSend = {
-      name: nameTextBox,
-      price: priceTextBox
-    };
+    // const dataToSend = {
+    //   name: nameTextBox,
+    //   price: priceTextBox
+    // };
 
-    console.log(dataToSend);
+    // console.log(dataToSend);
 
-    const res = await fetch('/api/wishlist', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(dataToSend)
-    });
+    // const res = await fetch('/api/wishlist', {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json'
+    //   },
+    //   body: JSON.stringify(dataToSend)
+    // });
+    const response = await fetch('/api/wishlist');
 
     const data = await res.json();
     console.log('Response (from client):', data);
   }
-
 
   return (
     <>
@@ -105,7 +105,7 @@ export default function WishList() {
         }
 
 
-        <Button onClick={() => fetch('/api/plaid/fetch-balance')}>aowfytuoytwu</Button>
+        <Button onClick={test}>aowfytuoytwu</Button>
     </>
   )
 }
