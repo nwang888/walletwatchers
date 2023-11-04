@@ -18,7 +18,7 @@ export default function Dashboard() {
 
   return (
     <>
-      <Header />
+      <Header setPageNum={setPageNum} />
 
       <div className="pt-16">
         {pageNum === 0 ? <HomePage /> : null}

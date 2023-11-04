@@ -18,7 +18,7 @@ export default function HomePage({ balance }) {
   }, []);
 
   if (isLoading) {
-    return <div>Fetching Data from Plaid...</div>;
+    return <div>Fetching Data from DB...</div>;
   }
 
   return (
