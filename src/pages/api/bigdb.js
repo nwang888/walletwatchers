@@ -12,12 +12,6 @@ export default async function instantiateBigDB(req, res) {
 
 		console.log("opened db");
 
-		// await db.run(`
-		//     CREATE TABLE IF NOT EXISTS big (
-		//         balance INTEGER PRIMARY KEY
-		//     );
-		// `);
-
 		await db.run(`
             CREATE TABLE IF NOT EXISTS Accounts (
                 account_id VARCHAR(256) NOT NULL,
