@@ -23,7 +23,7 @@ export default function HomePage({ balance }) {
 
   return (
     <>
-      <h1>Dashboard</h1>
+      <h1>Homepage</h1>
       {
         accountData.map((account, index) => {
           return (

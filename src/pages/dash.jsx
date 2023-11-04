@@ -5,13 +5,15 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 
 import HomePage from './components/home-page';
+import TransactionsPage from './components/transactions-page';
+import WishlistPage from './components/wishlist-page';
 
 
 export default function Dashboard({ balance }) {
 
   return (
     <>
-      <HomePage />
+      <TransactionsPage />
     </>
   )
 }
