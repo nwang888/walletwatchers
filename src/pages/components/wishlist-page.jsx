@@ -14,7 +14,6 @@ export default function WishlistPage({ balance }) {
         const response = await fetch('/api/wishlist');
         const payload = await response.json();
     
-        console.log(payload[0]);
         let newId = [];
         let newName = [];
         let newPrice = [];
@@ -52,9 +51,6 @@ export default function WishlistPage({ balance }) {
   useEffect(() => {
     getWishlistData();
   }, []);
-
-
-  console.log(name);
 
   return (
     <>

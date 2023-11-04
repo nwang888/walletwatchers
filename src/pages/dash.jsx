@@ -8,12 +8,24 @@ import HomePage from './components/home-page';
 import TransactionsPage from './components/transactions-page';
 import WishlistPage from './components/wishlist-page';
 
+import Header from './components/header';
+import NavBar from './components/navigation-bar';
 
-export default function Dashboard({ balance }) {
+
+export default function Dashboard() {
+
+  const [pageNum, setPageNum] = useState(0);
 
   return (
     <>
-      <TransactionsPage />
+      <Header />
+
+      {pageNum === 0 ? <HomePage /> : null}
+      {pageNum === 1 ? <TransactionsPage /> : null}
+      {pageNum === 2 ? <WishlistPage /> : null}
+
+
+      <NavBar setPageNum={setPageNum} />
     </>
   )
 }
