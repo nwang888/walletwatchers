@@ -103,9 +103,6 @@ export default function WishList() {
                 )
             })
         }
-
-
-        <Button onClick={test}>aowfytuoytwu</Button>
     </>
   )
 }
