@@ -6,33 +6,32 @@ import { useEffect, useState } from 'react';
 export default function Dashboard({ balance }) {
 
   const [accountData, setAccountData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-
-    console.log("testing for useEffect");
-    
     const getData = async () => {
       const response = await fetch('/api/account');
       const payload = await response.json();
       setAccountData(payload);
+      setIsLoading(false);
     }
 
     getData();
-
-    console.log("accountData: ", accountData);
-
-
   }, []);
+
+  if (isLoading) {
+    return <div>Fetching Data from Plaid...</div>;
+  }
 
   return (
     <>
+      <h1>Dashboard</h1>
       {
-        // use the data to displays tnayotufn
-        accountData.map((account) => {
+        accountData.map((account, index) => {
           return (
-            <div key={account.account_id}>
-              <h1>{account.name}</h1>
-              <h2>{account.balance}</h2>
+            <div key={index}>
+              <h2>{account.account_name}</h2>
+              <h3>{account.account_balance}</h3>
             </div>
           )
         })
@@ -59,7 +58,7 @@ const postAccountData = async (accounts, numbers, req) => {
   });
 
   const data = await res.json();
-  console.log('Response (from data posting):', data);
+  console.log('Response (from client):', data);
 }
 
 export const getServerSideProps = withIronSessionSsr(
