@@ -1,41 +1,16 @@
 import { withIronSessionSsr } from 'iron-session/next';
 import { plaidClient, sessionOptions } from '../lib/plaid';
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+
+import HomePage from './home-page';
 
 
 export default function Dashboard({ balance }) {
 
-  const [accountData, setAccountData] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const getData = async () => {
-      const response = await fetch('/api/account');
-      const payload = await response.json();
-      setAccountData(payload);
-      setIsLoading(false);
-    }
-
-    getData();
-  }, []);
-
-  if (isLoading) {
-    return <div>Fetching Data from Plaid...</div>;
-  }
-
   return (
     <>
-      <h1>Dashboard</h1>
-      {
-        accountData.map((account, index) => {
-          return (
-            <div key={index}>
-              <h2>{account.account_name}</h2>
-              <h3>{account.account_balance}</h3>
-            </div>
-          )
-        })
-      }
+      <h1>hello</h1>
     </>
   )
 }
@@ -63,6 +38,13 @@ const postAccountData = async (accounts, numbers, req) => {
 
 export const getServerSideProps = withIronSessionSsr(
   async function getServerSideProps({ req }) {
+
+    const protocol = req.headers['x-forwarded-proto'] || 'http';
+    const baseUrl = req ? `${protocol}://${req.headers.host}` : '';
+
+    // initalize bigdb
+    const res = await fetch(`${baseUrl}/api/bigdb`);
+
     const access_token = req.session.access_token;
 
     console.log("started");
