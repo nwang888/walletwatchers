@@ -28,7 +28,7 @@ export default function Dashboard() {
 
 
 
-      <NavBar setPageNum={setPageNum} />
+      <NavBar pageNum={pageNum} setPageNum={setPageNum} />
     </>
   )
 }
