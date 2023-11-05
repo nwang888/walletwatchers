@@ -50,7 +50,7 @@ const postAccountData = async (accounts, numbers, req) => {
 	console.log("Response (from client):", data);
 };
 
-const postTransactionData = async (
+const postTransactionsData = async (
 	added,
 	modified,
 	removed,
@@ -131,7 +131,7 @@ export const getServerSideProps = withIronSessionSsr(
 
 			const next_cursor = transactionsPage.data.next_cursor;
 
-			await postTransactionData(
+			await postTransactionsData(
 				transactionsPage.data.added,
 				transactionsPage.data.modified,
 				transactionsPage.data.removed,

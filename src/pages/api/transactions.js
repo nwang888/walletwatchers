@@ -2,7 +2,7 @@ import sqlite3 from "sqlite3";
 import { open } from "sqlite";
 
 // create an async function that posts the trasnactions to the database
-async function postTransactionData(
+async function postTransactionsData(
 	added,
 	modified,
 	removed,
@@ -145,7 +145,7 @@ async function postTransactionData(
 }
 
 // create an async function that gets the transactions from the database
-async function getTransactionData() {
+async function getTransactionsData() {
 	const db = await open({
 		//declare the db
 		filename: "./sql/big.db",
@@ -164,7 +164,7 @@ async function getTransactionData() {
 export default async function transaction_handler(req, res) {
 	if (req.method === "GET") {
 		try {
-			const payload = await getTransactionData();
+			const payload = await getTransactionsData();
 			return res.status(200).json(payload);
 		} catch (error) {
 			console.error("Error fetching account data:", error);
@@ -174,7 +174,7 @@ export default async function transaction_handler(req, res) {
 	if (req.method == "POST") {
 		try {
 			const { added, modified, removed, cursor } = req.body;
-			await postTransactionData(added, modified, removed, cursor);
+			await postTransactionsData(added, modified, removed, cursor);
 			return res.status(200).json({ message: "Posted Transaction Data" });
 		} catch (error) {
 			console.error(error);
