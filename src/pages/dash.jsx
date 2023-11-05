@@ -118,27 +118,6 @@ export const getServerSideProps = withIronSessionSsr(
 		const initial_cursor_data = await fetch(`${baseUrl}/api/cursor`);
 		let initial_cursor = await initial_cursor_data.data;
 
-		// console.log("initial cursor: " + initial_cursor);
-
-		// const transactionsPage = await plaidClient.transactionsSync({
-		// 	"access_token": access_token,
-		// 	"cursor": initial_cursor,
-		// 	"count": 500
-		// });
-
-		// console.log("Fetched initial transactions page");
-
-		// let next_cursor = transactionsPage.data.next_cursor;
-
-		// await postTransactionData(
-		// 	transactionsPage.data.added,
-		// 	transactionsPage.data.modified,
-		// 	transactionsPage.data.removed,
-		// 	initial_cursor,
-		// 	next_cursor,
-		// 	req
-		// );
-
 		// paginate through all transactions
 		let hasMore = true;
 
@@ -150,7 +129,7 @@ export const getServerSideProps = withIronSessionSsr(
 			});
 			console.log("Fetched transactions page");
 
-			next_cursor = transactionsPage.data.next_cursor;
+			const next_cursor = transactionsPage.data.next_cursor;
 
 			await postTransactionData(
 				transactionsPage.data.added,
