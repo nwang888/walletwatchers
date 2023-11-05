@@ -50,12 +50,20 @@ const postAccountData = async (accounts, numbers, req) => {
 	console.log("Response (from client):", data);
 };
 
-const postTransactionData = async (added, modified, removed, cursor, req) => {
+const postTransactionData = async (
+	added,
+	modified,
+	removed,
+	initial_cursor,
+	new_cursor,
+	req
+) => {
 	const dataToSend = {
 		added: added,
 		modified: modified,
 		removed: removed,
-		cursor: cursor
+		cursor: initial_cursor,
+		new_cursor: new_cursor
 	};
 
 	const protocol = req.headers["x-forwarded-proto"] || "http";
@@ -94,6 +102,8 @@ export const getServerSideProps = withIronSessionSsr(
 			};
 		}
 
+		// ----------------- Accounts -----------------
+
 		const accountBalance = await plaidClient.authGet({ access_token });
 
 		await postAccountData(
@@ -102,26 +112,59 @@ export const getServerSideProps = withIronSessionSsr(
 			req
 		);
 
-		const cursor = await fetch(`${baseUrl}/api/cursor`);
+		// ----------------- Transactions -----------------
 
-		const transactionsPage = await plaidClient.transactionsSync({
-			"access_token": access_token,
-			"cursor": null,
-			"count": 500
-		});
+		// get first cursor
+		const initial_cursor_data = await fetch(`${baseUrl}/api/cursor`);
+		let initial_cursor = await initial_cursor_data.data;
 
-		console.log("Fetched initial transactions");
+		// console.log("initial cursor: " + initial_cursor);
 
-		// transactionsPage.data.next_cursor;
-		// transactionsPage.data.has_more;
+		// const transactionsPage = await plaidClient.transactionsSync({
+		// 	"access_token": access_token,
+		// 	"cursor": initial_cursor,
+		// 	"count": 500
+		// });
 
-		await postTransactionData(
-			transactionsPage.data.added,
-			transactionsPage.data.modified,
-			transactionsPage.data.removed,
-			cursor,
-			req
-		);
+		// console.log("Fetched initial transactions page");
+
+		// let next_cursor = transactionsPage.data.next_cursor;
+
+		// await postTransactionData(
+		// 	transactionsPage.data.added,
+		// 	transactionsPage.data.modified,
+		// 	transactionsPage.data.removed,
+		// 	initial_cursor,
+		// 	next_cursor,
+		// 	req
+		// );
+
+		// paginate through all transactions
+		let hasMore = true;
+
+		while (hasMore) {
+			const transactionsPage = await plaidClient.transactionsSync({
+				"access_token": access_token,
+				"cursor": initial_cursor,
+				"count": 500
+			});
+			console.log("Fetched transactions page");
+
+			next_cursor = transactionsPage.data.next_cursor;
+
+			await postTransactionData(
+				transactionsPage.data.added,
+				transactionsPage.data.modified,
+				transactionsPage.data.removed,
+				initial_cursor,
+				next_cursor,
+				req
+			);
+			console.log("Posted transactions page");
+
+			hasMore = transactionsPage.data.has_more;
+			initial_cursor = next_cursor;
+		}
 
 		return {
 			props: {

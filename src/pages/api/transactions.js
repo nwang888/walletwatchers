@@ -2,7 +2,13 @@ import sqlite3 from "sqlite3";
 import { open } from "sqlite";
 
 // create an async function that posts the trasnactions to the database
-async function postTransactionData(added, modified, removed, cursor) {
+async function postTransactionData(
+	added,
+	modified,
+	removed,
+	cursor,
+	next_cursor
+) {
 	const db = await open({
 		filename: "./sql/big.db",
 		driver: sqlite3.Database
@@ -19,8 +25,7 @@ async function postTransactionData(added, modified, removed, cursor) {
 				amount: transaction_amount,
 				location: { address, city, region, postal_code, country },
 				datetime,
-				payment_channel,
-				next_cursor
+				payment_channel
 			} = transaction;
 
 			await db.run(
@@ -79,8 +84,7 @@ async function postTransactionData(added, modified, removed, cursor) {
 				amount: transaction_amount,
 				location: { address, city, region, postal_code, country },
 				datetime,
-				payment_channel,
-				next_cursor
+				payment_channel
 			} = transaction;
 
 			await db.run(
