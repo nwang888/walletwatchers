@@ -39,9 +39,6 @@ export default function PlaidLink() {
       <button onClick={() => open()} disabled={!ready}>
         <strong>Link account</strong>
       </button>
-
-      <button onClick={() => Router.push('/user-wishlist')}>Wishlist</button>
-      <button onClick={() => Router.push('/budget-category')}>Budgets</button>
     </>
   );
 }

@@ -2,40 +2,33 @@ import { withIronSessionSsr } from 'iron-session/next';
 import { plaidClient, sessionOptions } from '../lib/plaid';
 import { useEffect, useState } from 'react';
 
+import { useRouter } from 'next/router';
 
-export default function Dashboard({ balance }) {
+import HomePage from './components/home-page';
+import TransactionsPage from './components/transactions-page';
+import WishlistPage from './components/wishlist-page';
 
-  const [accountData, setAccountData] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+import Header from './components/header';
+import NavBar from './components/navigation-bar';
 
-  useEffect(() => {
-    const getData = async () => {
-      const response = await fetch('/api/account');
-      const payload = await response.json();
-      setAccountData(payload);
-      setIsLoading(false);
-    }
 
-    getData();
-  }, []);
+export default function Dashboard() {
 
-  if (isLoading) {
-    return <div>Fetching Data from Plaid...</div>;
-  }
+  const [pageNum, setPageNum] = useState(0);
 
   return (
     <>
-      <h1>Dashboard</h1>
-      {
-        accountData.map((account, index) => {
-          return (
-            <div key={index}>
-              <h2>{account.account_name}</h2>
-              <h3>{account.account_balance}</h3>
-            </div>
-          )
-        })
-      }
+      <Header setPageNum={setPageNum} />
+
+      <div className="pt-16">
+        {pageNum === 0 ? <HomePage /> : null}
+        {pageNum === 1 ? <TransactionsPage /> : null}
+        {pageNum === 2 ? <WishlistPage /> : null}
+      </div>
+
+
+
+      <NavBar pageNum={pageNum} setPageNum={setPageNum} />
     </>
   )
 }

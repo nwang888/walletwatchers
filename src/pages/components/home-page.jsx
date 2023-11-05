@@ -18,12 +18,12 @@ export default function HomePage({ balance }) {
   }, []);
 
   if (isLoading) {
-    return <div>Fetching Data from Plaid...</div>;
+    return <div>Fetching Data from DB...</div>;
   }
 
   return (
     <>
-      <h1>Dashboard</h1>
+      <h1 className='underline'>Home</h1>
       {
         accountData.map((account, index) => {
           return (
