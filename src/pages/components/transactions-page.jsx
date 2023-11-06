@@ -1,5 +1,5 @@
-import { get } from "http";
 import { useEffect, useState } from "react";
+import { Table } from "@radix-ui/themes";
 
 export default function TransactionsPage() {
 	const [transactions, setTransactions] = useState([]);
@@ -7,7 +7,20 @@ export default function TransactionsPage() {
 	const getTransactionsData = async () => {
 		const response = await fetch("/api/transactions");
 		const data = await response.json();
+		// if (data.length > 0) {
+		// 	console.log("Transactions data fetched successfully.");
+		// 	console.log(data);
+		// }
 		setTransactions(data);
+		// console.log("Getting transactions array");
+		// console.log(transactions);
+
+		// if (transactions.length > 0) {
+		// 	console.log(transactions[0]);
+		// 	console.log(transactions[0].category_primary);
+		// } else {
+		// 	console.log("No transactions found.");
+		// }
 	};
 
 	useEffect(() => {
@@ -16,31 +29,34 @@ export default function TransactionsPage() {
 
 	return (
 		<div>
-			<h1>Transactions</h1>
 			{transactions.length > 0 ? (
-				<ul>
-					{transactions.map((transaction, index) => (
-						<li key={index}>
-							<p>Transaction ID: {transaction.transaction_id}</p>
-							<p>Account ID: {transaction.account_id}</p>
-							<p>Primary Category: {transaction.category_primary}</p>
-							<p>Detailed Category: {transaction.category_detailed}</p>
-							<p>Merchant Name: {transaction.merchant_name}</p>
-							<p>Store Number: {transaction.store_number}</p>
-							<p>Logo URL: {transaction.logo_url}</p>
-							<p>Transaction Amount: {transaction.transaction_amount}</p>
-							<p>Address: {transaction.address}</p>
-							<p>City: {transaction.city}</p>
-							<p>Region: {transaction.region}</p>
-							<p>Postal Code: {transaction.postal_code}</p>
-							<p>Country: {transaction.country}</p>
-							<p>Datetime: {transaction.datetime}</p>
-							<p>Payment Channel: {transaction.payment_channel}</p>
-							<p>Cursor: {transaction.cursor}</p>
-							<p>Next Cursor: {transaction.next_cursor}</p>
-						</li>
-					))}
-				</ul>
+				<Table.Root variant="surface">
+					<Table.Header>
+						<Table.Row>
+							<Table.ColumnHeaderCell>Primary Category</Table.ColumnHeaderCell>
+							<Table.ColumnHeaderCell>Detailed Category</Table.ColumnHeaderCell>
+							<Table.ColumnHeaderCell>Merchant Name</Table.ColumnHeaderCell>
+							<Table.ColumnHeaderCell>
+								Transaction Amount
+							</Table.ColumnHeaderCell>
+							<Table.ColumnHeaderCell>City</Table.ColumnHeaderCell>
+						</Table.Row>
+					</Table.Header>
+
+					<Table.Body>
+						{transactions.map((transaction, index) => (
+							<Table.Row key={index}>
+								<Table.RowHeaderCell>
+									{transaction.category_primary}
+								</Table.RowHeaderCell>
+								<Table.Cell>{transaction.category_detailed}</Table.Cell>
+								<Table.Cell>{transaction.merchant_name}</Table.Cell>
+								<Table.Cell>{transaction.transaction_amount}</Table.Cell>
+								<Table.Cell>{transaction.city}</Table.Cell>
+							</Table.Row>
+						))}
+					</Table.Body>
+				</Table.Root>
 			) : (
 				<p>No transactions found.</p>
 			)}
