@@ -1,6 +1,8 @@
 import sqlite3 from "sqlite3";
 import { open } from "sqlite";
 
+//TODO: DEBUG: i think location details either do not exist in the test data or are not being added into the db
+
 // create an async function that posts the trasnactions to the database
 async function postTransactionsData(
 	added,
@@ -28,32 +30,40 @@ async function postTransactionsData(
 				payment_channel
 			} = transaction;
 
+			// Fetch account_name from Accounts table
+			const account = await db.get(
+				`SELECT account_name FROM Accounts WHERE account_id = ?`,
+				account_id
+			);
+			const account_name = account ? account.account_name : null;
+
 			await db.run(
 				`
                 INSERT INTO Transactions (
-                    transaction_id,
-                    account_id,
-                    category_primary,
-                    category_detailed,
-                    merchant_name,
-                    store_number,
-                    logo_url,
-                    transaction_amount,
-                    address,
-                    city,
-                    region,
-                    postal_code,
-                    country,
-                    datetime,
-                    payment_channel,
-                    cursor,
-                    next_cursor
+                    transaction_id = ?,
+                    account_id = ?,
+					account_name = ?,
+                    category_primary = ?,
+                    category_detailed = ?,
+                    merchant_name = ?,
+                    store_number = ?,
+                    logo_url = ?,
+                    transaction_amount = ?,
+                    address = ?,
+                    city = ?,
+                    region = ?,
+                    postal_code = ?,
+                    country = ?,
+                    datetime = ?,
+                    payment_channel = ?,
+                    cursor = ?,
+                    next_cursor = ?
                 )
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 `,
 				[
 					transaction_id,
 					account_id,
+					account_name,
 					category_primary,
 					category_detailed,
 					merchant_name,
@@ -76,7 +86,6 @@ async function postTransactionsData(
 		for (let transaction of modified) {
 			let {
 				transaction_id,
-				account_id,
 				category: [category_primary, category_detailed],
 				merchant_name,
 				store_number,
@@ -145,16 +154,15 @@ async function postTransactionsData(
 }
 
 // create an async function that gets the transactions from the database
-async function getTransactionsData() {
+async function getTransactionsData(sort_by = "datetime", order = "desc") {
 	const db = await open({
-		//declare the db
 		filename: "./sql/big.db",
 		driver: sqlite3.Database
 	});
 
 	const payload = await db.all(`
-        SELECT * FROM Transactions
-    `);
+		SELECT * FROM Transactions ORDER BY ${sort_by} ${order}, datetime DESC
+	  `); // ties are broken by datetime
 
 	await db.close();
 
@@ -164,7 +172,8 @@ async function getTransactionsData() {
 export default async function transaction_handler(req, res) {
 	if (req.method === "GET") {
 		try {
-			const payload = await getTransactionsData();
+			const { sort_by, order } = req.query;
+			const payload = await getTransactionsData(sort_by, order);
 			return res.status(200).json(payload);
 		} catch (error) {
 			console.error("Error fetching account data:", error);
