@@ -9,7 +9,6 @@ const item = {
 
 export default function Wallet({wallet}) {
 
-
     function generateBackgroundColor(routing_number) {
         const colors = ["bg-slate-100", "bg-slate-200", "bg-slate-300", "bg-neutral-100", "bg-slate-200", "bg-slate-300"]
         return colors[routing_number % 6]

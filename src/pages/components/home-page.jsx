@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Wallet from './homepage/wallet';
 
 
-export default function HomePage({ balance }) {
+export default function HomePage({ setPageNum, setWalletId }) {
 
   const [accountData, setAccountData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -39,6 +39,10 @@ export default function HomePage({ balance }) {
   return (
     <>
 
+      <button onClick={() => setWalletId("hello")}>
+        Tywftah
+      </button>
+
 
       <div className="flex my-5">
         <div className="w-2/3 mr-5 p-3  bg-slate-50 rounded-md">
@@ -53,29 +57,31 @@ export default function HomePage({ balance }) {
 
             {
               accountData.slice(0, 3).map((account, index) => (
-                <motion.div 
-                  key={index} 
-                  variants={item}
-                  className="w-1/3 p-1"
-                >
-                  <Wallet wallet={account} />
-                </motion.div>
+                <button className="text-left w-1/3 p-1" onClick={() => {setPageNum(1); setWalletId(account.account_id);}}>
+                  <motion.div 
+                    key={index} 
+                    variants={item}
+                  >
+                    <Wallet wallet={account} />
+                  </motion.div>
+                </button>
               ))
             }
 
             <AnimatePresence>
               {
                 viewAll && accountData.slice(3).map((account, index) => (
-                  <motion.div 
-                    key={index + 3} 
-                    variants={item}
-                    initial="hidden"
-                    animate="visible"
-                    exit="hidden"
-                    className="w-1/3 p-1"
-                  >
-                    <Wallet wallet={account} />
-                  </motion.div>
+                  <button className="text-left w-1/3 p-1" onClick={() => {setPageNum(1); setWalletId(account.account_id);}}>
+                    <motion.div 
+                      key={index + 3} 
+                      variants={item}
+                      initial="hidden"
+                      animate="visible"
+                      exit="hidden"
+                    >
+                      <Wallet wallet={account} />
+                    </motion.div>
+                  </button>
                 ))
               }
             </AnimatePresence>

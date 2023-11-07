@@ -31,7 +31,7 @@ export default function NavBar({ pageNum, setPageNum }) {
           }}
         >
           <Button 
-            onClick={() => setPageNum(1)}
+            onClick={() => {setPageNum(1); setWalletId("");}}
             style={{ backgroundColor: pageNum === 1 ? 'black' : 'grey' }}
           >
               Transactions

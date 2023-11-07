@@ -15,20 +15,23 @@ import NavBar from './components/navigation-bar';
 export default function Dashboard() {
 
   const [pageNum, setPageNum] = useState(0);
+  const [walletId, setWalletId] = useState("");
 
   return (
     <>
       <Header setPageNum={setPageNum} />
 
       <div className="my-16 mx-3">
-        {pageNum === 0 ? <HomePage /> : null}
+        {pageNum === 0 ? <HomePage setPageNum={setPageNum} setWalletId={setWalletId} /> : null}
         {pageNum === 1 ? <TransactionsPage /> : null}
         {pageNum === 2 ? <WishlistPage /> : null}
       </div>
 
+      {walletId}
 
 
-      <NavBar pageNum={pageNum} setPageNum={setPageNum} />
+
+      <NavBar pageNum={pageNum} setPageNum={setPageNum} setWalletId={setWalletId} />
     </>
   )
 }
