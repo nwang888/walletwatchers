@@ -10,7 +10,7 @@ const item = {
 export default function Wallet({wallet}) {
 
     function generateBackgroundColor(routing_number) {
-        const colors = ["bg-slate-100", "bg-slate-200", "bg-slate-300", "bg-neutral-100", "bg-slate-200", "bg-slate-300"]
+        const colors = ["bg-slate-100", "bg-slate-200", "bg-slate-300", "bg-neutral-100", "bg-neutral-200", "bg-neutral-300"]
         return colors[routing_number % 6]
     }
     
@@ -19,6 +19,12 @@ export default function Wallet({wallet}) {
         <motion.div 
             className={`flex-2 ${generateBackgroundColor(wallet.routing_number)} rounded-md py-2 px-5 m-2 h-full w-full`}
             variant= {item}
+
+            whileHover={{ scale: 1.02 }}
+            transition={{
+                type: "spring",
+                duration: 0.3
+            }}
         >
             <h2 className="text-xl">{wallet.account_name}</h2>
 

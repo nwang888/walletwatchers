@@ -59,7 +59,14 @@ export default function Wallets( { accountData, setPageNum, setWalletId }) {
                 </AnimatePresence>
             </motion.div>
                 
-            <div className="flex justify-end mt-3">
+            <motion.div 
+                className="flex justify-end mt-3"
+                whileHover={{ scale: 1.01, x: -5 }}
+                transition={{
+                    type: "spring",
+                    duration: 0.3
+                }}
+            >
                 {
                 viewAll ? (
                     <button
@@ -77,7 +84,7 @@ export default function Wallets( { accountData, setPageNum, setWalletId }) {
                     </button>
                 )
                 }
-            </div>
+            </motion.div>
         </>
     )
 }
