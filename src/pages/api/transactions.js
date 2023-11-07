@@ -154,7 +154,6 @@ async function postTransactionsData(
 	await db.close();
 }
 
-// create an async function that gets the transactions from the database
 async function getTransactionsData(
 	sort_by = "datetime",
 	order = "desc",
@@ -168,6 +167,7 @@ async function getTransactionsData(
 	});
 
 	let payload;
+	const totalRows = await db.get(`SELECT COUNT(*) as count FROM Transactions`);
 
 	if (paginate) {
 		const offset = (page - 1) * rowsPerPage;
@@ -182,7 +182,7 @@ async function getTransactionsData(
 
 	await db.close();
 
-	return payload;
+	return { transactions: payload, totalRows: totalRows.count };
 }
 
 export default async function transaction_handler(req, res) {

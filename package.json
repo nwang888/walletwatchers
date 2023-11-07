@@ -1,6 +1,7 @@
 {
   "private": true,
   "dependencies": {
+    "@radix-ui/react-select": "^2.0.0",
     "@radix-ui/themes": "^2.0.0",
     "framer-motion": "^10.16.4",
     "iron-session": "^6.1.3",

@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
-import { Table } from "@radix-ui/themes";
-import { Flex, Button } from "@radix-ui/themes";
+import { useRef, useEffect, useState } from "react";
+import React from "react";
+import * as Select from "@radix-ui/react-select";
+import { Flex, Button, Table } from "@radix-ui/themes";
 import { motion } from "framer-motion";
 
 //TODO: Add search
@@ -10,6 +11,7 @@ export default function TransactionsTable() {
 	const [transactions, setTransactions] = useState([]);
 	const [currentPage, setCurrentPage] = useState(1);
 	const [rowsPerPage, setRowsPerPage] = useState(10);
+	const [totalRows, setTotalRows] = useState(0);
 	const [sortAttribute, setSortAttribute] = useState("datetime");
 	const [sortOrder, setSortOrder] = useState({
 		category_primary: "asc",
@@ -22,13 +24,15 @@ export default function TransactionsTable() {
 		account_name: "asc"
 	});
 
-	const handleRowsPerPageChange = (event) => {
-		setRowsPerPage(parseInt(event.target.value));
+	const handleRowsPerPageChange = (value) => {
+		const newRowsPerPage = parseInt(value);
+		setRowsPerPage(newRowsPerPage);
+		setCurrentPage(1);
 		getTransactionsData(
 			sortAttribute,
 			sortOrder[sortAttribute],
-			currentPage,
-			parseInt(event.target.value)
+			1,
+			newRowsPerPage
 		);
 	};
 
@@ -60,7 +64,8 @@ export default function TransactionsTable() {
 			`/api/transactions?sort_by=${sort_by}&order=${order}&page=${page}&rowsPerPage=${rowsPerPage}&paginate=${paginate}`
 		);
 		const data = await response.json();
-		setTransactions(data);
+		setTransactions(data.transactions);
+		setTotalRows(data.totalRows);
 	};
 
 	useEffect(() => {
@@ -238,23 +243,32 @@ export default function TransactionsTable() {
 							))}
 						</Table.Body>
 					</Table.Root>
-					<label>
-						Rows per page:
-						<select value={rowsPerPage} onChange={handleRowsPerPageChange}>
-							<option value={10}>10</option>
-							<option value={20}>20</option>
-							<option value={50}>50</option>
-						</select>
-					</label>
-					<button
-						onClick={() => handlePageChange(currentPage - 1)}
-						disabled={currentPage === 1}
-					>
-						Previous
-					</button>
-					<button onClick={() => handlePageChange(currentPage + 1)}>
-						Next
-					</button>
+					<Select.Root onValueChange={handleRowsPerPageChange}>
+						<Select.Trigger>
+							Rows per page: {rowsPerPage} <Select.Value />
+						</Select.Trigger>
+						<Select.Content>
+							<Select.Viewport>
+								<Select.Item value="10">10</Select.Item>
+								<Select.Item value="20">20</Select.Item>
+								<Select.Item value="50">50</Select.Item>
+							</Select.Viewport>
+						</Select.Content>
+					</Select.Root>
+					<Flex style={{ justifyContent: "center", marginTop: "20px" }}>
+						<Button
+							onClick={() => handlePageChange(currentPage - 1)}
+							disabled={currentPage === 1}
+						>
+							Previous
+						</Button>
+						<div style={{ margin: "0 10px" }}>
+							Page {currentPage} / {Math.ceil(totalRows / rowsPerPage)}{" "}
+						</div>
+						<Button onClick={() => handlePageChange(currentPage + 1)}>
+							Next
+						</Button>
+					</Flex>
 				</div>
 			) : (
 				<p>No transactions found.</p>
