@@ -20,7 +20,7 @@ export default function Dashboard() {
 		<>
 			<Header setPageNum={setPageNum} />
 
-			<div className="pt-16">
+			<div className="py-16">
 				{pageNum === 0 ? <HomePage /> : null}
 				{pageNum === 1 ? <TransactionsPage /> : null}
 				{pageNum === 2 ? <WishlistPage /> : null}

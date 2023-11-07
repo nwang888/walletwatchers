@@ -3,7 +3,6 @@ import { Table } from "@radix-ui/themes";
 import { Flex, Button } from "@radix-ui/themes";
 import { motion } from "framer-motion";
 
-//TODO: Add pagination
 //TODO: Add search
 //TODO: Add filtering for all columns
 
@@ -22,6 +21,16 @@ export default function TransactionsTable() {
 		datetime: "desc",
 		account_name: "asc"
 	});
+
+	const handleRowsPerPageChange = (event) => {
+		setRowsPerPage(parseInt(event.target.value));
+		getTransactionsData(
+			sortAttribute,
+			sortOrder[sortAttribute],
+			currentPage,
+			parseInt(event.target.value)
+		);
+	};
 
 	const handlePageChange = (newPage) => {
 		setCurrentPage(newPage);
@@ -229,6 +238,14 @@ export default function TransactionsTable() {
 							))}
 						</Table.Body>
 					</Table.Root>
+					<label>
+						Rows per page:
+						<select value={rowsPerPage} onChange={handleRowsPerPageChange}>
+							<option value={10}>10</option>
+							<option value={20}>20</option>
+							<option value={50}>50</option>
+						</select>
+					</label>
 					<button
 						onClick={() => handlePageChange(currentPage - 1)}
 						disabled={currentPage === 1}
