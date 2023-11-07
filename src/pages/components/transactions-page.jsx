@@ -5,10 +5,8 @@ import { motion } from "framer-motion";
 
 //TODO: Add pagination
 //TODO: Add search
-//TODO: Add sorting for all columns
 //TODO: Add filtering for all columns
-//TODO: Add account data
-//TODO: Add date range (DEBUG)
+//TODO: Add date range
 
 export default function TransactionsPage() {
 	const [transactions, setTransactions] = useState([]);
