@@ -1,158 +1,93 @@
-import { withIronSessionSsr } from "iron-session/next";
-import { plaidClient, sessionOptions } from "../lib/plaid";
-import { useEffect, useState } from "react";
+import { withIronSessionSsr } from 'iron-session/next';
+import { plaidClient, sessionOptions } from '../lib/plaid';
+import { useEffect, useState } from 'react';
 
-import { useRouter } from "next/router";
+import { useRouter } from 'next/router';
 
-import HomePage from "./components/home-page";
-import TransactionsPage from "./components/transactions-page";
-import WishlistPage from "./components/wishlist-page";
+import HomePage from './components/home-page';
+import TransactionsPage from './components/transactions-page';
+import WishlistPage from './components/wishlist-page';
 
-import Header from "./components/header";
-import NavBar from "./components/navigation-bar";
+import Header from './components/header';
+import NavBar from './components/navigation-bar';
 
-//TODO: Need to test transactions pagination with larger dataset
 
 export default function Dashboard() {
-	const [pageNum, setPageNum] = useState(0);
 
-	return (
-		<>
-			<Header setPageNum={setPageNum} />
+  const [pageNum, setPageNum] = useState(0);
 
-			<div className="pt-16">
-				{pageNum === 0 ? <HomePage /> : null}
-				{pageNum === 1 ? <TransactionsPage /> : null}
-				{pageNum === 2 ? <WishlistPage /> : null}
-			</div>
+  return (
+    <>
+      <Header setPageNum={setPageNum} />
 
-			<NavBar pageNum={pageNum} setPageNum={setPageNum} />
-		</>
-	);
+      <div className="py-16">
+        {pageNum === 0 ? <HomePage /> : null}
+        {pageNum === 1 ? <TransactionsPage /> : null}
+        {pageNum === 2 ? <WishlistPage /> : null}
+      </div>
+
+
+
+      <NavBar pageNum={pageNum} setPageNum={setPageNum} />
+    </>
+  )
 }
 
 const postAccountData = async (accounts, numbers, req) => {
-	const dataToSend = {
-		accounts: accounts,
-		numbers: numbers.ach
-	};
+  const dataToSend = {
+    accounts: accounts,
+    numbers: numbers.ach
+  };
 
-	const protocol = req.headers["x-forwarded-proto"] || "http";
-	const baseUrl = req ? `${protocol}://${req.headers.host}` : "";
+  const protocol = req.headers['x-forwarded-proto'] || 'http';
+  const baseUrl = req ? `${protocol}://${req.headers.host}` : '';
 
-	const res = await fetch(`${baseUrl}/api/account`, {
-		method: "POST",
-		headers: {
-			"Content-Type": "application/json"
-		},
-		body: JSON.stringify(dataToSend)
-	});
+  const res = await fetch(`${baseUrl}/api/account`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(dataToSend)
+  });
 
-	const data = await res.json();
-	console.log("Response (from client):", data);
-};
-
-const postTransactionsData = async (
-	added,
-	modified,
-	removed,
-	initial_cursor,
-	new_cursor,
-	req
-) => {
-	const dataToSend = {
-		added: added,
-		modified: modified,
-		removed: removed,
-		cursor: initial_cursor,
-		new_cursor: new_cursor
-	};
-
-	const protocol = req.headers["x-forwarded-proto"] || "http";
-	const baseUrl = req ? `${protocol}://${req.headers.host}` : "";
-
-	const res = await fetch(`${baseUrl}/api/transactions`, {
-		method: "POST",
-		headers: {
-			"Content-Type": "application/json"
-		},
-		body: JSON.stringify(dataToSend)
-	});
-
-	const data = await res.json();
-	console.log("Response (from client):", data);
-};
+  const data = await res.json();
+  console.log('Response (from client):', data);
+}
 
 export const getServerSideProps = withIronSessionSsr(
-	async function getServerSideProps({ req }) {
-		const protocol = req.headers["x-forwarded-proto"] || "http";
-		const baseUrl = req ? `${protocol}://${req.headers.host}` : "";
+  async function getServerSideProps({ req }) {
 
-		// initalizes bigdb on login
-		const initialize_bigdb = await fetch(`${baseUrl}/api/bigdb`);
+    const protocol = req.headers['x-forwarded-proto'] || 'http';
+    const baseUrl = req ? `${protocol}://${req.headers.host}` : '';
 
-		const access_token = req.session.access_token;
+    // initalizes bigdb on login
+    const initialize_bigdb = await fetch(`${baseUrl}/api/bigdb`);
 
-		console.log("started");
 
-		if (!access_token) {
-			return {
-				redirect: {
-					destination: "/",
-					permanent: false
-				}
-			};
-		}
+    const access_token = req.session.access_token;
 
-		// ----------------- Accounts -----------------
 
-		const accountBalance = await plaidClient.authGet({ access_token });
+    console.log("started");
 
-		await postAccountData(
-			accountBalance.data.accounts,
-			accountBalance.data.numbers,
-			req
-		);
+    if (!access_token) {
+      return {
+        redirect: {
+          destination: '/',
+          permanent: false,
+        },
+      };
+    }
 
-		// ----------------- Transactions -----------------
+    const accountBalance = await plaidClient.authGet({ access_token });
+    
 
-		// get first cursor
-		const initial_cursor_data = await fetch(`${baseUrl}/api/cursor`);
-		let initial_cursor = await initial_cursor_data.data;
+    await postAccountData(accountBalance.data.accounts, accountBalance.data.numbers, req);
 
-		// paginate through all transactions
-		let hasMore = true;
-
-		while (hasMore) {
-			const transactionsPage = await plaidClient.transactionsSync({
-				"access_token": access_token,
-				"cursor": initial_cursor,
-				"count": 500
-			});
-			console.log("Fetched transactions page");
-			// console.log(transactionsPage.data);
-
-			const next_cursor = transactionsPage.data.next_cursor;
-
-			await postTransactionsData(
-				transactionsPage.data.added,
-				transactionsPage.data.modified,
-				transactionsPage.data.removed,
-				initial_cursor,
-				next_cursor,
-				req
-			);
-			console.log("Posted transactions page");
-
-			hasMore = transactionsPage.data.has_more;
-			initial_cursor = next_cursor;
-		}
-
-		return {
-			props: {
-				balance: accountBalance.data
-			}
-		};
-	},
-	sessionOptions
+    return {
+      props: {
+        balance: accountBalance.data,
+      },
+    };
+  },
+  sessionOptions
 );

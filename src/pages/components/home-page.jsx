@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 
+import Wallet from './homepage/wallet';
+
 
 export default function HomePage({ balance }) {
 
@@ -24,16 +26,35 @@ export default function HomePage({ balance }) {
   return (
     <>
       <h1 className='underline'>Home</h1>
-      {
-        accountData.map((account, index) => {
-          return (
-            <div key={index}>
-              <h2>{account.account_name}</h2>
-              <h3>{account.account_balance}</h3>
-            </div>
-          )
-        })
-      }
+
+      <div className="flex">
+
+        <div className="w-2/3">
+          <h1>Wallets</h1>
+
+
+          <div className="flex flex-wrap">
+            {
+              accountData.map((account, index) => {
+                if (index < 3)
+                return (
+                  <Wallet wallet={account} key={index} />
+                )
+
+                return null;
+              })
+            }
+          </div>
+
+
+        </div>
+        <div className="w-1/3">
+          <h1>Budget</h1>
+
+          <p>insert budget chart here</p>
+        </div>
+
+      </div>
     </>
   )
 }
