@@ -34,7 +34,7 @@ export default function HomePage({ balance }) {
       <h1 className='underline'>Home</h1>
 
       <div className="flex my-5">
-        <div className="w-2/3 pr-5">
+        <div className="w-2/3 mr-5">
           <h1 className="text-xl">Wallets</h1>
 
           <motion.div 
@@ -52,6 +52,8 @@ export default function HomePage({ balance }) {
             }
           </motion.div>
 
+          <h2 className="text-right text-md font-bold">View More...</h2>
+
 
         </div>
         <div className="w-1/3">
@@ -63,7 +65,7 @@ export default function HomePage({ balance }) {
 
 
       <div className="flex">
-        <div className="w-2/3 pr-5">
+        <div className="w-2/3 mr-5">
           <h1 className="text-xl">Transactions</h1>
 
           <p>insert transactions here</p>
