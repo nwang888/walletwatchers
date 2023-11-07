@@ -1,25 +1,11 @@
 import { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-
-import Wallet from './homepage/wallet';
+import Wallets from './homepage/wallets';
 
 
 export default function HomePage({ setPageNum, setWalletId }) {
 
   const [accountData, setAccountData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [viewAll, setViewAll] = useState(false);
-
-  const container = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1 },
-    transition: { duration: 3}
-  };
-
-  const item = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1 },
-};
 
   useEffect(() => {
     const getData = async () => {
@@ -40,67 +26,9 @@ export default function HomePage({ setPageNum, setWalletId }) {
     <>
       <div className="flex my-5">
         <div className="w-2/3 mr-5 p-3  bg-slate-50 rounded-md">
+
           <h1 className="text-xl">Wallets</h1>
-
-          <motion.div 
-            className="flex flex-wrap"
-            variants={container}
-            initial="hidden"
-            animate="visible"
-          >
-
-            {
-              accountData.slice(0, 3).map((account, index) => (
-                <button className="text-left w-1/3 p-1" onClick={() => {setPageNum(1); setWalletId(account.account_id);}}>
-                  <motion.div 
-                    key={index} 
-                    variants={item}
-                  >
-                    <Wallet wallet={account} />
-                  </motion.div>
-                </button>
-              ))
-            }
-
-            <AnimatePresence>
-              {
-                viewAll && accountData.slice(3).map((account, index) => (
-                  <button className="text-left w-1/3 p-1" onClick={() => {setPageNum(1); setWalletId(account.account_id);}}>
-                    <motion.div 
-                      key={index + 3} 
-                      variants={item}
-                      initial="hidden"
-                      animate="visible"
-                      exit="hidden"
-                    >
-                      <Wallet wallet={account} />
-                    </motion.div>
-                  </button>
-                ))
-              }
-            </AnimatePresence>
-          </motion.div>
-            
-          <div className="flex justify-end mt-3">
-            {
-              viewAll ? (
-                <button
-                  className="text-center text-md font-bold"
-                  onClick={() => setViewAll(false)}
-                >
-                  View Less...
-                </button>
-              ) : (
-                <button
-                  className="text-center text-md font-bold"
-                  onClick={() => setViewAll(true)}
-                >
-                  View All...
-                </button>
-              )
-            }
-          </div>
-
+          <Wallets accountData={accountData} setPageNum={setPageNum} setWalletId={setWalletId} />
 
         </div>
         <div className="w-1/3 p-3 bg-slate-50 rounded-md">
