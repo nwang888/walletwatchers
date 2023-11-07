@@ -11,13 +11,7 @@ export default function HomePage({ balance }) {
 
   const container = {
     hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        delayChildren: 0.3,
-        staggerChildren: 0.2
-      }
-    }
+    visible: { opacity: 1 }
   };
 
   useEffect(() => {
@@ -39,11 +33,9 @@ export default function HomePage({ balance }) {
     <>
       <h1 className='underline'>Home</h1>
 
-      <div className="flex">
-
-        <div className="w-2/3">
+      <div className="flex my-5">
+        <div className="w-2/3 pr-5">
           <h1 className="text-xl">Wallets</h1>
-
 
           <motion.div 
             className="flex flex-wrap"
@@ -53,14 +45,9 @@ export default function HomePage({ balance }) {
           >
             {
               accountData.map((account, index) => {
-                if (index < 3)
-                return (
-                  <Wallet 
-                    wallet={account} key={index} 
-                  />
-                )
-
-                return null;
+                return index < 3 ? (
+                  <Wallet wallet={account} key={index} />
+                ) : null;
               })
             }
           </motion.div>
@@ -68,11 +55,26 @@ export default function HomePage({ balance }) {
 
         </div>
         <div className="w-1/3">
-          <h1>Budget</h1>
+          <h1 className="text-xl">Budget</h1>
 
           <p>insert budget chart here</p>
         </div>
+      </div>
 
+
+      <div className="flex">
+        <div className="w-2/3 pr-5">
+          <h1 className="text-xl">Transactions</h1>
+
+          <p>insert transactions here</p>
+
+
+        </div>
+        <div className="w-1/3">
+          <h1 className="text-xl">Placeholder</h1>
+
+          <p>insert something here</p>
+        </div>
       </div>
     </>
   )
