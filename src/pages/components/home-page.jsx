@@ -25,7 +25,7 @@ export default function HomePage({ setPageNum, setWalletId }) {
   return (
     <>
       <div className="flex my-5">
-        <div className="w-2/3 mr-5 p-3  bg-slate-50 rounded-md">
+        <div className="w-2/3 mr-5 p-3 bg-slate-50 rounded-md">
 
           <h1 className="text-xl">Wallets</h1>
           <Wallets accountData={accountData} setPageNum={setPageNum} setWalletId={setWalletId} />

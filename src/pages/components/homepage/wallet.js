@@ -17,7 +17,7 @@ export default function Wallet({wallet}) {
 
     return (
         <motion.div 
-            className={`flex-2 ${generateBackgroundColor(wallet.routing_number)} rounded-md pt-2 px-5 m-2 h-full w-full`}
+            className={`flex-2 ${generateBackgroundColor(wallet.routing_number)} rounded-md py-2 px-5 m-2 h-full w-full`}
             variant= {item}
         >
             <h2 className="text-xl">{wallet.account_name}</h2>
