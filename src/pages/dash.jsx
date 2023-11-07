@@ -23,13 +23,9 @@ export default function Dashboard() {
 
       <div className="my-16 mx-3">
         {pageNum === 0 ? <HomePage setPageNum={setPageNum} setWalletId={setWalletId} /> : null}
-        {pageNum === 1 ? <TransactionsPage /> : null}
+        {pageNum === 1 ? <TransactionsPage walletId={walletId} /> : null}
         {pageNum === 2 ? <WishlistPage /> : null}
       </div>
-
-      {walletId}
-
-
 
       <NavBar pageNum={pageNum} setPageNum={setPageNum} setWalletId={setWalletId} />
     </>

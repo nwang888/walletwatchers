@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Flex, Button } from '@radix-ui/themes';
 import { motion } from 'framer-motion';
 
-export default function NavBar({ pageNum, setPageNum }) {
+export default function NavBar({ pageNum, setPageNum, setWalletId }) {
   return (
     <div className='fixed inset-x-0 bottom-0 flex justify-center items-center bg-white py-3'>
       <Flex direction="row" gap="3">
