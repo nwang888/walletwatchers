@@ -31,7 +31,7 @@ export default function HomePage({ balance }) {
 
   return (
     <>
-      <h1 className='underline'>Home</h1>
+
 
       <div className="flex my-5">
         <div className="w-2/3 mr-5">
