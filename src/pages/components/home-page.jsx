@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
 
 import Wallet from './homepage/wallet';
 
@@ -7,6 +8,17 @@ export default function HomePage({ balance }) {
 
   const [accountData, setAccountData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  const container = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        delayChildren: 0.3,
+        staggerChildren: 0.2
+      }
+    }
+  };
 
   useEffect(() => {
     const getData = async () => {
@@ -30,21 +42,28 @@ export default function HomePage({ balance }) {
       <div className="flex">
 
         <div className="w-2/3">
-          <h1>Wallets</h1>
+          <h1 className="text-xl">Wallets</h1>
 
 
-          <div className="flex flex-wrap">
+          <motion.div 
+            className="flex flex-wrap"
+            variants={container}
+            initial="hidden"
+            animate="visible"
+          >
             {
               accountData.map((account, index) => {
                 if (index < 3)
                 return (
-                  <Wallet wallet={account} key={index} />
+                  <Wallet 
+                    wallet={account} key={index} 
+                  />
                 )
 
                 return null;
               })
             }
-          </div>
+          </motion.div>
 
 
         </div>

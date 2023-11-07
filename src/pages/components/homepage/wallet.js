@@ -1,5 +1,13 @@
 
+import { motion } from 'framer-motion';
+
+
 export default function Wallet({wallet}) {
+
+    const item = {
+        hidden: { opacity: 0 },
+        visible: { opacity: 1 },
+    };
 
 
     function generateBackgroundColor() {
@@ -10,16 +18,20 @@ export default function Wallet({wallet}) {
     
 
     return (
-        <div className={`flex-2 ${generateBackgroundColor()} rounded-md p-3 m-3 w-[30%]`}>
+        <motion.div 
+            className={`flex-2 ${generateBackgroundColor()} rounded-md p-3 m-3 w-[30%]`}
+            variant= {item}
+        >
             <h2 className="text-xl">{wallet.account_name}</h2>
-            <hr className="bg-black w-full" />
+
+            <hr className="py-[1px] my-1 bg-black w-full" />
 
 
-            <h3>Total Balance</h3>
+            <h3 className="mt-2">Total Balance</h3>
             <h2 className="font-bold">${wallet.account_balance}</h2>
 
 
             <p className="text-right">{wallet.routing_number}</p>
-        </div>
+        </motion.div>
     );
 }
