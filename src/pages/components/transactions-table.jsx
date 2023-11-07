@@ -9,7 +9,7 @@ import { motion } from "framer-motion";
 //TODO: Add date range
 //TODO: Componentize table
 
-export default function TransactionsPage() {
+export default function TransactionsTable() {
 	const [transactions, setTransactions] = useState([]);
 	const [sortOrder, setSortOrder] = useState({
 		category_primary: "asc",
