@@ -29,7 +29,7 @@ export default async function cursorHandler(req, res) {
 			const payload = await getCursor();
 			return res.status(200).json(payload);
 		} catch (error) {
-			console.error("Error fetching account data:", error);
+			console.error("Error fetching cursor data:", error);
 			return res.status(500).json({ error: "Failed to fetch account data" });
 		}
 	}

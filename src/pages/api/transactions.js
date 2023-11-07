@@ -36,30 +36,31 @@ async function postTransactionsData(
 				account_id
 			);
 			const account_name = account ? account.account_name : null;
+			console.log("account_name: ", account_name);
 
 			await db.run(
 				`
                 INSERT INTO Transactions (
-                    transaction_id = ?,
-                    account_id = ?,
-					account_name = ?,
-                    category_primary = ?,
-                    category_detailed = ?,
-                    merchant_name = ?,
-                    store_number = ?,
-                    logo_url = ?,
-                    transaction_amount = ?,
-                    address = ?,
-                    city = ?,
-                    region = ?,
-                    postal_code = ?,
-                    country = ?,
-                    datetime = ?,
-                    payment_channel = ?,
-                    cursor = ?,
-                    next_cursor = ?
-                )
-                `,
+					transaction_id,
+					account_id,
+					account_name,
+					category_primary,
+					category_detailed,
+					merchant_name,
+					store_number,
+					logo_url,
+					transaction_amount,
+					address,
+					city,
+					region,
+					postal_code,
+					country,
+					datetime,
+					payment_channel,
+					cursor,
+					next_cursor
+				) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+				`,
 				[
 					transaction_id,
 					account_id,
@@ -98,24 +99,24 @@ async function postTransactionsData(
 
 			await db.run(
 				`
-                UPDATE Transactions
-                SET
-                    category_primary = ?,
-                    category_detailed = ?,
-                    merchant_name = ?,
-                    store_number = ?,
-                    logo_url = ?,
-                    transaction_amount = ?,
-                    address = ?,
-                    city = ?,
-                    region = ?,
-                    postal_code = ?,
-                    country = ?,
-                    datetime = ?,
-                    payment_channel = ?,
-                    next_cursor = ?
-                WHERE transaction_id = ?
-                `,
+				UPDATE Transactions
+				SET
+					category_primary = ?,
+					category_detailed = ?,
+					merchant_name = ?,
+					store_number = ?,
+					logo_url = ?,
+					transaction_amount = ?,
+					address = ?,
+					city = ?,
+					region = ?,
+					postal_code = ?,
+					country = ?,
+					datetime = ?,
+					payment_channel = ?,
+					next_cursor = ?
+				WHERE transaction_id = ?
+				`,
 				[
 					category_primary,
 					category_detailed,
@@ -131,7 +132,7 @@ async function postTransactionsData(
 					datetime,
 					payment_channel,
 					next_cursor,
-					transaction_id
+					transaction_id // this might be wrong
 				]
 			);
 		}
@@ -176,7 +177,7 @@ export default async function transaction_handler(req, res) {
 			const payload = await getTransactionsData(sort_by, order);
 			return res.status(200).json(payload);
 		} catch (error) {
-			console.error("Error fetching account data:", error);
+			console.error("Error fetching transaction data:", error);
 			return res.status(500).json({ error: "Failed to fetch account data" });
 		}
 	}

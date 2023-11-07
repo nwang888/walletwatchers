@@ -130,6 +130,7 @@ export const getServerSideProps = withIronSessionSsr(
 				"count": 500
 			});
 			console.log("Fetched transactions page");
+			// console.log(transactionsPage.data);
 
 			const next_cursor = transactionsPage.data.next_cursor;
 
