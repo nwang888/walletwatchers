@@ -36,7 +36,7 @@ async function postTransactionsData(
 				account_id
 			);
 			const account_name = account ? account.account_name : null;
-			console.log("account_name: ", account_name);
+			// console.log("account_name: ", account_name);
 
 			await db.run(
 				`
