@@ -319,7 +319,7 @@ useEffect(() => {
                 </Table.RowHeaderCell>
                 <Table.Cell>{name[idx]}</Table.Cell>
                 <Table.Cell>{price[idx]}</Table.Cell>
-                <Table.Cell> <progress value={totalBalance} max={price[idx]} /> <h1>{Math.trunc(Math.min(totalBalance/price[idx]*100, 100), 2)}%, ${price[idx]} / ${totalBalance} </h1></Table.Cell>
+                <Table.Cell> <progress value={totalBalance} max={price[idx]} /> <h1>{Math.trunc(Math.min(totalBalance/price[idx]*100, 100), 2)}%, ${totalBalance} / ${price[idx]} </h1></Table.Cell>
               </Table.Row>
             ))} 
           </Table.Body>
