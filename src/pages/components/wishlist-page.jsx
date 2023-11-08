@@ -9,7 +9,7 @@ import Image from 'next/image';
 // import TextField from '@mui/material/TextField';
 // import Rating from '@mui/material/Rating';
 // import { TextInput } from '@radix-ui/react-text-input';
-import { Table } from '@radix-ui/themes';
+import { Table, Button, TextField } from '@radix-ui/themes';
 import * as Progress from '@radix-ui/react-progress'
 // import './styles.css';
  
@@ -34,9 +34,10 @@ export  async function handler(req, res) {
 }
 
 export default function WishlistPage({ balance }) {
+    const [wishlist, setWishlist] = useState([]);
     const [nameTextBox, setNameTextBox] = useState("");
     const [priceTextBox, setPriceTextBox] = useState(0);
-    const [newItem, setNewItem] = useState({ name: '', price: '' });
+    // const [newItem, setNewItem] = useState({ name: '', price: '' });
     const [currentPage, setCurrentPage] = useState(1);
     const [rowsPerPage, setRowsPerPage] = useState(10);
 
@@ -55,17 +56,13 @@ export default function WishlistPage({ balance }) {
         setRowsPerPage(parseInt(event.target.value));
         getWishlistData(
           currentPage,
-          parseInt(event.target.value),
-          paginate = true
+          parseInt(event.target.value)
         );
-        page = 1,
-		rowsPerPage = 10,
-		paginate = true
       };
       
     const handlePageChange = (newPage) => {
       setCurrentPage(newPage);
-      getWishlistsData(
+      getWishlistData(
         newPage,
         rowsPerPage
       );
@@ -92,7 +89,10 @@ export default function WishlistPage({ balance }) {
     }, []);
   
  
-    const getWishlistData = async ( page=1, rowsPerPage = 10 , paginate = true) => {
+    const getWishlistData = async ( 
+		page = 1,
+		rowsPerPage = 10,
+		paginate = true) => {
         const response = await fetch(`/api/wishlist?page=${page}&rowsPerPage=${rowsPerPage}&paginate=${paginate}`);
         const payload = await response.json();
     
@@ -109,7 +109,8 @@ export default function WishlistPage({ balance }) {
         setID(newId); 
         setName(newName);
         setPrice(newPrice);
-        setWishlist([...wishlist, { name: 'Manual Name', price: 'Manual Price' }]);
+        
+        setWishlist(payload);
     }
     
     const postWishlistData = async () => {
@@ -117,8 +118,7 @@ export default function WishlistPage({ balance }) {
             name: nameTextBox,
             price: priceTextBox
         };
-        getWishlistData();
-        setWishlist([...wishlist, {name: "hi", price:" 5"}]);
+        getWishlistData(1, rowsPerPage);
         
         console.log("sending data: ", dataToSend);
 
@@ -135,12 +135,40 @@ export default function WishlistPage({ balance }) {
         const data = await res.json();
         // console.log('Response (from client):', data);
         // console.log(priceTextBox);
-        getWishlistData();
+        getWishlistData(1, rowsPerPage);
+
         setWishlist([...wishlist, {name: "hi", price:" 5"}]);
     }  
 
+    const[error, setError] = useState('');
+
+    const handleAddButton = (event) => {
+      const pp = parseFloat(priceTextBox);
+
+        if (isNaN(pp)) {
+          alert('Price must be a valid number');
+          return;
+        }
+      event.preventDefault();
+      postWishlistData();
+        
+
+
+        // if (/^(\d+\.?\d*|\.\d+)$/.test(price)) {
+        //   alert('Price must be a valid number');
+        //   return;
+        // }
+
+        
+      
+      setNameTextBox('');
+      setPriceTextBox('');
+    }
+
   useEffect(() => {
     getWishlistData();
+
+  
  
     //fix: https://stackoverflow.com/questions/72153376/multiple-charts-in-one-page-chartjs 
   //   const ctx = document.getElementById('progressBar').getContext('2d');
@@ -190,7 +218,7 @@ export default function WishlistPage({ balance }) {
 
 
     
-const [wishlist, setWishlist] = useState([]);
+// const [wishlist, setWishlist] = useState([]);
 
 
 
@@ -207,28 +235,45 @@ useEffect(() => {
    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
 
       
-      <h1>Wishlist</h1>
+   <div className="text-neutral-800 text-xl font-semibold leading-7 self-stretch">
+      Wishlist
+    </div>
         
     
-     
+      <h1>Enter items into your wishlist  </h1>
       <div>
-          <label for="name">Name:</label> 
-          <input  
-            id="name"
-              type="text"  
-              label = "Name" 
-              value= {nameTextBox}
-              onChange= {(e) => setNameTextBox(e.target.value)}
-          />    
-          <input  
-                  id="outlined-basic" 
-                  type="text"  
-                  label = "Price" 
-                  value= {priceTextBox} 
-                  onChange= {(event) => setPriceTextBox(event.target.value)} 
-              /> 
+          <label for="name">Item name:</label>   
+
+          <TextField.Root
+          style={{ width: '40%' }} >
+            <TextField.Slot>
+            </TextField.Slot>
+            <TextField.Input 
+              id="name" 
+              placeholder="Name"
+              value= {nameTextBox} 
+              onChange={(event) => setNameTextBox(event.target.value)}/>
+          </TextField.Root> 
+          <label for="name"> Price:</label>
+          <TextField.Root
+          style={{ width: '40%' }} >
+            <TextField.Slot>
+            </TextField.Slot>
+            <TextField.Input 
+              id="price" 
+              placeholder="Price"
+              value= {priceTextBox} 
+              onChange={(event) => setPriceTextBox(event.target.value)} />
+          </TextField.Root> 
+          
                       {/* <button onClick={getWishlistData}> Update </button> */}
-                      <button onClick={postWishlistData}> Add </button>
+                      <Button radius="large"
+												variant="surface"
+												highContrast
+												color="orange"
+												size="1"
+												onClick={handleAddButton}
+												style={{ marginLeft: "5px" }}> Add </Button>
     
              
       </div> 
@@ -266,14 +311,14 @@ useEffect(() => {
           </Table.Header> 
 
           <Table.Body>  
-            {id.map((item, idx) => (
+            {id.map((wishlist, idx) => (
               <Table.Row key={id[idx]}>
                 <Table.RowHeaderCell>
                   {id[idx]} 
                 </Table.RowHeaderCell>
                 <Table.Cell>{name[idx]}</Table.Cell>
                 <Table.Cell>{price[idx]}</Table.Cell>
-                <Table.Cell> <progress value={totalBalance} max={price[idx]} /> </Table.Cell>
+                <Table.Cell> <progress value={totalBalance} max={price[idx]} /> <h1>{Math.trunc(Math.min(totalBalance/price[idx]*100, 100), 2)}%</h1></Table.Cell>
               </Table.Row>
             ))} 
           </Table.Body>
@@ -312,4 +357,4 @@ useEffect(() => {
           </>
   );
 };
-//       return an error if 
+//       return an error if price value is not a double, also reset both textbox values to empty string '' after submit button is pressed 
