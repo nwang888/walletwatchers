@@ -10,7 +10,15 @@ export default async function handler(req, res) {
 				driver: sqlite3.Database
 			});
 
-			const wishlists = await db.all("SELECT * FROM wishlists");
+			// Get page from query parameters, default to 1 if not provided
+			const page = req.query.page ? parseInt(req.query.page) : 1;
+			// Set the number of records per page
+			const recordsPerPage = 10;
+			// Calculate the offset
+			const offset = (page - 1) * recordsPerPage;
+
+			// Modify the SQL query to include LIMIT and OFFSET
+			const wishlists = await db.all(`SELECT * FROM wishlists LIMIT ? OFFSET ?`, [recordsPerPage, offset]);
 			console.log(wishlists);
 			await db.close();
 
@@ -18,7 +26,8 @@ export default async function handler(req, res) {
 		} catch (err) {
 			return res.status(500).json({ error: err.message });
 		}
-	} else if (req.method === "POST") {
+	}  else if (req.method === "POST") {
+		console.log("posted!");
 		console.log(req.body);
 		try {
 			const db = await open({
@@ -27,15 +36,13 @@ export default async function handler(req, res) {
 			});
 
 			const requestData = req.body; // Access data sent in the request body
-			// res.json({ message: "Data received successfully", data: requestData });
+			res.json({ message: "Data received successfully", data: requestData });
 
 			console.log(requestData);
 
-			const lastWishlist = await db.get("SELECT wishlist_id FROM wishlists ORDER BY wishlist_id DESC LIMIT 1");
-			const wishlist_id = lastWishlist ? lastWishlist.wishlist_id + 1 : 1;
-
+			const wishlist_id = Math.floor(Math.random);
 			try {
-				console.log('wishlist id:', wishlist_id);
+				console.log(requestData.wishlist_id);
 
 				await db.run(
 					`
@@ -44,15 +51,15 @@ export default async function handler(req, res) {
             `,
 					[wishlist_id, requestData.name, requestData.price]
 				);
-				console.log("wishlist posted to db");
+				console.log("added");
 			} catch (error) {
 				console.error("Error adding item:", error.message);
 			}
 
 			await db.close();
-			console.log("posted!");
+			console.log("aft");
 
-			// res.json({ message: "Table: ", data: requestData });
+			res.json({ message: "Table: ", data: requestData });
 
 			return res.status(200).json(payload);
 		} catch (err) {

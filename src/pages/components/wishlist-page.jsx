@@ -83,7 +83,8 @@ export default function WishlistPage({ balance }) {
         fetch('/api/wishlist') // Assuming '/api/wishlist' returns your data
             .then(response => response.json())
             .then(data => {
-                const sum = data.reduce((total, item) => total + Number(item.item_price), 0);
+              console.log(data);
+                const sum = data.reduce((total, item) => total + Number(item.item_price), 0); 
                 setTotalPrice(sum);
             });
     }, []);
@@ -318,7 +319,7 @@ useEffect(() => {
                 </Table.RowHeaderCell>
                 <Table.Cell>{name[idx]}</Table.Cell>
                 <Table.Cell>{price[idx]}</Table.Cell>
-                <Table.Cell> <progress value={totalBalance} max={price[idx]} /> <h1>{Math.trunc(Math.min(totalBalance/price[idx]*100, 100), 2)}%</h1></Table.Cell>
+                <Table.Cell> <progress value={totalBalance} max={price[idx]} /> <h1>{Math.trunc(Math.min(totalBalance/price[idx]*100, 100), 2)}%, ${price[idx]} / ${totalBalance} </h1></Table.Cell>
               </Table.Row>
             ))} 
           </Table.Body>
