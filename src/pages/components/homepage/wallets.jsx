@@ -1,9 +1,13 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import Wallet from './wallet';
 
 export default function Wallets( { accountData, setPageNum, setWalletId }) {
+
+    useEffect(() => {
+        console.log(accountData);
+    });
 
     const [viewAll, setViewAll] = useState(false);
 
@@ -28,21 +32,21 @@ export default function Wallets( { accountData, setPageNum, setWalletId }) {
             >
 
                 {
-                accountData.slice(0, 3).map((account, index) => (
-                    <button className="text-left w-1/3 p-1" onClick={() => {setPageNum(1); setWalletId(account.account_id);}}>
-                    <motion.div 
-                        key={index} 
-                        variants={item}
-                    >
-                        <Wallet wallet={account} />
-                    </motion.div>
-                    </button>
-                ))
+                    accountData.slice(0, Math.max(3, accountData.length)).map((account, index) => (
+                        <button className="text-left w-1/3 p-1" onClick={() => {setPageNum(1); setWalletId(account.account_id);}}>
+                        <motion.div 
+                            key={index} 
+                            variants={item}
+                        >
+                            <Wallet wallet={account} />
+                        </motion.div>
+                        </button>
+                    ))
                 }
 
                 <AnimatePresence>
                 {
-                    viewAll && accountData.slice(3).map((account, index) => (
+                    viewAll && accountData.length > 3 && accountData.slice(3).map((account, index) => (
                     <button className="text-left w-1/3 p-1" onClick={() => {setPageNum(1); setWalletId(account.account_id);}}>
                         <motion.div 
                         key={index + 3} 
