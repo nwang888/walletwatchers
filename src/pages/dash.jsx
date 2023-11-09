@@ -1,35 +1,39 @@
-import { withIronSessionSsr } from 'iron-session/next';
-import { plaidClient, sessionOptions } from '../lib/plaid';
-import { useEffect, useState } from 'react';
+import { withIronSessionSsr } from "iron-session/next";
+import { plaidClient, sessionOptions } from "../lib/plaid";
+import { useEffect, useState } from "react";
 
-import { useRouter } from 'next/router';
+import { useRouter } from "next/router";
 
-import HomePage from './components/home-page';
-import TransactionsPage from './components/transactions-page';
-import WishlistPage from './components/wishlist-page';
+import HomePage from "./components/home-page";
+import TransactionsPage from "./components/transactions-page";
+import WishlistPage from "./components/wishlist-page";
 
-import Header from './components/header';
-import NavBar from './components/navigation-bar';
-
+import Header from "./components/header";
+import NavBar from "./components/navigation-bar";
 
 export default function Dashboard() {
+	const [pageNum, setPageNum] = useState(0);
+	const [walletId, setWalletId] = useState("");
 
-  const [pageNum, setPageNum] = useState(0);
-  const [walletId, setWalletId] = useState("");
+	return (
+		<>
+			<Header setPageNum={setPageNum} />
 
-  return (
-    <>
-      <Header setPageNum={setPageNum} />
+			<div className="my-16 mx-3">
+				{pageNum === 0 ? (
+					<HomePage setPageNum={setPageNum} setWalletId={setWalletId} />
+				) : null}
+				{pageNum === 1 ? <TransactionsPage walletId={walletId} /> : null}
+				{pageNum === 2 ? <WishlistPage /> : null}
+			</div>
 
-      <div className="my-16 mx-3">
-        {pageNum === 0 ? <HomePage setPageNum={setPageNum} setWalletId={setWalletId} /> : null}
-        {pageNum === 1 ? <TransactionsPage walletId={walletId} /> : null}
-        {pageNum === 2 ? <WishlistPage /> : null}
-      </div>
-
-      <NavBar pageNum={pageNum} setPageNum={setPageNum} setWalletId={setWalletId} />
-    </>
-  )
+			<NavBar
+				pageNum={pageNum}
+				setPageNum={setPageNum}
+				setWalletId={setWalletId}
+			/>
+		</>
+	);
 }
 
 const postAccountData = async (accounts, numbers, req) => {
@@ -91,6 +95,7 @@ export const getServerSideProps = withIronSessionSsr(
 
 		// initalizes bigdb on login
 		const initialize_bigdb = await fetch(`${baseUrl}/api/bigdb`);
+		console.log(await initialize_bigdb.json());
 
 		const access_token = req.session.access_token;
 
