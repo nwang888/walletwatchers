@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import Wallets from './homepage/wallets';
 import Chart from 'chart.js/auto';
 
@@ -19,10 +19,8 @@ export default function HomePage({ setPageNum, setWalletId }) {
     getData();
   }, []);
 
-  useEffect(() => {
-    if (chartInstance) {
-      chartInstance.destroy();
-    }
+  useLayoutEffect(() => {
+    if (isLoading || chartInstance) return;
 
     const data = {
       labels: ['Red', 'Orange', 'Yellow', 'Green', 'Blue'],
@@ -41,7 +39,7 @@ export default function HomePage({ setPageNum, setWalletId }) {
     };
 
     const config = {
-      type: 'pie',
+      type: 'doughnut',
       data: data,
       options: {
         responsive: true,
@@ -60,15 +58,16 @@ export default function HomePage({ setPageNum, setWalletId }) {
     const newChartInstance = new Chart(chartRef.current, config);
     setChartInstance(newChartInstance);
 
+    // Cleanup function
     return () => {
       if (chartInstance) {
         chartInstance.destroy();
       }
     };
-  }, []);
+  }, [isLoading]);
 
   if (isLoading) {
-    return <div>Fetching Data from DB...</div>;
+    return <div>Loading...</div>;
   }
 
   return (
@@ -80,7 +79,6 @@ export default function HomePage({ setPageNum, setWalletId }) {
         </div>
         <div className="w-1/3 p-3 bg-slate-50 rounded-md">
           <h1 className="text-xl">Budget</h1>
-          {/* Move the canvas element here */}
           <canvas ref={chartRef} id="budgetChart" />
         </div>
       </div>
@@ -96,5 +94,5 @@ export default function HomePage({ setPageNum, setWalletId }) {
         </div>
       </div>
     </>
-  )
+  );
 }
