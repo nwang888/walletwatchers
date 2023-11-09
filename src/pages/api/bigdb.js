@@ -28,6 +28,7 @@ export default async function instantiateBigDB(req, res) {
             CREATE TABLE IF NOT EXISTS Transactions (
                 transaction_id VARCHAR(256) NOT NULL,
                 account_id VARCHAR(256) NOT NULL,
+                account_name VARCHAR(256) NOT NULL,
                 category_primary VARCHAR(256),
                 category_detailed VARCHAR(256),
                 merchant_name VARCHAR(256),
@@ -43,7 +44,7 @@ export default async function instantiateBigDB(req, res) {
                 payment_channel VARCHAR(16),
                 cursor VARCHAR(256),
                 next_cursor VARCHAR(256),
-                FOREIGN KEY (account_id) REFERENCES Accounts(account_id)
+                FOREIGN KEY (account_id) REFERENCES Accounts(account_id),
             );
         `);
 
