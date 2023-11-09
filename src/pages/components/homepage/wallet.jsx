@@ -1,10 +1,10 @@
 import { motion } from 'framer-motion';
 
 export default function Wallet({ wallet, index }) {
-  function generateBackgroundColor(index) {
-    const colors = ["bg-customColor1", "bg-customColor2", "bg-customColor3"];
-    return colors[index]; 
-  }
+    function generateBackgroundColor(index) {
+        const colors = ["bg-customColor1", "bg-customColor2", "bg-customColor3"];
+        return colors[index % colors.length]; // Cycles through the colors based on index
+    }
 
   const backgroundColorClass = generateBackgroundColor(index);
 

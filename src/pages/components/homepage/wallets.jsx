@@ -30,11 +30,47 @@ export default function Wallets({ accountData, setPageNum, setWalletId }) {
             className="text-left w-1/3 p-1" 
             onClick={() => { setPageNum(1); setWalletId(account.account_id); }}
           >
-            <Wallet wallet={account} index={index % 3} />
+            <AnimatePresence>
+              { (viewAll || index < 3) && (
+                <motion.div 
+                  key={account.account_id} 
+                  variants={item}
+                  initial="hidden"
+                  animate="visible"
+                  exit="hidden"
+                >
+                  <Wallet wallet={account} index={index} />
+                </motion.div>
+              )}
+            </AnimatePresence>
           </button>
         ))}
       </motion.div>
-      {/* ... rest of your Wallets component */}
+      
+      <motion.div 
+        className="flex justify-end mt-3"
+        whileHover={{ scale: 1.01, x: -5 }}
+        transition={{
+            type: "spring",
+            duration: 0.3
+        }}
+      >
+        {viewAll ? (
+          <button
+            className="text-center text-md font-bold"
+            onClick={() => setViewAll(false)}
+          >
+            View Less...
+          </button>
+        ) : (
+          <button
+            className="text-center text-md font-bold"
+            onClick={() => setViewAll(true)}
+          >
+            View All...
+          </button>
+        )}
+      </motion.div>
     </>
-  )
+  );
 }
