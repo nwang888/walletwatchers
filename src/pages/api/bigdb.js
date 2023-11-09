@@ -45,6 +45,7 @@ export default async function instantiateBigDB(req, res) {
                 cursor VARCHAR(256),
                 next_cursor VARCHAR(256),
                 FOREIGN KEY (account_id) REFERENCES Accounts(account_id),
+                FOREIGN KEY (account_name) REFERENCES Accounts(account_name)
             );
         `);
 
