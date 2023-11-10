@@ -1,15 +1,17 @@
-import { useEffect, useState } from "react";
-import { Table } from "@radix-ui/themes";
-import { Flex, Button } from "@radix-ui/themes";
+import { useRef, useEffect, useState } from "react";
+import React from "react";
+import * as Select from "@radix-ui/react-select";
+import { Flex, Button, Table } from "@radix-ui/themes";
 import { motion } from "framer-motion";
 
 //TODO: Add search
 //TODO: Add filtering for all columns
 
-export default function TransactionsTable() {
+export default function TransactionsTable(walletID) {
 	const [transactions, setTransactions] = useState([]);
 	const [currentPage, setCurrentPage] = useState(1);
 	const [rowsPerPage, setRowsPerPage] = useState(10);
+	const [totalRows, setTotalRows] = useState(0);
 	const [sortAttribute, setSortAttribute] = useState("datetime");
 	const [sortOrder, setSortOrder] = useState({
 		category_primary: "asc",
@@ -21,51 +23,95 @@ export default function TransactionsTable() {
 		datetime: "desc",
 		account_name: "asc"
 	});
+	const [cur_filters, setFilters] = useState({});
 
-	const handleRowsPerPageChange = (event) => {
-		setRowsPerPage(parseInt(event.target.value));
-		getTransactionsData(
-			sortAttribute,
-			sortOrder[sortAttribute],
-			currentPage,
-			parseInt(event.target.value)
-		);
+	const handleRowsPerPageChange = (value) => {
+		const newRowsPerPage = parseInt(value);
+		setRowsPerPage(newRowsPerPage);
+		setCurrentPage(1);
+		getTransactionsData({
+			sort_by: sortAttribute,
+			order: sortOrder[sortAttribute],
+			rowsPerPage: newRowsPerPage,
+			filters: cur_filters
+		});
 	};
 
 	const handlePageChange = (newPage) => {
 		setCurrentPage(newPage);
-		getTransactionsData(
-			sortAttribute,
-			sortOrder[sortAttribute],
-			newPage,
-			rowsPerPage
-		);
+		getTransactionsData({
+			sort_by: sortAttribute,
+			order: sortOrder[sortAttribute],
+			page: newPage,
+			rowsPerPage: rowsPerPage,
+			filters: cur_filters
+		});
 	};
 
 	const handleSort = (attribute) => {
 		const newOrder = sortOrder[attribute] === "asc" ? "desc" : "asc";
 		setSortAttribute(attribute);
 		setSortOrder({ ...sortOrder, [attribute]: newOrder });
-		getTransactionsData(attribute, newOrder);
+		getTransactionsData({
+			sort_by: attribute,
+			order: newOrder,
+			rowsPerPage: rowsPerPage,
+			filters: cur_filters
+		});
 	};
 
-	const getTransactionsData = async (
+	const handleFilter = (newFilters) => {
+		// const newFilters = { ...filters, [attribute]: value };
+		setFilters(newFilters);
+		getTransactionsData({
+			sort_by: sortAttribute,
+			order: sortOrder[sortAttribute],
+			rowsPerPage: rowsPerPage,
+			filters: newFilters
+		});
+	};
+
+	const getTransactionsData = async ({
 		sort_by = "transaction_amount",
 		order = "desc",
 		page = 1,
 		rowsPerPage = 10,
-		paginate = true
-	) => {
+		paginate = true,
+		filters = {}
+	} = {}) => {
+		// console.log("Front End filters", filters);
 		const response = await fetch(
-			`/api/transactions?sort_by=${sort_by}&order=${order}&page=${page}&rowsPerPage=${rowsPerPage}&paginate=${paginate}`
+			`/api/transactions?sort_by=${sort_by}&order=${order}&page=${page}&rowsPerPage=${rowsPerPage}&paginate=${paginate}&filters=${encodeURIComponent(
+				JSON.stringify(filters)
+			)}`
 		);
 		const data = await response.json();
-		setTransactions(data);
+		setTransactions(data.transactions);
+		setTotalRows(data.totalRows);
 	};
 
 	useEffect(() => {
-		getTransactionsData();
-	}, []);
+		console.log("walletID", walletID.walletId);
+		if (walletID.walletId && walletID.walletId !== "") {
+			const newFilters = { "account_id": walletID.walletId };
+			setFilters(newFilters);
+			getTransactionsData({
+				sort_by: "transaction_amount",
+				order: "desc",
+				page: 1,
+				rowsPerPage: 10,
+				paginate: true,
+				filters: newFilters
+			});
+		} else getTransactionsData();
+	}, [walletID]);
+	// handleFilter({ "account_name": "Plaid Checking" });
+	// sortAttribute,
+	// sortOrder[sortAttribute],
+	// 1,
+	// rowsPerPage,
+	// true,
+	// { "account_name": "Plaid Checking" }
 
 	return (
 		<div>
@@ -238,23 +284,35 @@ export default function TransactionsTable() {
 							))}
 						</Table.Body>
 					</Table.Root>
-					<label>
-						Rows per page:
-						<select value={rowsPerPage} onChange={handleRowsPerPageChange}>
-							<option value={10}>10</option>
-							<option value={20}>20</option>
-							<option value={50}>50</option>
-						</select>
-					</label>
-					<button
-						onClick={() => handlePageChange(currentPage - 1)}
-						disabled={currentPage === 1}
-					>
-						Previous
-					</button>
-					<button onClick={() => handlePageChange(currentPage + 1)}>
-						Next
-					</button>
+					<Select.Root onValueChange={handleRowsPerPageChange}>
+						<Select.Trigger>
+							Rows per page: {rowsPerPage} <Select.Value />
+						</Select.Trigger>
+						<Select.Content>
+							<Select.Viewport>
+								<Select.Item value="10">10</Select.Item>
+								<Select.Item value="20">20</Select.Item>
+								<Select.Item value="50">50</Select.Item>
+							</Select.Viewport>
+						</Select.Content>
+					</Select.Root>
+					<Flex style={{ justifyContent: "center", marginTop: "20px" }}>
+						<Button
+							onClick={() => handlePageChange(currentPage - 1)}
+							disabled={currentPage === 1}
+						>
+							Previous
+						</Button>
+						<div style={{ margin: "0 10px" }}>
+							Page {currentPage} / {Math.ceil(totalRows / rowsPerPage)}{" "}
+						</div>
+						<Button
+							onClick={() => handlePageChange(currentPage + 1)}
+							disabled={currentPage === Math.ceil(totalRows / rowsPerPage)}
+						>
+							Next
+						</Button>
+					</Flex>
 				</div>
 			) : (
 				<p>No transactions found.</p>
