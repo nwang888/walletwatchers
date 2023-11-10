@@ -5,35 +5,45 @@ import TransactionsTable from "./transactions-table";
 
 export default function HomePage({ setPageNum, setWalletId }) {
   const [accountData, setAccountData] = useState([]);
+  const [budgetData, setBudgetData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const chartRef = useRef(null);
   const [chartInstance, setChartInstance] = useState(null);
 
   useEffect(() => {
-    const getData = async () => {
-      const response = await fetch('/api/account');
-      const payload = await response.json();
-      setAccountData(payload);
-      setIsLoading(false);
-    }
+    const fetchData = async () => {
+      try {
+        const accountResponse = await fetch('/api/account');
+        const accountPayload = await accountResponse.json();
+        setAccountData(accountPayload);
 
-    getData();
+        const budgetResponse = await fetch('/api/budgets');
+        const budgetPayload = await budgetResponse.json();
+        setBudgetData(budgetPayload);
+      } catch (error) {
+        console.error("Failed to fetch data:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
   }, []);
 
   useLayoutEffect(() => {
     if (isLoading || chartInstance) return;
 
     const data = {
-      labels: ['Red', 'Orange', 'Yellow', 'Green', 'Blue'],
+      labels: budgetData.map(budget => budget.budget_name),
       datasets: [{
-        label: 'Dataset 1',
-        data: [10, 20, 30, 40, 50], // Replace this with actual data
+        label: 'Budget Distribution',
+        data: budgetData.map(budget => budget.budget_amount),
         backgroundColor: [
           '#CCDFF1',
           '#EDDEF3',
           '#E8F5E4',
           '#C4E6DE',
-          '#CFEAF2'
+          '#CFEAF2',
         ],
         hoverOffset: 4
       }]
@@ -41,7 +51,7 @@ export default function HomePage({ setPageNum, setWalletId }) {
 
     const config = {
       type: 'doughnut',
-      data: data,
+      data,
       options: {
         responsive: true,
         plugins: {
@@ -64,7 +74,7 @@ export default function HomePage({ setPageNum, setWalletId }) {
         chartInstance.destroy();
       }
     };
-  }, [isLoading]);
+  }, [isLoading, budgetData]); 
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -86,7 +96,7 @@ export default function HomePage({ setPageNum, setWalletId }) {
       <div className="flex">
         <div className="w-2/3 mr-5 p-3 bg-slate-50 rounded-md">
           <h1 className="text-xl">Transactions</h1>
-          <>TransactionsTable</>
+          <TransactionsTable />
         </div>
         <div className="w-1/3 p-3 bg-slate-50 rounded-md">
           <h1 className="text-xl">Placeholder</h1>
