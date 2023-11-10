@@ -202,7 +202,12 @@ async function getTransactionsData(
 	console.log("whereValues: ", whereValues);
 
 	let payload;
-	const totalRows = await db.get(`SELECT COUNT(*) as count FROM Transactions`);
+	const totalRows = await db.get(
+		`SELECT COUNT(*) as count
+		FROM Transactions
+		WHERE 1=1 ${whereClause}`,
+		whereValues
+	);
 
 	if (paginate) {
 		const offset = (page - 1) * rowsPerPage;

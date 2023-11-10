@@ -23,28 +23,28 @@ export default function TransactionsTable(walletID) {
 		datetime: "desc",
 		account_name: "asc"
 	});
-	const [filters, setFilters] = useState({});
+	const [cur_filters, setFilters] = useState({});
 
 	const handleRowsPerPageChange = (value) => {
 		const newRowsPerPage = parseInt(value);
 		setRowsPerPage(newRowsPerPage);
 		setCurrentPage(1);
 		getTransactionsData({
-			sort_by: attribute,
-			order: newOrder,
+			sort_by: sortAttribute,
+			order: sortOrder[sortAttribute],
 			rowsPerPage: newRowsPerPage,
-			filters: filters
+			filters: cur_filters
 		});
 	};
 
 	const handlePageChange = (newPage) => {
 		setCurrentPage(newPage);
 		getTransactionsData({
-			sort_by: attribute,
-			order: newOrder,
+			sort_by: sortAttribute,
+			order: sortOrder[sortAttribute],
 			page: newPage,
 			rowsPerPage: rowsPerPage,
-			filters: filters
+			filters: cur_filters
 		});
 	};
 
@@ -56,7 +56,7 @@ export default function TransactionsTable(walletID) {
 			sort_by: attribute,
 			order: newOrder,
 			rowsPerPage: rowsPerPage,
-			filters: filters
+			filters: cur_filters
 		});
 	};
 
@@ -79,7 +79,7 @@ export default function TransactionsTable(walletID) {
 		paginate = true,
 		filters = {}
 	} = {}) => {
-		console.log("Front End filters", filters);
+		// console.log("Front End filters", filters);
 		const response = await fetch(
 			`/api/transactions?sort_by=${sort_by}&order=${order}&page=${page}&rowsPerPage=${rowsPerPage}&paginate=${paginate}&filters=${encodeURIComponent(
 				JSON.stringify(filters)
@@ -91,17 +91,27 @@ export default function TransactionsTable(walletID) {
 	};
 
 	useEffect(() => {
-		if (walletID) {
-			getTransactionsData({ filters: { "account_id": walletID } });
+		console.log("walletID", walletID.walletId);
+		if (walletID.walletId && walletID.walletId !== "") {
+			const newFilters = { "account_id": walletID.walletId };
+			setFilters(newFilters);
+			getTransactionsData({
+				sort_by: "transaction_amount",
+				order: "desc",
+				page: 1,
+				rowsPerPage: 10,
+				paginate: true,
+				filters: newFilters
+			});
 		} else getTransactionsData();
-		// handleFilter({ "account_name": "Plaid Checking" });
-		// sortAttribute,
-		// sortOrder[sortAttribute],
-		// 1,
-		// rowsPerPage,
-		// true,
-		// { "account_name": "Plaid Checking" }
-	}, []);
+	}, [walletID]);
+	// handleFilter({ "account_name": "Plaid Checking" });
+	// sortAttribute,
+	// sortOrder[sortAttribute],
+	// 1,
+	// rowsPerPage,
+	// true,
+	// { "account_name": "Plaid Checking" }
 
 	return (
 		<div>
@@ -296,7 +306,10 @@ export default function TransactionsTable(walletID) {
 						<div style={{ margin: "0 10px" }}>
 							Page {currentPage} / {Math.ceil(totalRows / rowsPerPage)}{" "}
 						</div>
-						<Button onClick={() => handlePageChange(currentPage + 1)}>
+						<Button
+							onClick={() => handlePageChange(currentPage + 1)}
+							disabled={currentPage === Math.ceil(totalRows / rowsPerPage)}
+						>
 							Next
 						</Button>
 					</Flex>
