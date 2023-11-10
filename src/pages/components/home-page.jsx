@@ -44,6 +44,7 @@ export default function HomePage({ setPageNum, setWalletId }) {
           '#E8F5E4',
           '#C4E6DE',
           '#CFEAF2',
+          '#F5E6E8',
         ],
         hoverOffset: 4
       }]
