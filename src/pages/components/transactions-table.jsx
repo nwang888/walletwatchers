@@ -91,15 +91,14 @@ export default function TransactionsTable(walletID) {
 	};
 
 	useEffect(() => {
-		getTransactionsData(
-			// handleFilter({ "account_name": "Plaid Checking" });
-			sortAttribute,
-			sortOrder[sortAttribute],
-			1,
-			rowsPerPage,
-			true,
-			{ "account_name": "Plaid Checking" }
-		);
+		getTransactionsData();
+		// handleFilter({ "account_name": "Plaid Checking" });
+		// sortAttribute,
+		// sortOrder[sortAttribute],
+		// 1,
+		// rowsPerPage,
+		// true,
+		// { "account_name": "Plaid Checking" }
 	}, []);
 
 	return (
