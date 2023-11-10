@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 //TODO: Add search
 //TODO: Add filtering for all columns
 
-export default function TransactionsTable() {
+export default function TransactionsTable(walletID) {
 	const [transactions, setTransactions] = useState([]);
 	const [currentPage, setCurrentPage] = useState(1);
 	const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -23,6 +23,7 @@ export default function TransactionsTable() {
 		datetime: "desc",
 		account_name: "asc"
 	});
+	const [filters, setFilters] = useState({});
 
 	const handleRowsPerPageChange = (value) => {
 		const newRowsPerPage = parseInt(value);
@@ -42,7 +43,8 @@ export default function TransactionsTable() {
 			sortAttribute,
 			sortOrder[sortAttribute],
 			newPage,
-			rowsPerPage
+			rowsPerPage,
+			filters
 		);
 	};
 
@@ -53,17 +55,32 @@ export default function TransactionsTable() {
 		getTransactionsData(attribute, newOrder);
 	};
 
+	const handleFilterChange = (attribute, value) => {
+		const newFilters = { ...filters, [attribute]: value };
+		setFilters(newFilters);
+		getTransactionsData(
+			sortAttribute,
+			sortOrder[sortAttribute],
+			newPage,
+			rowsPerPage
+		);
+	};
+
 	const getTransactionsData = async (
 		sort_by = "transaction_amount",
 		order = "desc",
 		page = 1,
 		rowsPerPage = 10,
-		paginate = true
+		paginate = true,
+		filters = {} // possible issue with filters, maybe need to json
 	) => {
 		const response = await fetch(
-			`/api/transactions?sort_by=${sort_by}&order=${order}&page=${page}&rowsPerPage=${rowsPerPage}&paginate=${paginate}`
+			`/api/transactions?sort_by=${sort_by}&order=${order}&page=${page}&rowsPerPage=${rowsPerPage}&paginate=${paginate}&filters=${encodeURIComponent(
+				JSON.stringify(filters)
+			)}`
 		);
 		const data = await response.json();
+		setFilters(data.filters);
 		setTransactions(data.transactions);
 		setTotalRows(data.totalRows);
 	};
