@@ -105,7 +105,7 @@ export default function HomePage({ setPageNum, setWalletId }) {
         </div>
         <div className="w-1/3 p-3 bg-slate-50 rounded-md">
           <h1 className="text-xl">Placeholder</h1>
-          <p>insert something here</p>
+          <p>Insert something here</p>
         </div>
       </div>
     </>
