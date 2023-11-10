@@ -16,9 +16,10 @@ export default function BudgetPage() {
         }
         const payload = await response.json();
         setBudgets(payload);
-        setIsLoading(false);
       } catch (error) {
         console.error("Failed to fetch budgets:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -26,7 +27,8 @@ export default function BudgetPage() {
   }, []);
 
   useLayoutEffect(() => {
-    if (isLoading || chartInstance) return;
+    if (isLoading || chartInstance || !Array.isArray(budgets)) return;
+
     const budgetLabels = budgets.map(budget => budget.budget_name);
     const budgetAmounts = budgets.map(budget => budget.budget_amount);
 
@@ -53,8 +55,8 @@ export default function BudgetPage() {
         responsive: true,
         plugins: {
           legend: {
-            position: 'top',
-          },
+ position: 'top',
+ },
           title: {
             display: true,
             text: 'Budget Distribution'
@@ -83,9 +85,12 @@ export default function BudgetPage() {
     <>
       <h1>Budget</h1>
       <div className="w-full p-3 bg-slate-50 rounded-md">
-        <canvas ref={chartRef} id="budgetChart" />
+        {Array.isArray(budgets) && budgets.length > 0 ? (
+          <canvas ref={chartRef} id="budgetChart" />
+        ) : (
+          <div>No budget data to display</div>
+        )}
       </div>
-      {}
     </>
   );
 }

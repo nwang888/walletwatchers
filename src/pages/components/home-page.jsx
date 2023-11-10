@@ -31,7 +31,7 @@ export default function HomePage({ setPageNum, setWalletId }) {
   }, []);
 
   useLayoutEffect(() => {
-    if (isLoading || chartInstance) return;
+    if (isLoading || chartInstance || !Array.isArray(budgetData)) return;
 
     const data = {
       labels: budgetData.map(budget => budget.budget_name),
@@ -90,7 +90,11 @@ export default function HomePage({ setPageNum, setWalletId }) {
         </div>
         <div className="w-1/3 p-3 bg-slate-50 rounded-md">
           <h1 className="text-xl">Budget</h1>
-          <canvas ref={chartRef} id="budgetChart" />
+          {Array.isArray(budgetData) && budgetData.length > 0 ? (
+            <canvas ref={chartRef} id="budgetChart" />
+          ) : (
+            <div>No budget data to display</div>
+          )}
         </div>
       </div>
 
