@@ -29,57 +29,57 @@ export default function TransactionsTable(walletID) {
 		const newRowsPerPage = parseInt(value);
 		setRowsPerPage(newRowsPerPage);
 		setCurrentPage(1);
-		getTransactionsData(
-			sortAttribute,
-			sortOrder[sortAttribute],
-			1,
-			newRowsPerPage,
-			true,
-			filters
-		);
+		getTransactionsData({
+			sort_by: attribute,
+			order: newOrder,
+			rowsPerPage: newRowsPerPage,
+			filters: filters
+		});
 	};
 
 	const handlePageChange = (newPage) => {
 		setCurrentPage(newPage);
-		getTransactionsData(
-			sortAttribute,
-			sortOrder[sortAttribute],
-			newPage,
-			rowsPerPage,
-			true,
-			filters
-		);
+		getTransactionsData({
+			sort_by: attribute,
+			order: newOrder,
+			page: newPage,
+			rowsPerPage: rowsPerPage,
+			filters: filters
+		});
 	};
 
 	const handleSort = (attribute) => {
 		const newOrder = sortOrder[attribute] === "asc" ? "desc" : "asc";
 		setSortAttribute(attribute);
 		setSortOrder({ ...sortOrder, [attribute]: newOrder });
-		getTransactionsData(attribute, newOrder, 1, rowsPerPage, true, filters);
+		getTransactionsData({
+			sort_by: attribute,
+			order: newOrder,
+			rowsPerPage: rowsPerPage,
+			filters: filters
+		});
 	};
 
 	const handleFilter = (newFilters) => {
 		// const newFilters = { ...filters, [attribute]: value };
 		setFilters(newFilters);
-		getTransactionsData(
-			sortAttribute,
-			sortOrder[sortAttribute],
-			1,
-			rowsPerPage,
-			true,
-			newFilters
-		);
+		getTransactionsData({
+			sort_by: sortAttribute,
+			order: sortOrder[sortAttribute],
+			rowsPerPage: rowsPerPage,
+			filters: newFilters
+		});
 	};
 
-	const getTransactionsData = async (
+	const getTransactionsData = async ({
 		sort_by = "transaction_amount",
 		order = "desc",
 		page = 1,
 		rowsPerPage = 10,
 		paginate = true,
 		filters = {}
-	) => {
-		console.log(filters);
+	} = {}) => {
+		console.log("Front End filters", filters);
 		const response = await fetch(
 			`/api/transactions?sort_by=${sort_by}&order=${order}&page=${page}&rowsPerPage=${rowsPerPage}&paginate=${paginate}&filters=${encodeURIComponent(
 				JSON.stringify(filters)
@@ -91,7 +91,9 @@ export default function TransactionsTable(walletID) {
 	};
 
 	useEffect(() => {
-		getTransactionsData();
+		if (walletID) {
+			getTransactionsData({ filters: { "account_id": walletID } });
+		} else getTransactionsData();
 		// handleFilter({ "account_name": "Plaid Checking" });
 		// sortAttribute,
 		// sortOrder[sortAttribute],

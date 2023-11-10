@@ -170,6 +170,7 @@ async function getTransactionsData(
 
 	// Validate sort_by and order
 	const validColumns = [
+		"account_id",
 		"account_name",
 		"category_primary",
 		"category_detailed",
@@ -183,7 +184,6 @@ async function getTransactionsData(
 	if (!validColumns.includes(sort_by) || !validDirections.includes(order)) {
 		throw new Error("Invalid sort_by or order", sort_by, order);
 	}
-	console.log("filters: ", filters);
 
 	const filters_parsed = JSON.parse(decodeURIComponent(filters));
 
