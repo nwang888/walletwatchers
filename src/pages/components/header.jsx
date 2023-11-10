@@ -15,7 +15,6 @@ export default function NavBar({ setPageNum }) {
             damping: 20
         }}
       >
-        {/* Use the font from your Figma design */}
         <h1 
           className="text-2xl md:text-3xl lg:text-4xl font-bold font-custom 'poppin' text-[#FFFFFF] cursor-pointer" 
           onClick={() => setPageNum(0)}

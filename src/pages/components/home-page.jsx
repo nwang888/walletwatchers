@@ -1,6 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import Wallets from './homepage/wallets';
 import Chart from 'chart.js/auto';
+import TransactionsTable from "./transactions-table";
 
 export default function HomePage({ setPageNum, setWalletId }) {
   const [accountData, setAccountData] = useState([]);
@@ -28,11 +29,11 @@ export default function HomePage({ setPageNum, setWalletId }) {
         label: 'Dataset 1',
         data: [10, 20, 30, 40, 50], // Replace this with actual data
         backgroundColor: [
-          'rgba(255, 99, 132, 0.5)',
-          'rgba(255, 159, 64, 0.5)',
-          'rgba(255, 205, 86, 0.5)',
-          'rgba(75, 192, 192, 0.5)',
-          'rgba(54, 162, 235, 0.5)'
+          '#CCDFF1',
+          '#EDDEF3',
+          '#E8F5E4',
+          '#C4E6DE',
+          '#CFEAF2'
         ],
         hoverOffset: 4
       }]
@@ -58,7 +59,6 @@ export default function HomePage({ setPageNum, setWalletId }) {
     const newChartInstance = new Chart(chartRef.current, config);
     setChartInstance(newChartInstance);
 
-    // Cleanup function
     return () => {
       if (chartInstance) {
         chartInstance.destroy();
@@ -86,7 +86,7 @@ export default function HomePage({ setPageNum, setWalletId }) {
       <div className="flex">
         <div className="w-2/3 mr-5 p-3 bg-slate-50 rounded-md">
           <h1 className="text-xl">Transactions</h1>
-          <p>insert transactions here</p>
+          <>TransactionsTable</>
         </div>
         <div className="w-1/3 p-3 bg-slate-50 rounded-md">
           <h1 className="text-xl">Placeholder</h1>
