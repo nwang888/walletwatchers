@@ -1,94 +1,76 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { useState, useEffect } from 'react';
-
+import { useState } from 'react';
 import Wallet from './wallet';
 
-export default function Wallets( { accountData, setPageNum, setWalletId }) {
+export default function Wallets({ accountData, setPageNum, setWalletId }) {
+  const [viewAll, setViewAll] = useState(false);
 
-    useEffect(() => {
-        console.log(accountData);
-    });
+  const container = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1 },
+    transition: { duration: 3 }
+  };
+  
+  const item = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1 },
+  };
 
-    const [viewAll, setViewAll] = useState(false);
-
-    const container = {
-        hidden: { opacity: 0 },
-        visible: { opacity: 1 },
-        transition: { duration: 3}
-    };
-    
-    const item = {
-        hidden: { opacity: 0 },
-        visible: { opacity: 1 },
-    };
-
-    return (
-        <>
-            <motion.div 
-                className="flex flex-wrap"
-                variants={container}
-                initial="hidden"
-                animate="visible"
-            >
-
-                {
-                    accountData.slice(0, Math.max(3, accountData.length)).map((account, index) => (
-                        <button className="text-left w-1/3 p-1" onClick={() => {setPageNum(1); setWalletId(account.account_id);}}>
-                        <motion.div 
-                            key={index} 
-                            variants={item}
-                        >
-                            <Wallet wallet={account} />
-                        </motion.div>
-                        </button>
-                    ))
-                }
-
-                <AnimatePresence>
-                {
-                    viewAll && accountData.length > 3 && accountData.slice(3).map((account, index) => (
-                    <button className="text-left w-1/3 p-1" onClick={() => {setPageNum(1); setWalletId(account.account_id);}}>
-                        <motion.div 
-                        key={index + 3} 
-                        variants={item}
-                        initial="hidden"
-                        animate="visible"
-                        exit="hidden"
-                        >
-                        <Wallet wallet={account} />
-                        </motion.div>
-                    </button>
-                    ))
-                }
-                </AnimatePresence>
-            </motion.div>
-                
-            <motion.div 
-                className="flex justify-end mt-3"
-                whileHover={{ scale: 1.01, x: -5 }}
-                transition={{
-                    type: "spring",
-                    duration: 0.3
-                }}
-            >
-                {
-                viewAll ? (
-                    <button
-                    className="text-center text-md font-bold"
-                    onClick={() => setViewAll(false)}
-                    >
-                    View Less...
-                    </button>
-                ) : (
-                    <button
-                    className="text-center text-md font-bold"
-                    onClick={() => setViewAll(true)}
-                    >
-                    View All...
-                    </button>
-                )
-                }
-            </motion.div>
-        </>
-    )
+  return (
+    <>
+      <motion.div 
+        className="flex flex-wrap"
+        variants={container}
+        initial="hidden"
+        animate="visible"
+      >
+        {accountData.map((account, index) => (
+          <button 
+            key={account.account_id} 
+            className="text-left w-1/3 p-1" 
+            onClick={() => { setPageNum(1); setWalletId(account.account_id); }}
+          >
+            <AnimatePresence>
+              { (viewAll || index < 3) && (
+                <motion.div 
+                  key={account.account_id} 
+                  variants={item}
+                  initial="hidden"
+                  animate="visible"
+                  exit="hidden"
+                >
+                  <Wallet wallet={account} index={index} />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </button>
+        ))}
+      </motion.div>
+      
+      <motion.div 
+        className="flex justify-end mt-3"
+        whileHover={{ scale: 1.01, x: -5 }}
+        transition={{
+            type: "spring",
+            duration: 0.3
+        }}
+      >
+        {viewAll ? (
+          <button
+            className="text-center text-md font-bold"
+            onClick={() => setViewAll(false)}
+          >
+            View Less...
+          </button>
+        ) : (
+          <button
+            className="text-center text-md font-bold"
+            onClick={() => setViewAll(true)}
+          >
+            View All...
+          </button>
+        )}
+      </motion.div>
+    </>
+  );
 }
