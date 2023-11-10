@@ -33,7 +33,9 @@ export default function TransactionsTable(walletID) {
 			sortAttribute,
 			sortOrder[sortAttribute],
 			1,
-			newRowsPerPage
+			newRowsPerPage,
+			true,
+			filters
 		);
 	};
 
@@ -44,6 +46,7 @@ export default function TransactionsTable(walletID) {
 			sortOrder[sortAttribute],
 			newPage,
 			rowsPerPage,
+			true,
 			filters
 		);
 	};
@@ -52,17 +55,19 @@ export default function TransactionsTable(walletID) {
 		const newOrder = sortOrder[attribute] === "asc" ? "desc" : "asc";
 		setSortAttribute(attribute);
 		setSortOrder({ ...sortOrder, [attribute]: newOrder });
-		getTransactionsData(attribute, newOrder);
+		getTransactionsData(attribute, newOrder, 1, rowsPerPage, true, filters);
 	};
 
-	const handleFilterChange = (attribute, value) => {
-		const newFilters = { ...filters, [attribute]: value };
+	const handleFilter = (newFilters) => {
+		// const newFilters = { ...filters, [attribute]: value };
 		setFilters(newFilters);
 		getTransactionsData(
 			sortAttribute,
 			sortOrder[sortAttribute],
-			newPage,
-			rowsPerPage
+			1,
+			rowsPerPage,
+			true,
+			newFilters
 		);
 	};
 
@@ -72,21 +77,29 @@ export default function TransactionsTable(walletID) {
 		page = 1,
 		rowsPerPage = 10,
 		paginate = true,
-		filters = {} // possible issue with filters, maybe need to json
+		filters = {}
 	) => {
+		console.log(filters);
 		const response = await fetch(
 			`/api/transactions?sort_by=${sort_by}&order=${order}&page=${page}&rowsPerPage=${rowsPerPage}&paginate=${paginate}&filters=${encodeURIComponent(
 				JSON.stringify(filters)
 			)}`
 		);
 		const data = await response.json();
-		setFilters(data.filters);
 		setTransactions(data.transactions);
 		setTotalRows(data.totalRows);
 	};
 
 	useEffect(() => {
-		getTransactionsData();
+		getTransactionsData(
+			// handleFilter({ "account_name": "Plaid Checking" });
+			sortAttribute,
+			sortOrder[sortAttribute],
+			1,
+			rowsPerPage,
+			true,
+			{ "account_name": "Plaid Checking" }
+		);
 	}, []);
 
 	return (
