@@ -11,19 +11,27 @@ import WishlistPage from "./components/wishlist-page";
 import Header from "./components/header";
 import NavBar from "./components/navigation-bar";
 
+//TODO: Need to test transactions pagination with larger dataset
+
 export default function Dashboard() {
 	const [pageNum, setPageNum] = useState(0);
+	const [walletId, setWalletId] = useState("");
 
 	return (
 		<>
 			<Header setPageNum={setPageNum} />
-			<div className="py-16">
-			{pageNum === 0 ? <HomePage /> : null}
-			{pageNum === 1 ? <TransactionsPage /> : null}
-			{pageNum === 2 ? <WishlistPage /> : null}
-			</div> 
 
-		<NavBar pageNum={pageNum} setPageNum={setPageNum} />
+			<div className="py-16">
+				{pageNum === 0 ? <HomePage /> : null}
+				{pageNum === 1 ? <TransactionsPage /> : null}
+				{pageNum === 2 ? <WishlistPage /> : null}
+			</div>
+
+			<NavBar 
+			pageNum={pageNum} 
+			setPageNum={setPageNum} 
+			setWalletId={setWalletId}
+			 />
 		</>
 	);
 }
