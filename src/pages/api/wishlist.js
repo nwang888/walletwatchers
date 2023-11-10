@@ -10,7 +10,15 @@ export default async function handler(req, res) {
 				driver: sqlite3.Database
 			});
 
-			const wishlists = await db.all("SELECT * FROM wishlists");
+			// Get page from query parameters, default to 1 if not provided
+			const page = req.query.page ? parseInt(req.query.page) : 1;
+			// Set the number of records per page
+			const recordsPerPage = 10;
+			// Calculate the offset
+			const offset = (page - 1) * recordsPerPage;
+
+			// Modify the SQL query to include LIMIT and OFFSET
+			const wishlists = await db.all(`SELECT * FROM wishlists LIMIT ? OFFSET ?`, [recordsPerPage, offset]);
 			console.log(wishlists);
 			await db.close();
 
@@ -18,7 +26,7 @@ export default async function handler(req, res) {
 		} catch (err) {
 			return res.status(500).json({ error: err.message });
 		}
-	} else if (req.method === "POST") {
+	}  else if (req.method === "POST") {
 		console.log("posted!");
 		console.log(req.body);
 		try {

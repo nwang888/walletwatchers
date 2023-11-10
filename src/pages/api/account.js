@@ -8,6 +8,7 @@ async function postAccountData(account, number){
       driver: sqlite3.Database,
   });
   try{
+
     // console.log("Inserting or updating account:", account);
     // Check if the account already exists
     const existingAccount = await db.get('SELECT * FROM Accounts WHERE account_id = ?', account.account_id);
@@ -51,11 +52,36 @@ async function getAccountData(){
     return info;
 }
 
+export  async function handler(req, res) {
+  if (req.method === "GET") {
+      try {
+          const db = await open({
+              filename: "./sql/big.db",
+              driver: sqlite3.Database
+          });
 
+          const accountBalance = await db.get("SELECT account_balance FROM Accounts");
+          console.log(accountBalance);
+          await db.close();
+
+          return res.status(200).json(accountBalance);
+      } catch (err) {
+          return res.status(500).json({ error: err.message });
+      }
+  }
+}
 
 export default async function accountHandler(req, res) {
   // Handling Get request
   if (req.method == "GET") {
+    const db = await open({
+        filename: "./sql/big.db",
+        driver: sqlite3.Database
+    });
+
+    const totalBalance = await db.get("SELECT SUM(account_balance) as total FROM Accounts");
+    await db.close();
+    
     try {
       const payload = await getAccountData();
       return res.status(200).json(payload);

@@ -1,7 +1,7 @@
 import sqlite3 from "sqlite3";
 import { open } from "sqlite";
 
-//TODO: DEBUG: i think location details either do not exist in the test data or are not being added into the db
+//DEBUG INFO: i think location and datetime details do not exist in the Plaid Sandbox Data
 
 // create an async function that posts the trasnactions to the database
 async function postTransactionsData(
@@ -155,15 +155,30 @@ async function postTransactionsData(
 }
 
 // create an async function that gets the transactions from the database
-async function getTransactionsData(sort_by = "datetime", order = "desc") {
+async function getTransactionsData(
+	sort_by = "datetime",
+	order = "desc",
+	page = 1,
+	rowsPerPage = 10,
+	paginate = true
+) {
 	const db = await open({
 		filename: "./sql/big.db",
 		driver: sqlite3.Database
 	});
 
-	const payload = await db.all(`
+	let payload;
+
+	if (paginate) {
+		const offset = (page - 1) * rowsPerPage;
+		payload = await db.all(`
+		SELECT * FROM Transactions ORDER BY ${sort_by} ${order}, datetime DESC LIMIT ${rowsPerPage} OFFSET ${offset}
+	  `); // ties are broken by datetime
+	} else {
+		payload = await db.all(`
 		SELECT * FROM Transactions ORDER BY ${sort_by} ${order}, datetime DESC
 	  `); // ties are broken by datetime
+	}
 
 	await db.close();
 
@@ -173,8 +188,14 @@ async function getTransactionsData(sort_by = "datetime", order = "desc") {
 export default async function transaction_handler(req, res) {
 	if (req.method === "GET") {
 		try {
-			const { sort_by, order } = req.query;
-			const payload = await getTransactionsData(sort_by, order);
+			const { sort_by, order, page, rowsPerPage, paginate } = req.query;
+			const payload = await getTransactionsData(
+				sort_by,
+				order,
+				page,
+				rowsPerPage,
+				paginate
+			);
 			return res.status(200).json(payload);
 		} catch (error) {
 			console.error("Error fetching transaction data:", error);

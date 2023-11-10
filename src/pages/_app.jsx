@@ -1,5 +1,6 @@
 import '../globals.css';
 import '@radix-ui/themes/styles.css';
+// import '@radix-ui/react-progress/index.css';
 
 import { Theme, ThemePanel } from '@radix-ui/themes';
 
