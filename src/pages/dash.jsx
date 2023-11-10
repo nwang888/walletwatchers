@@ -7,6 +7,7 @@ import { useRouter } from "next/router";
 import HomePage from "./components/home-page";
 import TransactionsPage from "./components/transactions-page";
 import WishlistPage from "./components/wishlist-page";
+import BudgetPage from "./components/budget-page";
 
 import Header from "./components/header";
 import NavBar from "./components/navigation-bar";
@@ -25,6 +26,7 @@ export default function Dashboard() {
 				) : null}
 				{pageNum === 1 ? <TransactionsPage walletId={walletId} /> : null}
 				{pageNum === 2 ? <WishlistPage /> : null}
+				{pageNum === 3 ? <BudgetPage /> : null}
 			</div>
 
 			<NavBar
