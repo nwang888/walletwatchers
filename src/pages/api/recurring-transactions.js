@@ -80,11 +80,14 @@ export default async function TransactionHandler(req, res) {
 			filename: "./sql/big.db",
 			driver: sqlite3.Database
 		});
-		const transaction_id = await db.get(`
-        SELECT MAX(account_id) as maxAccountId FROM RecurringTransactions
+		let transaction_id = await db.get(`
+        SELECT MAX(transaction_id) as maxAccountId FROM RecurringTransactions
     `);
 		await db.close();
-		transaction_id = transaction_id.maxAccountId ?? 0;
+
+		transaction_id = transaction_id.maxAccountId ?? "0";
+        transaction_id = parseInt(transaction_id) + 1;
+        console.log("The transaction id is " + transaction_id);
 
 		// Post the recurring transaction to the database
 		try {
