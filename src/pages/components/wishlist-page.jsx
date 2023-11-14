@@ -35,6 +35,7 @@ export default function WishlistPage({ balance }) {
     const [price, setPrice] = useState([]);
     const [id, setID] = useState([]);
     const [totalBalance, setTotalBalance] = useState(0);
+    const [remainingBalances, setRemainingBalances] = useState([]);
     const [totalPrice, setTotalPrice] = useState(0);
 
     const handleRowsPerPageChange = (event) => {
@@ -83,26 +84,37 @@ export default function WishlistPage({ balance }) {
         let newId = [];
         let newName = [];
         let newPrice = [];
+        let remainingBalances = [];
+        remainingBalances.push(totalBalance);
         
         for(let i = 0; i<payload.length;i++){
             newId.push(payload[i].wishlist_id);
             newName.push(payload[i].item_name);
             newPrice.push(payload[i].item_price);
+            remainingBalances.push(remainingBalances[i] - newPrice[i]);
         }
-    
+        
+        remainingBalances.shift();
         setID(newId); 
         setName(newName);
         setPrice(newPrice);
+        setRemainingBalances(remainingBalances);
         
         setWishlist(payload);
     }
     
     const postWishlistData = async () => {
+      setRemainingBalance(totalBalance);
         const dataToSend = {
             name: nameTextBox,
             price: priceTextBox
         };
         getWishlistData(1, rowsPerPage);
+        const newRemainingBalance = remainingBalances[remainingBalances.length - 1] - priceTextBox;
+
+        // Add the new remaining balance to the array
+        setRemainingBalances([...remainingBalances, newRemainingBalance]);
+        
         
         console.log("sending data: ", dataToSend);
 
@@ -206,7 +218,7 @@ export default function WishlistPage({ balance }) {
                   <Table.Row>
                     <Table.ColumnHeaderCell>
                       <div style={{ display: "flex", alignItems: "center" }}>
-                        Number
+                         
                       </div>
                     </Table.ColumnHeaderCell>
                     <Table.ColumnHeaderCell>
@@ -234,6 +246,7 @@ export default function WishlistPage({ balance }) {
                       <Table.Cell>{name[idx]}</Table.Cell>
                       <Table.Cell>{price[idx]}</Table.Cell>
                       <Table.Cell> <progress value={totalBalance} max={price[idx]} /> <h1>{Math.trunc(Math.min(totalBalance/price[idx]*100, 100), 2)}%, ${totalBalance} / ${price[idx]} </h1></Table.Cell>
+                      <Table.Cell>  {remainingBalances[idx]} </Table.Cell>
                     </Table.Row>
                   ))} 
                 </Table.Body>

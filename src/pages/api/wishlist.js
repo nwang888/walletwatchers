@@ -20,6 +20,7 @@ export default async function handler(req, res) {
 			// Modify the SQL query to include LIMIT and OFFSET
 			const wishlists = await db.all(`SELECT * FROM wishlists LIMIT ? OFFSET ?`, [recordsPerPage, offset]);
 			console.log(wishlists);
+			// console.log(WishlistPage$remainingBalance);
 			await db.close();
 
 			return res.status(200).json(wishlists);
