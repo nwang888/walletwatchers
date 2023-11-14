@@ -49,6 +49,17 @@ export default async function instantiateBigDB(req, res) {
             );
         `);
 
+        await db.run(`
+            CREATE TABLE IF NOT EXISTS RecurringTransactions (
+                transaction_id VARCHAR(256) NOT NULL,
+                category_primary VARCHAR(256),
+                category_detailed VARCHAR(256),
+                merchant_name VARCHAR(256),
+                transaction_amount DECIMAL(10,2) NOT NULL,
+                PRIMARY KEY (transaction_id)
+            );
+        `);
+
 		await db.run(`
             CREATE TABLE IF NOT EXISTS CategoryDescription (
                 category_primary VARCHAR(256) NOT NULL,
