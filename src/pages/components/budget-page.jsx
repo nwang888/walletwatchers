@@ -1,6 +1,8 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import Chart from 'chart.js/auto';
 
+import RecurringTransactions from './budget/recurring-transactions';
+
 export default function BudgetPage() {
   const [budgets, setBudgets] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -163,6 +165,9 @@ export default function BudgetPage() {
           </div>
         </div>
       </div>
+
+
+      <RecurringTransactions />
     </>
   );
 }
