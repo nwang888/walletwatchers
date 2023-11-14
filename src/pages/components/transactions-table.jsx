@@ -25,7 +25,7 @@ export default function TransactionsTable(walletID) {
 		datetime: "desc",
 		account_name: "asc"
 	});
-	const [cur_filters, setFilters] = useState({});
+	const [curFilters, setFilters] = useState({});
 	// cur_filters should be a dict of this format: { "account_id": "Plaid Checking", "category_primary": ["income", "transfer in"], "category_detailed": ["income dividends", "income interest earned"] }
 	const [showCheckboxes, setShowCheckboxes] = useState(false);
 	const categoryMapping = {
@@ -175,7 +175,7 @@ export default function TransactionsTable(walletID) {
 			sort_by: sortAttribute,
 			order: sortOrder[sortAttribute],
 			rowsPerPage: newRowsPerPage,
-			filters: cur_filters
+			filters: curFilters
 		});
 	};
 
@@ -186,7 +186,7 @@ export default function TransactionsTable(walletID) {
 			order: sortOrder[sortAttribute],
 			page: newPage,
 			rowsPerPage: rowsPerPage,
-			filters: cur_filters
+			filters: curFilters
 		});
 	};
 
@@ -198,33 +198,35 @@ export default function TransactionsTable(walletID) {
 			sort_by: attribute,
 			order: newOrder,
 			rowsPerPage: rowsPerPage,
-			filters: cur_filters
+			filters: curFilters
 		});
 	};
 
-	const handleFilterChange = (newFilters, addordel) => {
-		// need to make sure addordel is either "add" or "del"
-		// need to make sure newFilters is a dict with valid key value pairs
-		if (addordel === "add") {
-			const updatedFilters = { ...cur_filters, ...newFilters };
-			setFilters(updatedFilters);
-			getTransactionsData({
-				sort_by: sortAttribute,
-				order: sortOrder[sortAttribute],
-				rowsPerPage: rowsPerPage,
-				filters: updatedFilters
-			});
+	const handleFilterChange = (attribute, attributeValues, checked) => {
+		const newFilters = { ...curFilters };
+
+		if (checked) {
+			if (!newFilters[attribute]) {
+				newFilters[attribute] = [];
+			}
+			newFilters[attribute].push(attributeValues);
 		} else {
-			const newFilters = { ...cur_filters };
-			delete newFilters[attribute];
-			setFilters(newFilters);
-			getTransactionsData({
-				sort_by: sortAttribute,
-				order: sortOrder[sortAttribute],
-				rowsPerPage: rowsPerPage,
-				filters: newFilters
-			});
+			newFilters[attribute] = newFilters[attribute].filter(
+				(value) => value !== attributeValues
+			);
+			// If the array of values for the given attribute is empty, delete the attribute key from newFilters
+			if (newFilters[attribute].length === 0) {
+				delete newFilters[attribute];
+			}
 		}
+
+		setFilters(newFilters);
+		getTransactionsData({
+			sort_by: sortAttribute,
+			order: sortOrder[sortAttribute],
+			rowsPerPage: rowsPerPage,
+			filters: newFilters
+		});
 	};
 
 	const getTransactionsData = async ({
@@ -316,10 +318,17 @@ export default function TransactionsTable(walletID) {
 														<div className="flex items-center">
 															<Checkbox.Root
 																className="shadow-blackA4 hover:bg-violet3 flex h-[25px] w-[25px] appearance-none items-center justify-center rounded-[4px] bg-white shadow-[0_2px_10px] outline-none focus:shadow-[0_0_0_2px_black]"
-																checked={cur_filters.category_primary?.includes(
+																checked={curFilters.category_primary?.includes(
 																	category
 																)}
-																id="c1"
+																onCheckedChange={(checked) =>
+																	handleFilterChange(
+																		"category_primary",
+																		category,
+																		checked
+																	)
+																}
+																id={category}
 															>
 																<Checkbox.Indicator className="text-violet11">
 																	<CheckIcon />
