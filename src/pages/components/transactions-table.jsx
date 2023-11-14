@@ -116,203 +116,273 @@ export default function TransactionsTable(walletID) {
 	return (
 		<div>
 			{transactions.length > 0 ? (
-				<div>
-					<Table.Root variant="surface">
-						<Table.Header>
-							<Table.Row>
-								<Table.ColumnHeaderCell>
-									<div style={{ display: "flex", alignItems: "center" }}>
-										Account
-										<Flex gap="3">
-											<Button
-												radius="large"
-												variant="surface"
-												highContrast
-												color="orange"
-												size="1"
-												onClick={() => handleSort("account_name")}
-												style={{ marginLeft: "5px" }}
-											>
-												Sort
-											</Button>
-										</Flex>
-									</div>
-								</Table.ColumnHeaderCell>
-								<Table.ColumnHeaderCell>
-									<div style={{ display: "flex", alignItems: "center" }}>
-										Primary Category
-										<Flex gap="3">
-											<Button
-												radius="large"
-												variant="surface"
-												highContrast
-												color="orange"
-												size="1"
-												onClick={() => handleSort("category_primary")}
-												style={{ marginLeft: "5px" }}
-											>
-												Sort
-											</Button>
-										</Flex>
-									</div>
-								</Table.ColumnHeaderCell>
-								<Table.ColumnHeaderCell>
-									<div style={{ display: "flex", alignItems: "center" }}>
-										Detailed Category
-										<Flex gap="3">
-											<Button
-												radius="large"
-												variant="surface"
-												highContrast
-												color="orange"
-												size="1"
-												onClick={() => handleSort("category_detailed")}
-												style={{ marginLeft: "5px" }}
-											>
-												Sort
-											</Button>
-										</Flex>
-									</div>
-								</Table.ColumnHeaderCell>
-								<Table.ColumnHeaderCell>
-									<div style={{ display: "flex", alignItems: "center" }}>
-										Merchant Name
-										<Flex gap="3">
-											<Button
-												radius="large"
-												variant="surface"
-												highContrast
-												color="orange"
-												size="1"
-												onClick={() => handleSort("merchant_name")}
-												style={{ marginLeft: "5px" }}
-											>
-												Sort
-											</Button>
-										</Flex>
-									</div>
-								</Table.ColumnHeaderCell>
-								<Table.ColumnHeaderCell>
-									<div style={{ display: "flex", alignItems: "center" }}>
-										Transaction Amount
-										<Flex gap="3">
-											<Button
-												radius="large"
-												variant="surface"
-												highContrast
-												color="orange"
-												size="1"
-												onClick={() => handleSort("transaction_amount")}
-												style={{ marginLeft: "5px" }}
-											>
-												Sort
-											</Button>
-										</Flex>
-									</div>
-								</Table.ColumnHeaderCell>
-								<Table.ColumnHeaderCell>
-									<div style={{ display: "flex", alignItems: "center" }}>
-										City
-										<Flex gap="3">
-											<Button
-												radius="large"
-												variant="surface"
-												highContrast
-												color="orange"
-												size="1"
-												onClick={() => handleSort("city")}
-												style={{ marginLeft: "5px" }}
-											>
-												Sort
-											</Button>
-										</Flex>
-									</div>
-								</Table.ColumnHeaderCell>
-								<Table.ColumnHeaderCell>
-									<div style={{ display: "flex", alignItems: "center" }}>
-										Region
-										<Flex gap="3">
-											<Button
-												radius="large"
-												variant="surface"
-												highContrast
-												color="orange"
-												size="1"
-												onClick={() => handleSort("region")}
-												style={{ marginLeft: "5px" }}
-											>
-												Sort
-											</Button>
-										</Flex>
-									</div>
-								</Table.ColumnHeaderCell>
-								<Table.ColumnHeaderCell>
-									<div style={{ display: "flex", alignItems: "center" }}>
-										Datetime
-										<Flex gap="3">
-											<Button
-												radius="large"
-												variant="surface"
-												highContrast
-												color="orange"
-												size="1"
-												onClick={() => handleSort("datetime")}
-												style={{ marginLeft: "5px" }}
-											>
-												Sort
-											</Button>
-										</Flex>
-									</div>
-								</Table.ColumnHeaderCell>
-							</Table.Row>
-						</Table.Header>
-
-						<Table.Body>
-							{transactions.map((transaction, index) => (
-								<Table.Row key={index}>
-									<Table.RowHeaderCell>
-										{transaction.account_name}
-									</Table.RowHeaderCell>
-									<Table.Cell>{transaction.category_primary}</Table.Cell>
-									<Table.Cell>{transaction.category_detailed}</Table.Cell>
-									<Table.Cell>{transaction.merchant_name}</Table.Cell>
-									<Table.Cell>{transaction.transaction_amount}</Table.Cell>
-									<Table.Cell>{transaction.city}</Table.Cell>
-									<Table.Cell>{transaction.region}</Table.Cell>
-									<Table.Cell>{transaction.datetime}</Table.Cell>
+				<div
+					style={{
+						display: "flex",
+						flexDirection: "column",
+						height: "80vh",
+						position: "relative"
+					}}
+				>
+					<div style={{ flexGrow: 1, overflowY: "auto" }}>
+						<Table.Root variant="surface">
+							<Table.Header>
+								<Table.Row>
+									<Table.ColumnHeaderCell>
+										<div style={{ display: "flex", alignItems: "center" }}>
+											Account
+											<Flex gap="3">
+												<Button
+													radius="large"
+													variant="surface"
+													highContrast
+													color="orange"
+													size="1"
+													onClick={() => handleSort("account_name")}
+													style={{ marginLeft: "5px" }}
+												>
+													Sort
+												</Button>
+											</Flex>
+										</div>
+									</Table.ColumnHeaderCell>
+									<Table.ColumnHeaderCell>
+										<div style={{ display: "flex", alignItems: "center" }}>
+											Primary Category
+											<Flex gap="3">
+												<Button
+													radius="large"
+													variant="surface"
+													highContrast
+													color="orange"
+													size="1"
+													onClick={() => handleSort("category_primary")}
+													style={{ marginLeft: "5px" }}
+												>
+													Sort
+												</Button>
+											</Flex>
+										</div>
+									</Table.ColumnHeaderCell>
+									<Table.ColumnHeaderCell>
+										<div style={{ display: "flex", alignItems: "center" }}>
+											Detailed Category
+											<Flex gap="3">
+												<Button
+													radius="large"
+													variant="surface"
+													highContrast
+													color="orange"
+													size="1"
+													onClick={() => handleSort("category_detailed")}
+													style={{ marginLeft: "5px" }}
+												>
+													Sort
+												</Button>
+											</Flex>
+										</div>
+									</Table.ColumnHeaderCell>
+									<Table.ColumnHeaderCell>
+										<div style={{ display: "flex", alignItems: "center" }}>
+											Merchant Name
+											<Flex gap="3">
+												<Button
+													radius="large"
+													variant="surface"
+													highContrast
+													color="orange"
+													size="1"
+													onClick={() => handleSort("merchant_name")}
+													style={{ marginLeft: "5px" }}
+												>
+													Sort
+												</Button>
+											</Flex>
+										</div>
+									</Table.ColumnHeaderCell>
+									<Table.ColumnHeaderCell>
+										<div style={{ display: "flex", alignItems: "center" }}>
+											Transaction Amount
+											<Flex gap="3">
+												<Button
+													radius="large"
+													variant="surface"
+													highContrast
+													color="orange"
+													size="1"
+													onClick={() => handleSort("transaction_amount")}
+													style={{ marginLeft: "5px" }}
+												>
+													Sort
+												</Button>
+											</Flex>
+										</div>
+									</Table.ColumnHeaderCell>
+									<Table.ColumnHeaderCell>
+										<div style={{ display: "flex", alignItems: "center" }}>
+											City
+											<Flex gap="3">
+												<Button
+													radius="large"
+													variant="surface"
+													highContrast
+													color="orange"
+													size="1"
+													onClick={() => handleSort("city")}
+													style={{ marginLeft: "5px" }}
+												>
+													Sort
+												</Button>
+											</Flex>
+										</div>
+									</Table.ColumnHeaderCell>
+									<Table.ColumnHeaderCell>
+										<div style={{ display: "flex", alignItems: "center" }}>
+											Region
+											<Flex gap="3">
+												<Button
+													radius="large"
+													variant="surface"
+													highContrast
+													color="orange"
+													size="1"
+													onClick={() => handleSort("region")}
+													style={{ marginLeft: "5px" }}
+												>
+													Sort
+												</Button>
+											</Flex>
+										</div>
+									</Table.ColumnHeaderCell>
+									<Table.ColumnHeaderCell>
+										<div style={{ display: "flex", alignItems: "center" }}>
+											Datetime
+											<Flex gap="3">
+												<Button
+													radius="large"
+													variant="surface"
+													highContrast
+													color="orange"
+													size="1"
+													onClick={() => handleSort("datetime")}
+													style={{ marginLeft: "5px" }}
+												>
+													Sort
+												</Button>
+											</Flex>
+										</div>
+									</Table.ColumnHeaderCell>
 								</Table.Row>
-							))}
-						</Table.Body>
-					</Table.Root>
-					<Select.Root onValueChange={handleRowsPerPageChange}>
-						<Select.Trigger>
-							Rows per page: {rowsPerPage} <Select.Value />
-						</Select.Trigger>
-						<Select.Content>
-							<Select.Viewport>
-								<Select.Item value="10">10</Select.Item>
-								<Select.Item value="20">20</Select.Item>
-								<Select.Item value="50">50</Select.Item>
-							</Select.Viewport>
-						</Select.Content>
-					</Select.Root>
-					<Flex style={{ justifyContent: "center", marginTop: "20px" }}>
-						<Button
-							onClick={() => handlePageChange(currentPage - 1)}
-							disabled={currentPage === 1}
-						>
-							Previous
-						</Button>
-						<div style={{ margin: "0 10px" }}>
-							Page {currentPage} / {Math.ceil(totalRows / rowsPerPage)}{" "}
+							</Table.Header>
+
+							<Table.Body>
+								{transactions.map((transaction, index) => (
+									<Table.Row key={index}>
+										<Table.RowHeaderCell>
+											{transaction.account_name}
+										</Table.RowHeaderCell>
+										<Table.Cell>{transaction.category_primary}</Table.Cell>
+										<Table.Cell>{transaction.category_detailed}</Table.Cell>
+										<Table.Cell>{transaction.merchant_name}</Table.Cell>
+										<Table.Cell>{transaction.transaction_amount}</Table.Cell>
+										<Table.Cell>{transaction.city}</Table.Cell>
+										<Table.Cell>{transaction.region}</Table.Cell>
+										<Table.Cell>{transaction.datetime}</Table.Cell>
+									</Table.Row>
+								))}
+							</Table.Body>
+						</Table.Root>
+					</div>
+					<div className="pt-5 items-center justify-center">
+						<div className="text-center">Rows per page:</div>
+						<div className="flex space-x-4 items-center justify-center pt-5">
+							<motion.div
+								whileHover={{ scale: 1.05 }}
+								transition={{
+									type: "spring",
+									duration: 0.3
+								}}
+							>
+								<Button
+									color={rowsPerPage === 10 ? "cyan" : "indigo"}
+									onClick={() => handleRowsPerPageChange(10)}
+								>
+									10
+								</Button>
+							</motion.div>
+							<motion.div
+								className="mx-[10vw]"
+								whileHover={{ scale: 1.05 }}
+								transition={{
+									type: "spring",
+									duration: 0.3
+								}}
+							>
+								<Button
+									color={rowsPerPage === 20 ? "cyan" : "indigo"}
+									onClick={() => handleRowsPerPageChange(20)}
+								>
+									20
+								</Button>
+							</motion.div>
+							<motion.div
+								className="mx-[10vw]"
+								whileHover={{ scale: 1.05 }}
+								transition={{
+									type: "spring",
+									duration: 0.3
+								}}
+							>
+								<Button
+									color={rowsPerPage === 50 ? "cyan" : "indigo"}
+									onClick={() => handleRowsPerPageChange(50)}
+								>
+									50
+								</Button>
+							</motion.div>
 						</div>
-						<Button
-							onClick={() => handlePageChange(currentPage + 1)}
-							disabled={currentPage === Math.ceil(totalRows / rowsPerPage)}
+					</div>
+					<div>
+						<Flex
+							style={{
+								paddingTop: "20px",
+								justifyContent: "center",
+								marginTop: "20px"
+							}}
 						>
-							Next
-						</Button>
-					</Flex>
+							<motion.div
+								whileHover={{ scale: 1.05 }}
+								transition={{
+									type: "spring",
+									duration: 0.3
+								}}
+							>
+								<Button
+									onClick={() => handlePageChange(currentPage - 1)}
+									disabled={currentPage === 1}
+								>
+									Previous
+								</Button>
+							</motion.div>
+							<div style={{ margin: "0 10px" }}>
+								Page {currentPage} / {Math.ceil(totalRows / rowsPerPage)}{" "}
+							</div>
+							<motion.div
+								whileHover={{ scale: 1.05 }}
+								transition={{
+									type: "spring",
+									duration: 0.3
+								}}
+							>
+								<Button
+									onClick={() => handlePageChange(currentPage + 1)}
+									disabled={currentPage === Math.ceil(totalRows / rowsPerPage)}
+								>
+									Next
+								</Button>
+							</motion.div>
+						</Flex>
+					</div>
 				</div>
 			) : (
 				<p>No transactions found.</p>
