@@ -192,8 +192,14 @@ async function getTransactionsData(
 	let whereValues = [];
 	for (const [key, value] of Object.entries(filters_parsed)) {
 		if (value && validColumns.includes(key)) {
-			whereClause += ` AND ${key} = ?`;
-			whereValues.push(value);
+			if (Array.isArray(value)) {
+				const subclauses = value.map((_, i) => `${key} = ?`).join(" OR ");
+				whereClause += ` AND (${subclauses})`;
+				whereValues.push(...value);
+			} else {
+				whereClause += ` AND ${key} = ?`;
+				whereValues.push(value);
+			}
 		} else {
 			console.error(`Invalid filter key: ${key}`);
 		}

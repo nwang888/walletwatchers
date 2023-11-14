@@ -2,6 +2,7 @@
   "private": true,
   "dependencies": {
     "@kurkle/color": "^0.3.2",
+    "@radix-ui/react-icons": "^1.3.0",
     "@radix-ui/react-popover": "1.0.7",
     "@radix-ui/react-progress": "^1.0.3",
     "@radix-ui/themes": "^2.0.0",
@@ -13,6 +14,7 @@
     "radix-ui": "^1.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-icons": "^4.12.0",
     "react-plaid-link": "^3.3.0",
     "react-table": "^7.8.0",
     "sqlite": "^5.1.1",

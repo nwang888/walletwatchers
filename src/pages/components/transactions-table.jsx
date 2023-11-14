@@ -3,6 +3,8 @@ import React from "react";
 import * as Select from "@radix-ui/react-select";
 import { Flex, Button, Table } from "@radix-ui/themes";
 import { motion } from "framer-motion";
+import * as Checkbox from "@radix-ui/react-checkbox";
+import { CheckIcon } from "@radix-ui/react-icons";
 
 //TODO: Add search
 //TODO: Add filtering for all columns
@@ -24,6 +26,146 @@ export default function TransactionsTable(walletID) {
 		account_name: "asc"
 	});
 	const [cur_filters, setFilters] = useState({});
+	// cur_filters should be a dict of this format: { "account_id": "Plaid Checking", "category_primary": ["income", "transfer in"], "category_detailed": ["income dividends", "income interest earned"] }
+	const [showCheckboxes, setShowCheckboxes] = useState(false);
+	const categoryMapping = {
+		"income": [
+			"income dividends",
+			"income interest earned",
+			"income retirement pension",
+			"income tax refund",
+			"income unemployment",
+			"income wages",
+			"income other income"
+		],
+		"transfer in": [
+			"transfer in cash advances and loans",
+			"transfer in deposit",
+			"transfer in investment and retirement funds",
+			"transfer in savings",
+			"transfer in account transfer",
+			"transfer in other transfer in"
+		],
+		"transfer out": [
+			"transfer out investment and retirement funds",
+			"transfer out savings",
+			"transfer out withdrawal",
+			"transfer out account transfer",
+			"transfer out other transfer out"
+		],
+		"loan payments": [
+			"loan payments car payment",
+			"loan payments credit card payment",
+			"loan payments personal loan payment",
+			"loan payments mortgage payment",
+			"loan payments student loan payment",
+			"loan payments other payment"
+		],
+		"bank fees": [
+			"bank fees atm fees",
+			"bank fees foreign transaction fees",
+			"bank fees insufficient funds",
+			"bank fees interest charge",
+			"bank fees overdraft fees",
+			"bank fees other bank fees"
+		],
+		"entertainment": [
+			"entertainment casinos and gambling",
+			"entertainment music and audio",
+			"entertainment sporting events amusement parks and museums",
+			"entertainment tv and movies",
+			"entertainment video games",
+			"entertainment other entertainment"
+		],
+		"food and drink": [
+			"food and drink beer wine and liquor",
+			"food and drink coffee",
+			"food and drink fast food",
+			"food and drink groceries",
+			"food and drink restaurant",
+			"food and drink vending machines",
+			"food and drink other food and drink"
+		],
+		"general merchandise": [
+			"general merchandise bookstores and newsstands",
+			"general merchandise clothing and accessories",
+			"general merchandise convenience stores",
+			"general merchandise department stores",
+			"general merchandise discount stores",
+			"general merchandise electronics",
+			"general merchandise gifts and novelties",
+			"general merchandise office supplies",
+			"general merchandise online marketplaces",
+			"general merchandise pet supplies",
+			"general merchandise sporting goods",
+			"general merchandise superstores",
+			"general merchandise tobacco and vape",
+			"general merchandise other general merchandise"
+		],
+		"home improvement": [
+			"home improvement furniture",
+			"home improvement hardware",
+			"home improvement repair and maintenance",
+			"home improvement security",
+			"home improvement other home improvement"
+		],
+		"medical": [
+			"medical dental care",
+			"medical eye care",
+			"medical nursing care",
+			"medical pharmacies and supplements",
+			"medical primary care",
+			"medical veterinary services",
+			"medical other medical"
+		],
+		"personal care": [
+			"personal care gyms and fitness centers",
+			"personal care hair and beauty",
+			"personal care laundry and dry cleaning",
+			"personal care other personal care"
+		],
+		"general services": [
+			"general services accounting and financial planning",
+			"general services automotive",
+			"general services childcare",
+			"general services consulting and legal",
+			"general services education",
+			"general services insurance",
+			"general services postage and shipping",
+			"general services storage",
+			"general services other general services"
+		],
+		"government and non profit": [
+			"government and non profit donations",
+			"government and non profit government departments and agencies",
+			"government and non profit tax payment",
+			"government and non profit other government and non profit"
+		],
+		"transportation": [
+			"transportation bikes and scooters",
+			"transportation gas",
+			"transportation parking",
+			"transportation public transit",
+			"transportation taxis and ride shares",
+			"transportation tolls",
+			"transportation other transportation"
+		],
+		"travel": [
+			"travel flights",
+			"travel lodging",
+			"travel rental cars",
+			"travel other travel"
+		],
+		"rent and utilities": [
+			"rent and utilities gas and electricity",
+			"rent and utilities internet and cable",
+			"rent and utilities rent",
+			"rent and utilities sewage and waste management",
+			"rent and utilities telephone",
+			"rent and utilities water",
+			"rent and utilities other utilities"
+		]
+	};
 
 	const handleRowsPerPageChange = (value) => {
 		const newRowsPerPage = parseInt(value);
@@ -60,15 +202,29 @@ export default function TransactionsTable(walletID) {
 		});
 	};
 
-	const handleFilter = (newFilters) => {
-		// const newFilters = { ...filters, [attribute]: value };
-		setFilters(newFilters);
-		getTransactionsData({
-			sort_by: sortAttribute,
-			order: sortOrder[sortAttribute],
-			rowsPerPage: rowsPerPage,
-			filters: newFilters
-		});
+	const handleFilterChange = (newFilters, addordel) => {
+		// need to make sure addordel is either "add" or "del"
+		// need to make sure newFilters is a dict with valid key value pairs
+		if (addordel === "add") {
+			const updatedFilters = { ...cur_filters, ...newFilters };
+			setFilters(updatedFilters);
+			getTransactionsData({
+				sort_by: sortAttribute,
+				order: sortOrder[sortAttribute],
+				rowsPerPage: rowsPerPage,
+				filters: updatedFilters
+			});
+		} else {
+			const newFilters = { ...cur_filters };
+			delete newFilters[attribute];
+			setFilters(newFilters);
+			getTransactionsData({
+				sort_by: sortAttribute,
+				order: sortOrder[sortAttribute],
+				rowsPerPage: rowsPerPage,
+				filters: newFilters
+			});
+		}
 	};
 
 	const getTransactionsData = async ({
@@ -148,7 +304,37 @@ export default function TransactionsTable(walletID) {
 									</Table.ColumnHeaderCell>
 									<Table.ColumnHeaderCell>
 										<div style={{ display: "flex", alignItems: "center" }}>
-											Primary Category
+											<button
+												onClick={() => setShowCheckboxes(!showCheckboxes)}
+											>
+												Primary Category
+											</button>
+
+											{showCheckboxes && (
+												<div>
+													{Object.keys(categoryMapping).map((category) => (
+														<div className="flex items-center">
+															<Checkbox.Root
+																className="shadow-blackA4 hover:bg-violet3 flex h-[25px] w-[25px] appearance-none items-center justify-center rounded-[4px] bg-white shadow-[0_2px_10px] outline-none focus:shadow-[0_0_0_2px_black]"
+																checked={cur_filters.category_primary?.includes(
+																	category
+																)}
+																id="c1"
+															>
+																<Checkbox.Indicator className="text-violet11">
+																	<CheckIcon />
+																</Checkbox.Indicator>
+															</Checkbox.Root>
+															<label
+																className="pl-[15px] leading-none"
+																htmlFor="c1"
+															>
+																{category}
+															</label>
+														</div>
+													))}
+												</div>
+											)}
 											<Flex gap="3">
 												<Button
 													radius="large"
