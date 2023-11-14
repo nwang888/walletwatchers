@@ -8,6 +8,8 @@ import { CheckIcon } from "@radix-ui/react-icons";
 
 //TODO: Add search
 //TODO: Add filtering for all columns
+//TODO: When there are no transactions, continue to show the table headers
+//TODO: Condense the Table headers
 
 export default function TransactionsTable(walletID) {
 	const [transactions, setTransactions] = useState([]);
@@ -29,143 +31,138 @@ export default function TransactionsTable(walletID) {
 	// cur_filters should be a dict of this format: { "account_id": "Plaid Checking", "category_primary": ["income", "transfer in"], "category_detailed": ["income dividends", "income interest earned"] }
 	const [showCheckboxes, setShowCheckboxes] = useState(false);
 	const categoryMapping = {
-		"income": [
-			"income dividends",
-			"income interest earned",
-			"income retirement pension",
-			"income tax refund",
-			"income unemployment",
-			"income wages",
-			"income other income"
+		"Income": [
+			"Dividends",
+			"Interest Earned",
+			"Retirement Pension",
+			"Tax Refund",
+			"Unemployment",
+			"Wages",
+			"Other Income"
 		],
-		"transfer in": [
-			"transfer in cash advances and loans",
-			"transfer in deposit",
-			"transfer in investment and retirement funds",
-			"transfer in savings",
-			"transfer in account transfer",
-			"transfer in other transfer in"
+		"Transfer In": [
+			"Cash Advances and Loans",
+			"Deposit",
+			"Investment and Retirement Funds",
+			"Savings",
+			"Account Transfer",
+			"Other Transfer In"
 		],
-		"transfer out": [
-			"transfer out investment and retirement funds",
-			"transfer out savings",
-			"transfer out withdrawal",
-			"transfer out account transfer",
-			"transfer out other transfer out"
+		"Transfer Out": [
+			"Investment and Retirement Funds",
+			"Savings",
+			"Withdrawal",
+			"Account Transfer",
+			"Other Transfer Out"
 		],
 		"loan payments": [
-			"loan payments car payment",
-			"loan payments credit card payment",
-			"loan payments personal loan payment",
-			"loan payments mortgage payment",
-			"loan payments student loan payment",
-			"loan payments other payment"
+			"Car Payment",
+			"Credit Card Payment",
+			"Personal Loan Payment",
+			"Mortgage Payment",
+			"Student Loan Payment",
+			"Other Payment"
 		],
 		"bank fees": [
-			"bank fees atm fees",
-			"bank fees foreign transaction fees",
-			"bank fees insufficient funds",
-			"bank fees interest charge",
-			"bank fees overdraft fees",
-			"bank fees other bank fees"
+			"ATM Fees",
+			"Foreign Transaction Fees",
+			"Insufficient Funds",
+			"Interest Charge",
+			"Overdraft Fees",
+			"Other Bank Fees"
 		],
 		"entertainment": [
-			"entertainment casinos and gambling",
-			"entertainment music and audio",
-			"entertainment sporting events amusement parks and museums",
-			"entertainment tv and movies",
-			"entertainment video games",
-			"entertainment other entertainment"
+			"Casinos and Gambling",
+			"Music and Audio",
+			"Sporting Events Amusement Parks and Museums",
+			"TV and Movies",
+			"Video Games",
+			"Other Entertainment"
 		],
-		"food and drink": [
-			"food and drink beer wine and liquor",
-			"food and drink coffee",
-			"food and drink fast food",
-			"food and drink groceries",
-			"food and drink restaurant",
-			"food and drink vending machines",
-			"food and drink other food and drink"
+		"Food and Drink": [
+			"Beer Wine and Liquor",
+			"Coffee",
+			"fast food",
+			"groceries",
+			"Restaurants",
+			"vending machines",
+			"other food and drink"
 		],
 		"general merchandise": [
-			"general merchandise bookstores and newsstands",
-			"general merchandise clothing and accessories",
-			"general merchandise convenience stores",
-			"general merchandise department stores",
-			"general merchandise discount stores",
-			"general merchandise electronics",
-			"general merchandise gifts and novelties",
-			"general merchandise office supplies",
-			"general merchandise online marketplaces",
-			"general merchandise pet supplies",
-			"general merchandise sporting goods",
-			"general merchandise superstores",
-			"general merchandise tobacco and vape",
-			"general merchandise other general merchandise"
+			"bookstores and newsstands",
+			"clothing and accessories",
+			"convenience stores",
+			"department stores",
+			"discount stores",
+			"electronics",
+			"gifts and novelties",
+			"office supplies",
+			"online marketplaces",
+			"pet supplies",
+			"sporting goods",
+			"superstores",
+			"tobacco and vape",
+			"other general merchandise"
 		],
 		"home improvement": [
-			"home improvement furniture",
-			"home improvement hardware",
-			"home improvement repair and maintenance",
-			"home improvement security",
-			"home improvement other home improvement"
+			"furniture",
+			"hardware",
+			"repair and maintenance",
+			"security",
+			"other home improvement"
 		],
 		"medical": [
-			"medical dental care",
-			"medical eye care",
-			"medical nursing care",
-			"medical pharmacies and supplements",
-			"medical primary care",
-			"medical veterinary services",
-			"medical other medical"
+			"dental care",
+			"eye care",
+			"nursing care",
+			"pharmacies and supplements",
+			"primary care",
+			"veterinary services",
+			"other medical"
 		],
 		"personal care": [
-			"personal care gyms and fitness centers",
-			"personal care hair and beauty",
-			"personal care laundry and dry cleaning",
-			"personal care other personal care"
+			"gyms and fitness centers",
+			"hair and beauty",
+			"laundry and dry cleaning",
+			"other personal care"
 		],
 		"general services": [
-			"general services accounting and financial planning",
-			"general services automotive",
-			"general services childcare",
-			"general services consulting and legal",
-			"general services education",
-			"general services insurance",
-			"general services postage and shipping",
-			"general services storage",
-			"general services other general services"
+			"accounting and financial planning",
+			"automotive",
+			"childcare",
+			"consulting and legal",
+			"education",
+			"insurance",
+			"postage and shipping",
+			"storage",
+			"other general services"
 		],
 		"government and non profit": [
-			"government and non profit donations",
-			"government and non profit government departments and agencies",
-			"government and non profit tax payment",
-			"government and non profit other government and non profit"
+			"donations",
+			"government departments and agencies",
+			"tax payment",
+			"other government and non profit"
 		],
 		"transportation": [
-			"transportation bikes and scooters",
-			"transportation gas",
-			"transportation parking",
-			"transportation public transit",
-			"transportation taxis and ride shares",
-			"transportation tolls",
-			"transportation other transportation"
+			"bikes and scooters",
+			"gas",
+			"parking",
+			"public transit",
+			"taxis and ride shares",
+			"tolls",
+			"other transportation"
 		],
-		"travel": [
-			"travel flights",
-			"travel lodging",
-			"travel rental cars",
-			"travel other travel"
-		],
+		"travel": ["flights", "lodging", "rental cars", "other travel"],
 		"rent and utilities": [
-			"rent and utilities gas and electricity",
-			"rent and utilities internet and cable",
-			"rent and utilities rent",
-			"rent and utilities sewage and waste management",
-			"rent and utilities telephone",
-			"rent and utilities water",
-			"rent and utilities other utilities"
+			"gas and electricity",
+			"internet and cable",
+			"rent",
+			"sewage and waste management",
+			"telephone",
+			"water",
+			"other utilities"
 		]
-	};
+	}; //istg some of these are not capitalized or spelled correctly and its screwing up the filtering
 
 	const handleRowsPerPageChange = (value) => {
 		const newRowsPerPage = parseInt(value);
@@ -211,15 +208,16 @@ export default function TransactionsTable(walletID) {
 			}
 			newFilters[attribute].push(attributeValues);
 		} else {
-			newFilters[attribute] = newFilters[attribute].filter(
-				(value) => value !== attributeValues
-			);
-			// If the array of values for the given attribute is empty, delete the attribute key from newFilters
-			if (newFilters[attribute].length === 0) {
-				delete newFilters[attribute];
+			if (newFilters[attribute]) {
+				newFilters[attribute] = newFilters[attribute].filter(
+					(value) => value !== attributeValues
+				);
+				// // If the array of values for the given attribute is empty, delete the attribute key from newFilters
+				// if (newFilters[attribute].length === 0) {
+				// 	delete newFilters[attribute];
+				// }
 			}
 		}
-
 		setFilters(newFilters);
 		getTransactionsData({
 			sort_by: sortAttribute,
@@ -271,6 +269,16 @@ export default function TransactionsTable(walletID) {
 	// true,
 	// { "account_name": "Plaid Checking" }
 
+	const columns = [
+		{ name: "Account", sortKey: "account_name" },
+		{ name: "Primary Category", sortKey: "category_primary" },
+		{ name: "Detailed Category", sortKey: "category_detailed" },
+		{ name: "Merchant", sortKey: "merchant_name" },
+		{ name: "Amount", sortKey: "transaction_amount" },
+		{ name: "City", sortKey: "city" },
+		{ name: "Region", sortKey: "region" },
+		{ name: "Datetime", sortKey: "datetime" }
+	];
 	return (
 		<div>
 			{transactions.length > 0 ? (
@@ -286,187 +294,70 @@ export default function TransactionsTable(walletID) {
 						<Table.Root variant="surface">
 							<Table.Header>
 								<Table.Row>
-									<Table.ColumnHeaderCell>
-										<div style={{ display: "flex", alignItems: "center" }}>
-											Account
-											<Flex gap="3">
-												<Button
-													radius="large"
-													variant="surface"
-													highContrast
-													color="orange"
-													size="1"
-													onClick={() => handleSort("account_name")}
-													style={{ marginLeft: "5px" }}
-												>
-													Sort
-												</Button>
-											</Flex>
-										</div>
-									</Table.ColumnHeaderCell>
-									<Table.ColumnHeaderCell>
-										<div style={{ display: "flex", alignItems: "center" }}>
-											<button
-												onClick={() => setShowCheckboxes(!showCheckboxes)}
-											>
-												Primary Category
-											</button>
-
-											{showCheckboxes && (
-												<div>
-													{Object.keys(categoryMapping).map((category) => (
-														<div className="flex items-center">
-															<Checkbox.Root
-																className="shadow-blackA4 hover:bg-violet3 flex h-[25px] w-[25px] appearance-none items-center justify-center rounded-[4px] bg-white shadow-[0_2px_10px] outline-none focus:shadow-[0_0_0_2px_black]"
-																checked={curFilters.category_primary?.includes(
-																	category
-																)}
-																onCheckedChange={(checked) =>
-																	handleFilterChange(
-																		"category_primary",
-																		category,
-																		checked
-																	)
-																}
-																id={category}
-															>
-																<Checkbox.Indicator className="text-violet11">
-																	<CheckIcon />
-																</Checkbox.Indicator>
-															</Checkbox.Root>
-															<label
-																className="pl-[15px] leading-none"
-																htmlFor="c1"
-															>
-																{category}
-															</label>
+									{columns.map((column) => (
+										<Table.ColumnHeaderCell key={column.sortKey}>
+											<div style={{ display: "flex", alignItems: "center" }}>
+												{column.name !== "Primary Category" ? (
+													column.name
+												) : (
+													<button
+														onClick={() => setShowCheckboxes(!showCheckboxes)}
+													>
+														{column.name}
+													</button>
+												)}
+												<Flex gap="3">
+													<Button
+														radius="large"
+														variant="surface"
+														highContrast
+														color="orange"
+														size="1"
+														onClick={() => handleSort(column.sortKey)}
+														style={{ marginLeft: "5px" }}
+													>
+														Sort
+													</Button>
+												</Flex>
+												{showCheckboxes &&
+													column.name === "Primary Category" && (
+														<div>
+															{Object.keys(categoryMapping).map((category) => (
+																<div
+																	key={category}
+																	className="flex items-center"
+																>
+																	<Checkbox.Root
+																		className="shadow-blackA4 hover:bg-violet3 flex h-[25px] w-[25px] appearance-none items-center justify-center rounded-[4px] bg-white shadow-[0_2px_10px] outline-none focus:shadow-[0_0_0_2px_black]"
+																		checked={curFilters.category_primary?.includes(
+																			category
+																		)}
+																		onCheckedChange={(checked) =>
+																			handleFilterChange(
+																				"category_primary",
+																				category,
+																				checked
+																			)
+																		}
+																		id={category}
+																	>
+																		<Checkbox.Indicator className="text-violet11">
+																			<CheckIcon />
+																		</Checkbox.Indicator>
+																	</Checkbox.Root>
+																	<label
+																		className="pl-[15px] leading-none"
+																		htmlFor={category}
+																	>
+																		{category}
+																	</label>
+																</div>
+															))}
 														</div>
-													))}
-												</div>
-											)}
-											<Flex gap="3">
-												<Button
-													radius="large"
-													variant="surface"
-													highContrast
-													color="orange"
-													size="1"
-													onClick={() => handleSort("category_primary")}
-													style={{ marginLeft: "5px" }}
-												>
-													Sort
-												</Button>
-											</Flex>
-										</div>
-									</Table.ColumnHeaderCell>
-									<Table.ColumnHeaderCell>
-										<div style={{ display: "flex", alignItems: "center" }}>
-											Detailed Category
-											<Flex gap="3">
-												<Button
-													radius="large"
-													variant="surface"
-													highContrast
-													color="orange"
-													size="1"
-													onClick={() => handleSort("category_detailed")}
-													style={{ marginLeft: "5px" }}
-												>
-													Sort
-												</Button>
-											</Flex>
-										</div>
-									</Table.ColumnHeaderCell>
-									<Table.ColumnHeaderCell>
-										<div style={{ display: "flex", alignItems: "center" }}>
-											Merchant Name
-											<Flex gap="3">
-												<Button
-													radius="large"
-													variant="surface"
-													highContrast
-													color="orange"
-													size="1"
-													onClick={() => handleSort("merchant_name")}
-													style={{ marginLeft: "5px" }}
-												>
-													Sort
-												</Button>
-											</Flex>
-										</div>
-									</Table.ColumnHeaderCell>
-									<Table.ColumnHeaderCell>
-										<div style={{ display: "flex", alignItems: "center" }}>
-											Transaction Amount
-											<Flex gap="3">
-												<Button
-													radius="large"
-													variant="surface"
-													highContrast
-													color="orange"
-													size="1"
-													onClick={() => handleSort("transaction_amount")}
-													style={{ marginLeft: "5px" }}
-												>
-													Sort
-												</Button>
-											</Flex>
-										</div>
-									</Table.ColumnHeaderCell>
-									<Table.ColumnHeaderCell>
-										<div style={{ display: "flex", alignItems: "center" }}>
-											City
-											<Flex gap="3">
-												<Button
-													radius="large"
-													variant="surface"
-													highContrast
-													color="orange"
-													size="1"
-													onClick={() => handleSort("city")}
-													style={{ marginLeft: "5px" }}
-												>
-													Sort
-												</Button>
-											</Flex>
-										</div>
-									</Table.ColumnHeaderCell>
-									<Table.ColumnHeaderCell>
-										<div style={{ display: "flex", alignItems: "center" }}>
-											Region
-											<Flex gap="3">
-												<Button
-													radius="large"
-													variant="surface"
-													highContrast
-													color="orange"
-													size="1"
-													onClick={() => handleSort("region")}
-													style={{ marginLeft: "5px" }}
-												>
-													Sort
-												</Button>
-											</Flex>
-										</div>
-									</Table.ColumnHeaderCell>
-									<Table.ColumnHeaderCell>
-										<div style={{ display: "flex", alignItems: "center" }}>
-											Datetime
-											<Flex gap="3">
-												<Button
-													radius="large"
-													variant="surface"
-													highContrast
-													color="orange"
-													size="1"
-													onClick={() => handleSort("datetime")}
-													style={{ marginLeft: "5px" }}
-												>
-													Sort
-												</Button>
-											</Flex>
-										</div>
-									</Table.ColumnHeaderCell>
+													)}
+											</div>
+										</Table.ColumnHeaderCell>
+									))}
 								</Table.Row>
 							</Table.Header>
 

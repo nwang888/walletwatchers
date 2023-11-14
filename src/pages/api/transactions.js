@@ -191,6 +191,7 @@ async function getTransactionsData(
 	let whereClause = "";
 	let whereValues = [];
 	for (const [key, value] of Object.entries(filters_parsed)) {
+		if (value.length == 0) continue;
 		if (value && validColumns.includes(key)) {
 			if (Array.isArray(value)) {
 				const subclauses = value.map((_, i) => `${key} = ?`).join(" OR ");
@@ -234,6 +235,8 @@ async function getTransactionsData(
 	}
 
 	await db.close();
+
+	// console.log(payload);
 
 	return { transactions: payload, totalRows: totalRows.count };
 }
