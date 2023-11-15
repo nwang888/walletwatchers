@@ -8,7 +8,6 @@ import { CheckIcon } from "@radix-ui/react-icons";
 
 //TODO: Add search
 //TODO: Add filtering for all columns
-//TODO: Add selection for all and none for filtering
 //TODO: When there are no transactions, continue to show the table headers
 
 export default function TransactionsTable(walletID) {
@@ -302,192 +301,193 @@ export default function TransactionsTable(walletID) {
 	];
 	return (
 		<div>
-			{transactions.length > 0 ? (
-				<div
-					style={{
-						display: "flex",
-						flexDirection: "column",
-						height: "80vh",
-						position: "relative"
-					}}
-				>
-					<div style={{ flexGrow: 1, overflowY: "auto" }}>
-						<Table.Root variant="surface">
-							<Table.Header>
-								<Table.Row>
-									{columns.map((column) => (
-										<Table.ColumnHeaderCell key={column.sortKey}>
-											<div style={{ display: "flex", alignItems: "center" }}>
-												{column.name === "Primary Category" ||
-												column.name === "Detailed Category" ? (
-													<button
-														onClick={() =>
-															column.name === "Primary Category"
-																? setShowPrimaryCategoryCheckboxes(
-																		!showPrimaryCategoryCheckboxes
-																  )
-																: setShowDetailedCategoryCheckboxes(
-																		!showDetailedCategoryCheckboxes
-																  )
-														}
-													>
-														{column.name}
-													</button>
-												) : (
-													column.name
-												)}
-												<Flex gap="3">
-													<Button
-														radius="large"
-														variant="surface"
-														highContrast
-														color="orange"
-														size="1"
-														onClick={() => handleSort(column.sortKey)}
-														style={{ marginLeft: "5px" }}
-													>
-														Sort
-													</Button>
-												</Flex>
-												{showPrimaryCategoryCheckboxes &&
-													column.name === "Primary Category" && (
-														// <div className="absolute top-full mt-2 w-full bg-white shadow-lg z-10">
-														<div>
-															<button
-																onClick={() =>
-																	handleAllFilterChange(
-																		"category_primary",
-																		true
-																	)
-																}
-															>
-																Select All
-															</button>
-															<button
-																onClick={() =>
-																	handleAllFilterChange(
-																		"category_primary",
-																		false
-																	)
-																}
-															>
-																Select None
-															</button>
-															{Object.keys(categoryMapping).map((category) => (
-																<div
-																	key={category}
-																	className="flex items-center"
+			<div
+				style={{
+					display: "flex",
+					flexDirection: "column",
+					height: "80vh",
+					position: "relative"
+				}}
+			>
+				<div style={{ flexGrow: 1, overflowY: "auto" }}>
+					<Table.Root variant="surface">
+						<Table.Header>
+							<Table.Row>
+								{columns.map((column) => (
+									<Table.ColumnHeaderCell key={column.sortKey}>
+										<div style={{ display: "flex", alignItems: "center" }}>
+											{column.name === "Primary Category" ||
+											column.name === "Detailed Category" ? (
+												<button
+													onClick={() =>
+														column.name === "Primary Category"
+															? setShowPrimaryCategoryCheckboxes(
+																	!showPrimaryCategoryCheckboxes
+															  )
+															: setShowDetailedCategoryCheckboxes(
+																	!showDetailedCategoryCheckboxes
+															  )
+													}
+												>
+													{column.name}
+												</button>
+											) : (
+												column.name
+											)}
+											<Flex gap="3">
+												<Button
+													radius="large"
+													variant="surface"
+													highContrast
+													color="orange"
+													size="1"
+													onClick={() => handleSort(column.sortKey)}
+													style={{ marginLeft: "5px" }}
+												>
+													Sort
+												</Button>
+											</Flex>
+											{showPrimaryCategoryCheckboxes &&
+												column.name === "Primary Category" && (
+													// <div className="absolute top-full mt-2 w-full bg-white shadow-lg z-10">
+													<div>
+														<button
+															onClick={() =>
+																handleAllFilterChange("category_primary", true)
+															}
+														>
+															Select All
+														</button>
+														<button
+															onClick={() =>
+																handleAllFilterChange("category_primary", false)
+															}
+														>
+															Select None
+														</button>
+														{Object.keys(categoryMapping).map((category) => (
+															<div key={category} className="flex items-center">
+																<Checkbox.Root
+																	className="shadow-blackA4 hover:bg-violet3 flex h-[25px] w-[25px] appearance-none items-center justify-center rounded-[4px] bg-white shadow-[0_2px_10px] outline-none focus:shadow-[0_0_0_2px_black]"
+																	checked={curFilters.category_primary?.includes(
+																		category
+																	)}
+																	onCheckedChange={(checked) =>
+																		handleFilterChange(
+																			"category_primary",
+																			category,
+																			checked
+																		)
+																	}
+																	id={category}
 																>
-																	<Checkbox.Root
-																		className="shadow-blackA4 hover:bg-violet3 flex h-[25px] w-[25px] appearance-none items-center justify-center rounded-[4px] bg-white shadow-[0_2px_10px] outline-none focus:shadow-[0_0_0_2px_black]"
-																		checked={curFilters.category_primary?.includes(
-																			category
-																		)}
-																		onCheckedChange={(checked) =>
-																			handleFilterChange(
-																				"category_primary",
-																				category,
-																				checked
-																			)
-																		}
-																		id={category}
-																	>
-																		<Checkbox.Indicator className="text-violet11">
-																			<CheckIcon />
-																		</Checkbox.Indicator>
-																	</Checkbox.Root>
-																	<label
-																		className="pl-[15px] leading-none"
-																		htmlFor={category}
-																	>
-																		{category}
-																	</label>
+																	<Checkbox.Indicator className="text-violet11">
+																		<CheckIcon />
+																	</Checkbox.Indicator>
+																</Checkbox.Root>
+																<label
+																	className="pl-[15px] leading-none"
+																	htmlFor={category}
+																>
+																	{category}
+																</label>
+															</div>
+														))}
+													</div>
+												)}
+											{showDetailedCategoryCheckboxes &&
+												column.name === "Detailed Category" && (
+													<div>
+														<button
+															onClick={() =>
+																handleFilterChange(
+																	"category_detailed",
+																	Object.keys(categoryMapping).flatMap(
+																		(key) => categoryMapping[key]
+																	),
+																	true
+																)
+															}
+														>
+															Select All
+														</button>
+														<button
+															onClick={() =>
+																handleFilterChange(
+																	"category_detailed",
+																	Object.keys(categoryMapping).flatMap(
+																		(key) => categoryMapping[key]
+																	),
+																	false
+																)
+															}
+														>
+															Select None
+														</button>
+														{Object.entries(categoryMapping)
+															.filter(
+																([category]) =>
+																	!curFilters.category_primary ||
+																	curFilters.category_primary.length === 0 ||
+																	curFilters.category_primary.includes(category)
+															)
+															.map(([category, subcategories]) => (
+																<div key={category}>
+																	<h3>{category}</h3>
+																	{subcategories.map((subcategory) => (
+																		<div
+																			key={subcategory}
+																			className="flex items-center"
+																		>
+																			<Checkbox.Root
+																				className="shadow-blackA4 hover:bg-violet3 flex h-[25px] w-[25px] appearance-none items-center justify-center rounded-[4px] bg-white shadow-[0_2px_10px] outline-none focus:shadow-[0_0_0_2px_black]"
+																				checked={curFilters.category_detailed?.includes(
+																					subcategory
+																				)}
+																				onCheckedChange={(checked) =>
+																					handleFilterChange(
+																						"category_detailed",
+																						subcategory,
+																						checked
+																					)
+																				}
+																				id={subcategory}
+																			>
+																				<Checkbox.Indicator className="text-violet11">
+																					<CheckIcon />
+																				</Checkbox.Indicator>
+																			</Checkbox.Root>
+																			<label
+																				className="pl-[15px] leading-none"
+																				htmlFor={subcategory}
+																			>
+																				{subcategory}
+																			</label>
+																		</div>
+																	))}
 																</div>
 															))}
-														</div>
-													)}
-												{showDetailedCategoryCheckboxes &&
-													column.name === "Detailed Category" && (
-														<div>
-															<button
-																onClick={() =>
-																	handleFilterChange(
-																		"category_detailed",
-																		Object.keys(categoryMapping).flatMap(
-																			(key) => categoryMapping[key]
-																		),
-																		true
-																	)
-																}
-															>
-																Select All
-															</button>
-															<button
-																onClick={() =>
-																	handleFilterChange(
-																		"category_detailed",
-																		Object.keys(categoryMapping).flatMap(
-																			(key) => categoryMapping[key]
-																		),
-																		false
-																	)
-																}
-															>
-																Select None
-															</button>
-															{Object.entries(categoryMapping)
-																.filter(
-																	([category]) =>
-																		!curFilters.category_primary ||
-																		curFilters.category_primary.length === 0 ||
-																		curFilters.category_primary.includes(
-																			category
-																		)
-																)
-																.map(([category, subcategories]) => (
-																	<div key={category}>
-																		<h3>{category}</h3>
-																		{subcategories.map((subcategory) => (
-																			<div
-																				key={subcategory}
-																				className="flex items-center"
-																			>
-																				<Checkbox.Root
-																					className="shadow-blackA4 hover:bg-violet3 flex h-[25px] w-[25px] appearance-none items-center justify-center rounded-[4px] bg-white shadow-[0_2px_10px] outline-none focus:shadow-[0_0_0_2px_black]"
-																					checked={curFilters.category_detailed?.includes(
-																						subcategory
-																					)}
-																					onCheckedChange={(checked) =>
-																						handleFilterChange(
-																							"category_detailed",
-																							subcategory,
-																							checked
-																						)
-																					}
-																					id={subcategory}
-																				>
-																					<Checkbox.Indicator className="text-violet11">
-																						<CheckIcon />
-																					</Checkbox.Indicator>
-																				</Checkbox.Root>
-																				<label
-																					className="pl-[15px] leading-none"
-																					htmlFor={subcategory}
-																				>
-																					{subcategory}
-																				</label>
-																			</div>
-																		))}
-																	</div>
-																))}
-														</div>
-													)}
-											</div>
-										</Table.ColumnHeaderCell>
-									))}
-								</Table.Row>
-							</Table.Header>
+													</div>
+												)}
+										</div>
+									</Table.ColumnHeaderCell>
+								))}
+							</Table.Row>
+						</Table.Header>
 
+						{transactions.length === 0 ? (
+							<div
+								style={{
+									display: "flex",
+									justifyContent: "center",
+									alignItems: "center",
+									height: "30vh",
+									textAlign: "center"
+								}}
+							>
+								No Transactions Found
+							</div>
+						) : (
 							<Table.Body>
 								{transactions.map((transaction, index) => (
 									<Table.Row key={index}>
@@ -504,102 +504,100 @@ export default function TransactionsTable(walletID) {
 									</Table.Row>
 								))}
 							</Table.Body>
-						</Table.Root>
-					</div>
-					<div className="pt-5 items-center justify-center">
-						<div className="text-center">Rows per page:</div>
-						<div className="flex space-x-4 items-center justify-center pt-5">
-							<motion.div
-								whileHover={{ scale: 1.05 }}
-								transition={{
-									type: "spring",
-									duration: 0.3
-								}}
-							>
-								<Button
-									color={rowsPerPage === 10 ? "cyan" : "indigo"}
-									onClick={() => handleRowsPerPageChange(10)}
-								>
-									10
-								</Button>
-							</motion.div>
-							<motion.div
-								className="mx-[10vw]"
-								whileHover={{ scale: 1.05 }}
-								transition={{
-									type: "spring",
-									duration: 0.3
-								}}
-							>
-								<Button
-									color={rowsPerPage === 20 ? "cyan" : "indigo"}
-									onClick={() => handleRowsPerPageChange(20)}
-								>
-									20
-								</Button>
-							</motion.div>
-							<motion.div
-								className="mx-[10vw]"
-								whileHover={{ scale: 1.05 }}
-								transition={{
-									type: "spring",
-									duration: 0.3
-								}}
-							>
-								<Button
-									color={rowsPerPage === 50 ? "cyan" : "indigo"}
-									onClick={() => handleRowsPerPageChange(50)}
-								>
-									50
-								</Button>
-							</motion.div>
-						</div>
-					</div>
-					<div>
-						<Flex
-							style={{
-								paddingTop: "20px",
-								justifyContent: "center",
-								marginTop: "20px"
+						)}
+					</Table.Root>
+				</div>
+				<div className="pt-5 items-center justify-center">
+					<div className="text-center">Rows per page:</div>
+					<div className="flex space-x-4 items-center justify-center pt-5">
+						<motion.div
+							whileHover={{ scale: 1.05 }}
+							transition={{
+								type: "spring",
+								duration: 0.3
 							}}
 						>
-							<motion.div
-								whileHover={{ scale: 1.05 }}
-								transition={{
-									type: "spring",
-									duration: 0.3
-								}}
+							<Button
+								color={rowsPerPage === 10 ? "cyan" : "indigo"}
+								onClick={() => handleRowsPerPageChange(10)}
 							>
-								<Button
-									onClick={() => handlePageChange(currentPage - 1)}
-									disabled={currentPage === 1}
-								>
-									Previous
-								</Button>
-							</motion.div>
-							<div style={{ margin: "0 10px" }}>
-								Page {currentPage} / {Math.ceil(totalRows / rowsPerPage)}{" "}
-							</div>
-							<motion.div
-								whileHover={{ scale: 1.05 }}
-								transition={{
-									type: "spring",
-									duration: 0.3
-								}}
+								10
+							</Button>
+						</motion.div>
+						<motion.div
+							className="mx-[10vw]"
+							whileHover={{ scale: 1.05 }}
+							transition={{
+								type: "spring",
+								duration: 0.3
+							}}
+						>
+							<Button
+								color={rowsPerPage === 20 ? "cyan" : "indigo"}
+								onClick={() => handleRowsPerPageChange(20)}
 							>
-								<Button
-									onClick={() => handlePageChange(currentPage + 1)}
-									disabled={currentPage === Math.ceil(totalRows / rowsPerPage)}
-								>
-									Next
-								</Button>
-							</motion.div>
-						</Flex>
+								20
+							</Button>
+						</motion.div>
+						<motion.div
+							className="mx-[10vw]"
+							whileHover={{ scale: 1.05 }}
+							transition={{
+								type: "spring",
+								duration: 0.3
+							}}
+						>
+							<Button
+								color={rowsPerPage === 50 ? "cyan" : "indigo"}
+								onClick={() => handleRowsPerPageChange(50)}
+							>
+								50
+							</Button>
+						</motion.div>
 					</div>
 				</div>
-			) : (
-				<p>No transactions found.</p>
-			)}
+				<div>
+					<Flex
+						style={{
+							paddingTop: "20px",
+							justifyContent: "center",
+							marginTop: "20px"
+						}}
+					>
+						<motion.div
+							whileHover={{ scale: 1.05 }}
+							transition={{
+								type: "spring",
+								duration: 0.3
+							}}
+						>
+							<Button
+								onClick={() => handlePageChange(currentPage - 1)}
+								disabled={currentPage === 1}
+							>
+								Previous
+							</Button>
+						</motion.div>
+						<div style={{ margin: "0 10px" }}>
+							Page {currentPage} / {Math.ceil(totalRows / rowsPerPage)}{" "}
+						</div>
+						<motion.div
+							whileHover={{ scale: 1.05 }}
+							transition={{
+								type: "spring",
+								duration: 0.3
+							}}
+						>
+							<Button
+								onClick={() => handlePageChange(currentPage + 1)}
+								disabled={currentPage === Math.ceil(totalRows / rowsPerPage)}
+							>
+								Next
+							</Button>
+						</motion.div>
+					</Flex>
+				</div>
+			</div>
 		</div>
 	);
 }
