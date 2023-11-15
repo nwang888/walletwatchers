@@ -233,12 +233,12 @@ export default function TransactionsTable(walletID) {
 	const handleAllFilterChange = (attribute, allornone) => {
 		const newFilters = { ...curFilters };
 		if (allornone) {
-			newFilters[attribute] = Object.keys(categoryMapping).flatMap(
-				(key) => categoryMapping[key]
-			);
+			newFilters[attribute] = Object.keys(categoryMapping);
+			console.log(Object.keys(categoryMapping));
 		} else {
 			newFilters[attribute] = [];
 		}
+		console.log("handleAllFilterChange newFilters:", newFilters);
 		setFilters(newFilters);
 		getTransactionsData({
 			sort_by: sortAttribute,
