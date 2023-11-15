@@ -8,8 +8,8 @@ import { CheckIcon } from "@radix-ui/react-icons";
 
 //TODO: Add search
 //TODO: Add filtering for all columns
+//TODO: Add selection for all and none for filtering
 //TODO: When there are no transactions, continue to show the table headers
-//TODO: Condense the Table headers
 
 export default function TransactionsTable(walletID) {
 	const [transactions, setTransactions] = useState([]);
@@ -29,7 +29,10 @@ export default function TransactionsTable(walletID) {
 	});
 	const [curFilters, setFilters] = useState({});
 	// cur_filters should be a dict of this format: { "account_id": "Plaid Checking", "category_primary": ["income", "transfer in"], "category_detailed": ["income dividends", "income interest earned"] }
-	const [showCheckboxes, setShowCheckboxes] = useState(false);
+	const [showPrimaryCategoryCheckboxes, setShowPrimaryCategoryCheckboxes] =
+		useState(false);
+	const [showDetailedCategoryCheckboxes, setShowDetailedCategoryCheckboxes] =
+		useState(false);
 	const categoryMapping = {
 		"Income": [
 			"Dividends",
@@ -55,7 +58,7 @@ export default function TransactionsTable(walletID) {
 			"Account Transfer",
 			"Other Transfer Out"
 		],
-		"loan payments": [
+		"Loan Payments": [
 			"Car Payment",
 			"Credit Card Payment",
 			"Personal Loan Payment",
@@ -63,7 +66,7 @@ export default function TransactionsTable(walletID) {
 			"Student Loan Payment",
 			"Other Payment"
 		],
-		"bank fees": [
+		"Bank Fees": [
 			"ATM Fees",
 			"Foreign Transaction Fees",
 			"Insufficient Funds",
@@ -71,7 +74,7 @@ export default function TransactionsTable(walletID) {
 			"Overdraft Fees",
 			"Other Bank Fees"
 		],
-		"entertainment": [
+		"Entertainment": [
 			"Casinos and Gambling",
 			"Music and Audio",
 			"Sporting Events Amusement Parks and Museums",
@@ -82,85 +85,85 @@ export default function TransactionsTable(walletID) {
 		"Food and Drink": [
 			"Beer Wine and Liquor",
 			"Coffee",
-			"fast food",
-			"groceries",
+			"Fast Food",
+			"Groceries",
 			"Restaurants",
-			"vending machines",
-			"other food and drink"
+			"Vending Machines",
+			"Other food and drink"
 		],
-		"general merchandise": [
-			"bookstores and newsstands",
-			"clothing and accessories",
-			"convenience stores",
-			"department stores",
-			"discount stores",
-			"electronics",
-			"gifts and novelties",
-			"office supplies",
-			"online marketplaces",
-			"pet supplies",
-			"sporting goods",
-			"superstores",
-			"tobacco and vape",
-			"other general merchandise"
+		"General Merchandise": [
+			"Bookstores and Newsstands",
+			"Clothing and Accessories",
+			"Convenience Stores",
+			"Department Stores",
+			"Discount Stores",
+			"Electronics",
+			"Gifts and Novelties",
+			"Office Supplies",
+			"Online Marketplaces",
+			"Pet Supplies",
+			"Sporting Goods",
+			"Superstores",
+			"Tobacco and Vape",
+			"Other General Merchandise"
 		],
-		"home improvement": [
-			"furniture",
-			"hardware",
-			"repair and maintenance",
-			"security",
-			"other home improvement"
+		"Home Improvement": [
+			"Furniture",
+			"Hardware",
+			"Repair and Maintenance",
+			"Security",
+			"Other Home Improvement"
 		],
-		"medical": [
-			"dental care",
-			"eye care",
-			"nursing care",
-			"pharmacies and supplements",
-			"primary care",
-			"veterinary services",
-			"other medical"
+		"Medical": [
+			"Dental Care",
+			"Eye Care",
+			"Nursing Care",
+			"Pharmacies and Supplements",
+			"Primary Care",
+			"Veterinary Services",
+			"Other Medical"
 		],
-		"personal care": [
-			"gyms and fitness centers",
-			"hair and beauty",
-			"laundry and dry cleaning",
-			"other personal care"
+		"Personal Care": [
+			"Gyms and Fitness Centers",
+			"Hair and Beauty",
+			"Laundry and Dry Cleaning",
+			"Other Personal Care"
 		],
-		"general services": [
-			"accounting and financial planning",
-			"automotive",
-			"childcare",
-			"consulting and legal",
-			"education",
-			"insurance",
-			"postage and shipping",
-			"storage",
-			"other general services"
+		"General Services": [
+			"Accounting and Financial Planning",
+			"Automotive",
+			"Childcare",
+			"Consulting and Legal",
+			"Education",
+			"Insurance",
+			"Postage and Shipping",
+			"Storage",
+			"Other General Services"
 		],
-		"government and non profit": [
-			"donations",
-			"government departments and agencies",
-			"tax payment",
-			"other government and non profit"
+		"Government and Non Profit": [
+			"Donations",
+			"Government Departments and Agencies",
+			"Tax Payment",
+			"Other Government and Non Profit"
 		],
-		"transportation": [
-			"bikes and scooters",
-			"gas",
-			"parking",
-			"public transit",
-			"taxis and ride shares",
-			"tolls",
-			"other transportation"
+		"Transportation": [
+			"Bikes and Scooters",
+			"Gas",
+			"Parking",
+			"Public Transit",
+			"Taxis and Ride Shares",
+			"Tolls",
+			"Other Transportation"
 		],
-		"travel": ["flights", "lodging", "rental cars", "other travel"],
-		"rent and utilities": [
-			"gas and electricity",
-			"internet and cable",
-			"rent",
-			"sewage and waste management",
-			"telephone",
-			"water",
-			"other utilities"
+		"Travel": ["Flights", "Lodging", "Rental Cars", "Other Travel"],
+		"Rent and Utilities": [
+			"Gas and Electricity",
+			"Internet and Cable",
+			"Rent",
+			"Sewage and Waste Management",
+			"Telephone",
+			"Water",
+			"Other Utilities"
 		]
 	}; //istg some of these are not capitalized or spelled correctly and its screwing up the filtering
 
@@ -217,6 +220,24 @@ export default function TransactionsTable(walletID) {
 				// 	delete newFilters[attribute];
 				// }
 			}
+		}
+		setFilters(newFilters);
+		getTransactionsData({
+			sort_by: sortAttribute,
+			order: sortOrder[sortAttribute],
+			rowsPerPage: rowsPerPage,
+			filters: newFilters
+		});
+	};
+
+	const handleAllFilterChange = (attribute, allornone) => {
+		const newFilters = { ...curFilters };
+		if (allornone) {
+			newFilters[attribute] = Object.keys(categoryMapping).flatMap(
+				(key) => categoryMapping[key]
+			);
+		} else {
+			newFilters[attribute] = [];
 		}
 		setFilters(newFilters);
 		getTransactionsData({
@@ -297,14 +318,23 @@ export default function TransactionsTable(walletID) {
 									{columns.map((column) => (
 										<Table.ColumnHeaderCell key={column.sortKey}>
 											<div style={{ display: "flex", alignItems: "center" }}>
-												{column.name !== "Primary Category" ? (
-													column.name
-												) : (
+												{column.name === "Primary Category" ||
+												column.name === "Detailed Category" ? (
 													<button
-														onClick={() => setShowCheckboxes(!showCheckboxes)}
+														onClick={() =>
+															column.name === "Primary Category"
+																? setShowPrimaryCategoryCheckboxes(
+																		!showPrimaryCategoryCheckboxes
+																  )
+																: setShowDetailedCategoryCheckboxes(
+																		!showDetailedCategoryCheckboxes
+																  )
+														}
 													>
 														{column.name}
 													</button>
+												) : (
+													column.name
 												)}
 												<Flex gap="3">
 													<Button
@@ -319,9 +349,30 @@ export default function TransactionsTable(walletID) {
 														Sort
 													</Button>
 												</Flex>
-												{showCheckboxes &&
+												{showPrimaryCategoryCheckboxes &&
 													column.name === "Primary Category" && (
+														// <div className="absolute top-full mt-2 w-full bg-white shadow-lg z-10">
 														<div>
+															<button
+																onClick={() =>
+																	handleAllFilterChange(
+																		"category_primary",
+																		true
+																	)
+																}
+															>
+																Select All
+															</button>
+															<button
+																onClick={() =>
+																	handleAllFilterChange(
+																		"category_primary",
+																		false
+																	)
+																}
+															>
+																Select None
+															</button>
 															{Object.keys(categoryMapping).map((category) => (
 																<div
 																	key={category}
@@ -353,6 +404,82 @@ export default function TransactionsTable(walletID) {
 																	</label>
 																</div>
 															))}
+														</div>
+													)}
+												{showDetailedCategoryCheckboxes &&
+													column.name === "Detailed Category" && (
+														<div>
+															<button
+																onClick={() =>
+																	handleFilterChange(
+																		"category_detailed",
+																		Object.keys(categoryMapping).flatMap(
+																			(key) => categoryMapping[key]
+																		),
+																		true
+																	)
+																}
+															>
+																Select All
+															</button>
+															<button
+																onClick={() =>
+																	handleFilterChange(
+																		"category_detailed",
+																		Object.keys(categoryMapping).flatMap(
+																			(key) => categoryMapping[key]
+																		),
+																		false
+																	)
+																}
+															>
+																Select None
+															</button>
+															{Object.entries(categoryMapping)
+																.filter(
+																	([category]) =>
+																		!curFilters.category_primary ||
+																		curFilters.category_primary.length === 0 ||
+																		curFilters.category_primary.includes(
+																			category
+																		)
+																)
+																.map(([category, subcategories]) => (
+																	<div key={category}>
+																		<h3>{category}</h3>
+																		{subcategories.map((subcategory) => (
+																			<div
+																				key={subcategory}
+																				className="flex items-center"
+																			>
+																				<Checkbox.Root
+																					className="shadow-blackA4 hover:bg-violet3 flex h-[25px] w-[25px] appearance-none items-center justify-center rounded-[4px] bg-white shadow-[0_2px_10px] outline-none focus:shadow-[0_0_0_2px_black]"
+																					checked={curFilters.category_detailed?.includes(
+																						subcategory
+																					)}
+																					onCheckedChange={(checked) =>
+																						handleFilterChange(
+																							"category_detailed",
+																							subcategory,
+																							checked
+																						)
+																					}
+																					id={subcategory}
+																				>
+																					<Checkbox.Indicator className="text-violet11">
+																						<CheckIcon />
+																					</Checkbox.Indicator>
+																				</Checkbox.Root>
+																				<label
+																					className="pl-[15px] leading-none"
+																					htmlFor={subcategory}
+																				>
+																					{subcategory}
+																				</label>
+																			</div>
+																		))}
+																	</div>
+																))}
 														</div>
 													)}
 											</div>
