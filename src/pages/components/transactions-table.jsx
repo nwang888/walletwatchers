@@ -5,10 +5,10 @@ import { Flex, Button, Table } from "@radix-ui/themes";
 import { motion } from "framer-motion";
 import * as Checkbox from "@radix-ui/react-checkbox";
 import { CheckIcon } from "@radix-ui/react-icons";
+import { MultiSelect } from "react-multi-select-component";
 
 //TODO: Add search
 //TODO: Add filtering for all columns
-//TODO: When there are no transactions, continue to show the table headers
 
 export default function TransactionsTable(walletID) {
 	const [transactions, setTransactions] = useState([]);
@@ -365,7 +365,7 @@ export default function TransactionsTable(walletID) {
 														>
 															Select None
 														</button>
-														{Object.keys(categoryMapping).map((category) => (
+														{/* {Object.keys(categoryMapping).map((category) => (
 															<div key={category} className="flex items-center">
 																<Checkbox.Root
 																	className="shadow-blackA4 hover:bg-violet3 flex h-[25px] w-[25px] appearance-none items-center justify-center rounded-[4px] bg-white shadow-[0_2px_10px] outline-none focus:shadow-[0_0_0_2px_black]"
@@ -392,7 +392,26 @@ export default function TransactionsTable(walletID) {
 																	{category}
 																</label>
 															</div>
-														))}
+														))} */}
+														<MultiSelect
+															options={Object.keys(categoryMapping).map(
+																(category) => ({
+																	label: category,
+																	value: category
+																})
+															)}
+															value={Object.keys(curFilters).map((filter) => ({
+																label: filter,
+																value: filter
+															}))}
+															onChange={(selectedOptions) =>
+																handleFilterChange(
+																	selectedOptions.map((option) => option.value)
+																)
+															}
+															hasSelectAll
+															labelledBy="Select"
+														/>
 													</div>
 												)}
 											{showDetailedCategoryCheckboxes &&
