@@ -2,6 +2,7 @@ import sqlite3 from "sqlite3";
 import { open } from "sqlite";
 
 //DEBUG INFO: i think location and datetime details do not exist in the Plaid Sandbox Data
+//TODO: Fix potential sql injection on where clause
 
 // create an async function that posts the trasnactions to the database
 async function postTransactionsData(
@@ -154,47 +155,95 @@ async function postTransactionsData(
 	await db.close();
 }
 
-// create an async function that gets the transactions from the database
 async function getTransactionsData(
 	sort_by = "datetime",
 	order = "desc",
 	page = 1,
 	rowsPerPage = 10,
-	paginate = true
+	paginate = true,
+	filters = {}
 ) {
 	const db = await open({
 		filename: "./sql/big.db",
 		driver: sqlite3.Database
 	});
 
+	// Validate sort_by and order
+	const validColumns = [
+		"account_id",
+		"account_name",
+		"category_primary",
+		"category_detailed",
+		"merchant_name",
+		"transaction_amount",
+		"city",
+		"region",
+		"datetime"
+	];
+	const validDirections = ["asc", "desc"];
+	if (!validColumns.includes(sort_by) || !validDirections.includes(order)) {
+		throw new Error("Invalid sort_by or order", sort_by, order);
+	}
+
+	const filters_parsed = JSON.parse(decodeURIComponent(filters));
+
+	// console.log("filters: ", filters_parsed);
+	let whereClause = "";
+	let whereValues = [];
+	for (const [key, value] of Object.entries(filters_parsed)) {
+		if (value && validColumns.includes(key)) {
+			whereClause += ` AND ${key} = ?`;
+			whereValues.push(value);
+		} else {
+			console.error(`Invalid filter key: ${key}`);
+		}
+	}
+	// console.log("whereClause: ", whereClause);
+	// console.log("whereValues: ", whereValues);
+
 	let payload;
+	const totalRows = await db.get(
+		`SELECT COUNT(*) as count
+		FROM Transactions
+		WHERE 1=1 ${whereClause}`,
+		whereValues
+	);
 
 	if (paginate) {
 		const offset = (page - 1) * rowsPerPage;
-		payload = await db.all(`
-		SELECT * FROM Transactions ORDER BY ${sort_by} ${order}, datetime DESC LIMIT ${rowsPerPage} OFFSET ${offset}
-	  `); // ties are broken by datetime
+		payload = await db.all(
+			`SELECT * FROM Transactions
+			WHERE 1=1 ${whereClause}
+			ORDER BY ${sort_by} ${order}, datetime DESC
+			LIMIT ? OFFSET ?`,
+			[...whereValues, rowsPerPage, offset]
+		);
 	} else {
-		payload = await db.all(`
-		SELECT * FROM Transactions ORDER BY ${sort_by} ${order}, datetime DESC
-	  `); // ties are broken by datetime
+		payload = await db.all(
+			`SELECT * FROM Transactions
+			WHERE 1=1 ${whereClause}
+			ORDER BY ${sort_by} ${order}, datetime DESC`,
+			whereValues
+		);
 	}
 
 	await db.close();
 
-	return payload;
+	return { transactions: payload, totalRows: totalRows.count };
 }
 
 export default async function transaction_handler(req, res) {
 	if (req.method === "GET") {
 		try {
-			const { sort_by, order, page, rowsPerPage, paginate } = req.query;
+			const { sort_by, order, page, rowsPerPage, paginate, filters } =
+				req.query;
 			const payload = await getTransactionsData(
 				sort_by,
 				order,
 				page,
 				rowsPerPage,
-				paginate
+				paginate,
+				filters
 			);
 			return res.status(200).json(payload);
 		} catch (error) {

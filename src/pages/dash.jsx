@@ -7,6 +7,7 @@ import { useRouter } from "next/router";
 import HomePage from "./components/home-page";
 import TransactionsPage from "./components/transactions-page";
 import WishlistPage from "./components/wishlist-page";
+import BudgetPage from "./components/budget-page";
 
 import Header from "./components/header";
 import NavBar from "./components/navigation-bar";
@@ -21,17 +22,21 @@ export default function Dashboard() {
 		<>
 			<Header setPageNum={setPageNum} />
 
-			<div className="py-16">
-				{pageNum === 0 ? <HomePage /> : null}
-				{pageNum === 1 ? <TransactionsPage /> : null}
+
+			<div className="my-16 mx-3">
+				{pageNum === 0 ? (
+					<HomePage setPageNum={setPageNum} setWalletId={setWalletId} />
+				) : null}
+				{pageNum === 1 ? <TransactionsPage walletId={walletId} /> : null}
 				{pageNum === 2 ? <WishlistPage /> : null}
+				{pageNum === 3 ? <BudgetPage /> : null}
 			</div>
 
-			<NavBar 
-			pageNum={pageNum} 
-			setPageNum={setPageNum} 
-			setWalletId={setWalletId}
-			 />
+			<NavBar
+				pageNum={pageNum}
+				setPageNum={setPageNum}
+				setWalletId={setWalletId}
+			/>
 		</>
 	);
 }
@@ -95,6 +100,7 @@ export const getServerSideProps = withIronSessionSsr(
 
 		// initalizes bigdb on login
 		const initialize_bigdb = await fetch(`${baseUrl}/api/bigdb`);
+		console.log(await initialize_bigdb.json());
 
 		const access_token = req.session.access_token;
 
