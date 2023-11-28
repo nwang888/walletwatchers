@@ -20,6 +20,7 @@ export default async function handler(req, res) {
 			// Modify the SQL query to include LIMIT and OFFSET
 			const wishlists = await db.all(`SELECT * FROM wishlists LIMIT ? OFFSET ?`, [recordsPerPage, offset]);
 			console.log(wishlists);
+			// console.log(WishlistPage$remainingBalance);
 			await db.close();
 
 			return res.status(200).json(wishlists);
@@ -64,6 +65,31 @@ export default async function handler(req, res) {
 			return res.status(200).json(payload);
 		} catch (err) {
 			return res.status(500).json({ error: err.message });
+		}
+	}
+	if (req.method === "DELETE") {
+		console.log("delete");
+		const { id } = req.query;
+
+		try {
+			const db = await open({
+			filename: './sql/big.db',
+			driver: sqlite3.Database
+			});
+
+			await db.run(
+			`
+				DELETE FROM wishlists
+				WHERE wishlist_id = ?
+			`,
+			[id]
+			);
+
+			await db.close();
+
+			res.status(200).json({ message: `Item with id ${id} deleted.` });
+		} catch (err) {
+			res.status(500).json({ error: err.message });
 		}
 	}
 }

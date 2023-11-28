@@ -36,9 +36,16 @@ export default function PlaidLink() {
 
   return (
     <>
-      <button onClick={() => open()} disabled={!ready}>
-        <strong>Link account</strong>
-      </button>
+       <div className="flex justify-center items-center text-sky-400/50 text-8xl font-semibold self-stretch whitespace-nowrap mt-20 max-md:max-w-full max-md:text-4xl">
+      Welcome Back!
+    </div>
+
+      <div className="flex justify-center ">
+  <button className="px-4 py-2 bg-blue-500 text-white rounded items-center" onClick={() => open()} disabled={!ready}>
+    Link Account
+  </button>
+</div>
+
     </>
   );
 }
