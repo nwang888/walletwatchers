@@ -47,4 +47,6 @@ sql/big.db
 .sql
 
 .swp
+
+.DS_Store
 ```
