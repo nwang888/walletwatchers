@@ -58,9 +58,9 @@ export default function RecurringTransactions() {
         }
         return (
             <>
-                <div className='flex'>
-                    <div className='flex-1'>
-                        <h1>Primary Category:</h1>
+                <div>
+                    <div className='my-2'>
+                        <label className="mr-2">Primary Category:</label>
                         <select className="border rounded" onChange={(event) => setPrimaryCategory(event.target.value)}>
                             {Object.keys(categoryMapping).map((key) => (
                                 <option value={key}>{key}</option>
@@ -68,8 +68,8 @@ export default function RecurringTransactions() {
                         </select>
                     </div>
 
-                    <div className='flex-1'>
-                        <h2>Detailed Category:</h2>
+                    <div className='my-2'>
+                        <label className="mr-2">Detailed Category:</label>
                         <select className="border rounded" onChange={(event) => setDetailedCategory(event.target.value)}>
                             {primaryCategory && categoryMapping[primaryCategory].map((category) => (
                                 <option value={category}>{category}</option>
@@ -86,10 +86,12 @@ export default function RecurringTransactions() {
     function Form() {
         return (
             <>
-                <h1 className='text-center text-2xl font-bold my-3'>Enter Recurring Transactions</h1>
-                <div class='flex my-3'>
-                    <div className='flex-1'>
-                        <label for="name">Merchant name:</label>   
+                <div class='flex-col my-3'>
+
+                    <h1 className='text-2xl font-bold my-3'>Enter Recurring Transactions</h1>
+
+                    <div className='my-2'>
+                        <label className="my-2" for="name">Merchant name:</label>   
                         <TextField.Root
                             style={{ width: '40%' }} >
                             <TextField.Slot>
@@ -103,8 +105,8 @@ export default function RecurringTransactions() {
                         </TextField.Root>
                     </div>
 
-                    <div className='flex-1'>
-                        <label for="name">Cost per month:</label>
+                    <div className='my-2'>
+                        <label className="my-2" for="name">Cost per month:</label>
                         <TextField.Root
                             style={{ width: '40%' }} >
                             <TextField.Slot>
@@ -117,8 +119,6 @@ export default function RecurringTransactions() {
                         />
                         </TextField.Root> 
                     </div>
-                </div>
-                <div>
 
                     {CategorySelector()}
 
@@ -126,9 +126,7 @@ export default function RecurringTransactions() {
                         onClick={handleAddButton}
                         className='border-2 border-gray-200 rounded-md p-2 hover:border-gray-300 transition-colors my-3'
                     >Post</button>
-    
-             
-                </div> 
+                </div>
             </>
         )
     }
