@@ -192,7 +192,7 @@ export default function TransactionsTable(walletID) {
 			"Account Transfer",
 			"Other Transfer Out"
 		],
-		"Payments": [
+		"Payment": [
 			"Credit Card",
 			"Personal Loan Payment",
 			"Mortgage Payment",
