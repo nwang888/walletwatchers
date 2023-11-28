@@ -9,6 +9,10 @@ import { MultiSelect } from "react-multi-select-component";
 
 //TODO: Add search
 //TODO: Add filtering for all columns
+//TODO: WTF is wrong with category_mapping
+// THings i was doing: making sure checkboxes are checked by default
+// Making sur eSElect none works
+// Getting SElect all for dettailed_categories to work
 
 export default function TransactionsTable(walletID) {
 	const [transactions, setTransactions] = useState([]);
@@ -26,13 +30,12 @@ export default function TransactionsTable(walletID) {
 		datetime: "desc",
 		account_name: "asc"
 	});
-	const [curFilters, setFilters] = useState({});
-	// cur_filters should be a dict of this format: { "account_id": "Plaid Checking", "category_primary": ["income", "transfer in"], "category_detailed": ["income dividends", "income interest earned"] }
+
 	const [showPrimaryCategoryCheckboxes, setShowPrimaryCategoryCheckboxes] =
 		useState(false);
 	const [showDetailedCategoryCheckboxes, setShowDetailedCategoryCheckboxes] =
 		useState(false);
-	const categoryMapping = {
+	const realCategoryMapping = {
 		"Income": [
 			"Dividends",
 			"Interest Earned",
@@ -150,7 +153,7 @@ export default function TransactionsTable(walletID) {
 			"Gas",
 			"Parking",
 			"Public Transit",
-			"Taxis and Ride Shares",
+			"Taxi and Rideshares",
 			"Tolls",
 			"Other Transportation"
 		],
@@ -164,7 +167,146 @@ export default function TransactionsTable(walletID) {
 			"Water",
 			"Other Utilities"
 		]
-	}; //istg some of these are not capitalized or spelled correctly and its screwing up the filtering
+	};
+
+	const categoryMapping = {
+		"Income": [
+			"Dividends",
+			"Interest Earned",
+			"Retirement Pension",
+			"Tax Refund",
+			"Unemployment",
+			"Wages",
+			"Other Income"
+		],
+		"Transfer": [
+			"Cash Advances and Loans",
+			"Deposit",
+			"Investment and Retirement Funds",
+			"Savings",
+			"Account Transfer",
+			"Other Transfer In",
+			"Payroll",
+			"Savings",
+			"Withdrawal",
+			"Account Transfer",
+			"Other Transfer Out"
+		],
+		"Payments": [
+			"Credit Card",
+			"Personal Loan Payment",
+			"Mortgage Payment",
+			"Student Loan Payment",
+			"Other Payment"
+		],
+		"Bank Fees": [
+			"ATM Fees",
+			"Foreign Transaction Fees",
+			"Insufficient Funds",
+			"Interest Charge",
+			"Overdraft Fees",
+			"Other Bank Fees"
+		],
+		"Entertainment": [
+			"Casinos and Gambling",
+			"Music and Audio",
+			"Sporting Events Amusement Parks and Museums",
+			"TV and Movies",
+			"Video Games",
+			"Other Entertainment"
+		],
+		"Food and Drink": [
+			"Beer Wine and Liquor",
+			"Coffee",
+			"Fast Food",
+			"Groceries",
+			"Restaurants",
+			"Vending Machines",
+			"Other food and drink"
+		],
+		"General Merchandise": [
+			"Bookstores and Newsstands",
+			"Clothing and Accessories",
+			"Convenience Stores",
+			"Department Stores",
+			"Discount Stores",
+			"Electronics",
+			"Gifts and Novelties",
+			"Office Supplies",
+			"Online Marketplaces",
+			"Pet Supplies",
+			"Sporting Goods",
+			"Superstores",
+			"Tobacco and Vape",
+			"Other General Merchandise"
+		],
+		"Home Improvement": [
+			"Furniture",
+			"Hardware",
+			"Repair and Maintenance",
+			"Security",
+			"Other Home Improvement"
+		],
+		"Medical": [
+			"Dental Care",
+			"Eye Care",
+			"Nursing Care",
+			"Pharmacies and Supplements",
+			"Primary Care",
+			"Veterinary Services",
+			"Other Medical"
+		],
+		"Personal Care": [
+			"Gyms and Fitness Centers",
+			"Hair and Beauty",
+			"Laundry and Dry Cleaning",
+			"Other Personal Care"
+		],
+		"General Services": [
+			"Accounting and Financial Planning",
+			"Automotive",
+			"Childcare",
+			"Consulting and Legal",
+			"Education",
+			"Insurance",
+			"Postage and Shipping",
+			"Storage",
+			"Other General Services"
+		],
+		"Government and Non Profit": [
+			"Donations",
+			"Government Departments and Agencies",
+			"Tax Payment",
+			"Other Government and Non Profit"
+		],
+		"Transportation": [
+			"Bikes and Scooters",
+			"Gas",
+			"Parking",
+			"Public Transit",
+			"Tolls",
+			"Other Transportation"
+		],
+		"Travel": ["Taxi", "Airlines and Aviation Services"],
+		"Rent and Utilities": [
+			"Gas and Electricity",
+			"Internet and Cable",
+			"Rent",
+			"Sewage and Waste Management",
+			"Telephone",
+			"Water",
+			"Other Utilities"
+		]
+	};
+
+	const [curFilters, setFilters] = useState({
+		// category_primary: Object.keys(categoryMapping),
+		// category_detailed: [].concat(...Object.values(categoryMapping))
+		// Add other filters here...
+	});
+	// cur_filters should be a dict of this format: { "account_id": "Plaid Checking", "category_primary": ["income", "transfer in"], "category_detailed": ["income dividends", "income interest earned"] }
+
+	console.log("curFilters", curFilters);
 
 	const handleRowsPerPageChange = (value) => {
 		const newRowsPerPage = parseInt(value);
@@ -229,15 +371,41 @@ export default function TransactionsTable(walletID) {
 		});
 	};
 
-	const handleAllFilterChange = (attribute, allornone) => {
+	const handleAllPrimaryFilterChange = (attribute, allornone) => {
 		const newFilters = { ...curFilters };
 		if (allornone) {
 			newFilters[attribute] = Object.keys(categoryMapping);
 			console.log(Object.keys(categoryMapping));
 		} else {
 			newFilters[attribute] = [];
+			console.log(newFilters[attribute]);
 		}
-		console.log("handleAllFilterChange newFilters:", newFilters);
+		console.log("handleAllPrimaryFilterChange newFilters:", newFilters);
+		setFilters(newFilters);
+		getTransactionsData({
+			sort_by: sortAttribute,
+			order: sortOrder[sortAttribute],
+			rowsPerPage: rowsPerPage,
+			filters: newFilters
+		});
+	};
+
+	const handleAllDetailedFilterChange = (attribute, allornone) => {
+		const newFilters = { ...curFilters };
+		if (allornone) {
+			newFilters[attribute] = Object.entries(categoryMapping)
+				.filter(
+					([category]) =>
+						!curFilters.category_primary ||
+						curFilters.category_primary.length === 0 ||
+						curFilters.category_primary.includes(category)
+				)
+				.flatMap(([category, subcategories]) => subcategories);
+			console.log(newFilters[attribute]);
+		} else {
+			newFilters[attribute] = [];
+		}
+		console.log("handleAllDetailedFilterChange newFilters:", newFilters);
 		setFilters(newFilters);
 		getTransactionsData({
 			sort_by: sortAttribute,
@@ -353,19 +521,25 @@ export default function TransactionsTable(walletID) {
 													<div>
 														<button
 															onClick={() =>
-																handleAllFilterChange("category_primary", true)
+																handleAllPrimaryFilterChange(
+																	"category_primary",
+																	true
+																)
 															}
 														>
 															Select All
 														</button>
 														<button
 															onClick={() =>
-																handleAllFilterChange("category_primary", false)
+																handleAllPrimaryFilterChange(
+																	"category_primary",
+																	false
+																)
 															}
 														>
 															Select None
 														</button>
-														{/* {Object.keys(categoryMapping).map((category) => (
+														{Object.keys(categoryMapping).map((category) => (
 															<div key={category} className="flex items-center">
 																<Checkbox.Root
 																	className="shadow-blackA4 hover:bg-violet3 flex h-[25px] w-[25px] appearance-none items-center justify-center rounded-[4px] bg-white shadow-[0_2px_10px] outline-none focus:shadow-[0_0_0_2px_black]"
@@ -392,8 +566,8 @@ export default function TransactionsTable(walletID) {
 																	{category}
 																</label>
 															</div>
-														))} */}
-														<MultiSelect
+														))}
+														{/* <MultiSelect
 															options={Object.keys(categoryMapping).map(
 																(category) => ({
 																	label: category,
@@ -411,7 +585,7 @@ export default function TransactionsTable(walletID) {
 															}
 															hasSelectAll
 															labelledBy="Select"
-														/>
+														/> */}
 													</div>
 												)}
 											{showDetailedCategoryCheckboxes &&
@@ -419,7 +593,7 @@ export default function TransactionsTable(walletID) {
 													<div>
 														<button
 															onClick={() =>
-																handleFilterChange(
+																handleAllDetailedFilterChange(
 																	"category_detailed",
 																	Object.keys(categoryMapping).flatMap(
 																		(key) => categoryMapping[key]
@@ -432,7 +606,7 @@ export default function TransactionsTable(walletID) {
 														</button>
 														<button
 															onClick={() =>
-																handleFilterChange(
+																handleAllDetailedFilterChange(
 																	"category_detailed",
 																	Object.keys(categoryMapping).flatMap(
 																		(key) => categoryMapping[key]
@@ -598,7 +772,8 @@ export default function TransactionsTable(walletID) {
 							</Button>
 						</motion.div>
 						<div style={{ margin: "0 10px" }}>
-							Page {currentPage} / {Math.ceil(totalRows / rowsPerPage)}{" "}
+							Page {currentPage} / {Math.ceil(totalRows / rowsPerPage)}
+							Total Rows: {totalRows}{" "}
 						</div>
 						<motion.div
 							whileHover={{ scale: 1.05 }}
