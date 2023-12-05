@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState, useRef} from 'react';
 // import Chart from 'chart.js/auto';
 // import Image from 'next/image';
@@ -74,9 +73,9 @@ export default function WishlistTable({ balance }) {
   
  
     const getWishlistData = async ( 
-		page = 1,
-		rowsPerPage = 10,
-		paginate = true) => {
+    page = 1,
+    rowsPerPage = 10,
+    paginate = true) => {
         const response = await fetch(`/api/wishlist?page=${page}&rowsPerPage=${rowsPerPage}&paginate=${paginate}`);
         const payload = await response.json();
     
