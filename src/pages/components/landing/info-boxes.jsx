@@ -3,7 +3,7 @@ import InfoBox from './info-box';
 
 export default function InfoBoxes() {
 
-    const delay = 2;
+    const delay = 3;
     const stagger = 0.8;
 
     const data = {
@@ -17,13 +17,22 @@ export default function InfoBoxes() {
     }
 
     return (
-        <motion.div
+        <>
+            <motion.hr 
+                className="border-primary my-8 justify-center block mx-auto" 
+                initial={{ width: 0 }}
+                animate={{ width: "85%" }}
+
+                transition={{ duration: 0.8, delay: delay - 0.3, type: "easeOut" }}
+            />
+
+            <motion.div
                 className="flex flex-row justify-center items-center"
                 initial={{opacity: 0 }}
                 animate={{opacity: 1 }}
 
                 transition={{ duration: 0.4, delay: delay }}
-              >
+            >
 
                 {
                     data.header.map((header, index) => (
@@ -37,8 +46,7 @@ export default function InfoBoxes() {
                     ))
                 }
 
-
-
-        </motion.div>
+            </motion.div>
+        </>
     )
 }
