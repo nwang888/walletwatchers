@@ -2,6 +2,10 @@ import Router from 'next/router';
 import { useState, useEffect, useCallback } from 'react';
 import { usePlaidLink } from 'react-plaid-link';
 
+import ParticleBackground from './components/ParticleBackground';
+import Header from './components/Header';
+import Head from 'next/head';
+
 export default function PlaidLink() {
   const [token, setToken] = useState(null);
 
@@ -35,17 +39,30 @@ export default function PlaidLink() {
   });
 
   return (
-    <>
-       <div className="flex justify-center items-center text-sky-400/50 text-8xl font-semibold self-stretch whitespace-nowrap mt-20 max-md:max-w-full max-md:text-4xl">
-      Welcome Back!
+    <div className="z-10">
+      {/* <ParticleBackground /> */}
+
+      <Header />
+
+      <div className='mt-[20vh] max-w-[60%] mx-auto'>
+        <p className='text-text text-center text-5xl font-semibold mx-auto'>
+          Reimagine Financial Transparency
+        </p>
+
+        <p className='text-subtext max-w-[90%] text-center text-xl font-normal my-4 mx-auto'>
+          <span className='text-accent'>Supercharge</span> your finances with cross-account viewing, smart budget optimization, and comprehensive expense reports
+        </p>
+      </div>
+
+
+
+
+      <div className="flex justify-center my-5">
+        <button className="text-background bg-primary font-semibold py-3 px-5 rounded-lg hover:bg-primary-hover transition-all" onClick={() => open()} disabled={!ready}>
+          Link Account
+        </button>
+      </div>
+
     </div>
-
-      <div className="flex justify-center ">
-  <button className="px-4 py-2 bg-blue-500 text-white rounded items-center" onClick={() => open()} disabled={!ready}>
-    Link Account
-  </button>
-</div>
-
-    </>
   );
 }

@@ -13,10 +13,12 @@
     "radix-ui": "^1.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-particles": "^2.12.2",
     "react-plaid-link": "^3.3.0",
     "react-table": "^7.8.0",
     "sqlite": "^5.1.1",
-    "sqlite3": "^5.1.6"
+    "sqlite3": "^5.1.6",
+    "tsparticles-slim": "^2.12.0"
   },
   "scripts": {
     "dev": "next",
