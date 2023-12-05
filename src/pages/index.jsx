@@ -2,9 +2,11 @@ import Router from 'next/router';
 import { useState, useEffect, useCallback } from 'react';
 import { usePlaidLink } from 'react-plaid-link';
 
-import Header from './components/Header';
+import Header from './components/header';
 import Loading from './loading';
 import { motion } from 'framer-motion';
+
+import InfoBoxes from './components/landing/info-boxes';
 
 
 
@@ -55,8 +57,8 @@ export default function PlaidLink() {
 
 
           <>
-            <Header />
-              <div className='mt-[20vh] max-w-[60%] mx-auto'>
+            <Header setPageNum={(num) => {return}}/>
+              <div className='mt-[16vh] max-w-[60%] mx-auto'>
                 <motion.p 
                   className='text-text text-center text-5xl font-semibold mx-auto'
                   initial={{opacity: 0 }}
@@ -86,7 +88,7 @@ export default function PlaidLink() {
                 initial={{opacity: 0 }}
                 animate={{opacity: 1 }}
 
-                transition={{ duration: 0.4, delay: 2.5 }}
+                transition={{ duration: 0.4, delay: 2.3 }}
               >
                 <motion.button 
                   className="text-background bg-primary font-semibold py-3 px-5 rounded-lg hover:bg-primary-hover transition-all"
@@ -101,6 +103,17 @@ export default function PlaidLink() {
                   Get Started
                 </motion.button>
               </motion.div>
+
+
+              <motion.hr 
+                  className="border-primary my-10 justify-center block mx-auto" 
+                  initial={{ width: 0 }}
+                  animate={{ width: "85%" }}
+
+                  transition={{ duration: 0.8, delay: 3, type: "easeOut" }}
+              />
+
+              <InfoBoxes />
           </>
         )
       }
