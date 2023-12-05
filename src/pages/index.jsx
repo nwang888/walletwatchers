@@ -3,10 +3,14 @@ import { useState, useEffect, useCallback } from 'react';
 import { usePlaidLink } from 'react-plaid-link';
 
 import Header from './components/Header';
+import Loading from './loading';
 import { motion } from 'framer-motion';
+
+
 
 export default function PlaidLink() {
   const [token, setToken] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [data, setData] = useState([]);
 
@@ -22,6 +26,8 @@ export default function PlaidLink() {
   }, []);
 
   const onSuccess = useCallback(async (publicToken) => {
+    setIsLoading(true);
+
     await fetch('/api/exchange-public-token', {
       method: 'POST',
       headers: {
@@ -40,53 +46,66 @@ export default function PlaidLink() {
   return (
     <div className="z-10">
 
-      <Header />
-
-      <div className='mt-[20vh] max-w-[60%] mx-auto'>
-        <motion.p 
-          className='text-text text-center text-5xl font-semibold mx-auto'
-          initial={{opacity: 0 }}
-          animate={{opacity: 1 }}
-
-          transition={{ duration: 1, delay: 0.8 }}
-        >
-          Reimagine Financial Transparency
-        </motion.p>
-
-        <motion.p 
-          className='text-subtext max-w-[90%] text-center text-xl font-normal my-4 mx-auto'
-          initial={{opacity: 0 }}
-          animate={{opacity: 1 }}
-
-          transition={{ duration: 1, delay: 1.5 }}
-        >
-          <motion.span className='font-semibold' animate={{color: ["#525252", "#25311c", "#3e522e", "#577240", "#709353", "#89ac6c"]}} transition={{ duration: 0.6, delay: 1.8 }}>Supercharge </motion.span> your finances with cross-account viewing, smart budget optimization, and comprehensive expense reports
-        </motion.p>
-      </div>
+      {
+        isLoading ? (
+          <Loading />
+        ) : (
 
 
 
 
-      <motion.div 
-        className="flex justify-center my-10"
-        initial={{opacity: 0 }}
-        animate={{opacity: 1 }}
+          <>
+            <Header />
+              <div className='mt-[20vh] max-w-[60%] mx-auto'>
+                <motion.p 
+                  className='text-text text-center text-5xl font-semibold mx-auto'
+                  initial={{opacity: 0 }}
+                  animate={{opacity: 1 }}
 
-        transition={{ duration: 0.4, delay: 2.5 }}
-      >
-        <motion.button 
-          className="text-background bg-primary font-semibold py-3 px-5 rounded-lg hover:bg-primary-hover transition-all"
+                  transition={{ duration: 1, delay: 0.8 }}
+                >
+                  Reimagine Financial Transparency
+                </motion.p>
 
-          whileHover={{
-            y: -1,
-            transition: { duration: 0.1, type: "linear" },
-          }}
-          whileTap={{ scale: 0.9 }}
+                <motion.p 
+                  className='text-subtext max-w-[90%] text-center text-xl font-normal my-4 mx-auto'
+                  initial={{opacity: 0 }}
+                  animate={{opacity: 1 }}
 
-          onClick={() => open()} disabled={!ready}>
-          Get Started
-        </motion.button>
-      </motion.div>
+                  transition={{ duration: 1, delay: 1.5 }}
+                >
+                  <motion.span className='font-semibold' animate={{color: ["#525252", "#25311c", "#3e522e", "#577240", "#709353", "#89ac6c"]}} transition={{ duration: 0.4, delay: 1.8 }}>Supercharge </motion.span> your finances with cross-account viewing, smart budget optimization, and comprehensive expense reports
+                </motion.p>
+              </div>
+
+
+
+
+              <motion.div 
+                className="flex justify-center my-7"
+                initial={{opacity: 0 }}
+                animate={{opacity: 1 }}
+
+                transition={{ duration: 0.4, delay: 2.5 }}
+              >
+                <motion.button 
+                  className="text-background bg-primary font-semibold py-3 px-5 rounded-lg hover:bg-primary-hover transition-all"
+
+                  whileHover={{
+                    y: -1,
+                    transition: { duration: 0.1, type: "linear" },
+                  }}
+                  whileTap={{ scale: 0.9 }}
+
+                  onClick={() => open()} disabled={!ready}>
+                  Get Started
+                </motion.button>
+              </motion.div>
+          </>
+        )
+      }
+
+
 
     </div>
   );
