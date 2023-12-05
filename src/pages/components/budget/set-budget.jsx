@@ -31,17 +31,54 @@ const BudgetForm = () => {
   };
 
   return (
-    <div className="flex justify-center my-5">
-      <div className="w-1/2 p-3 bg-slate-50 rounded-md">
-        <h1 className="text-xl mb-4">Set Budget</h1>
-        <div className="flex flex-col">
-          <input className="mb-2 p-2 border rounded" type="text" value={budgetName} onChange={e => setBudgetName(e.target.value)} placeholder="Budget Name" />
-          <input className="mb-2 p-2 border rounded" type="date" value={startDate} onChange={e => setStartDate(e.target.value)} placeholder="Start Date" />
-          <input className="mb-2 p-2 border rounded" type="date" value={endDate} onChange={e => setEndDate(e.target.value)} placeholder="End Date" />
-          <input className="mb-2 p-2 border rounded" type="number" value={budgetAmount} onChange={e => setBudgetAmount(e.target.value)} placeholder="Budget Amount" />
-          <button className="p-2 bg-blue-500 text-white rounded hover:bg-blue-700 transition-colors" onClick={handleSetBudget}>Set Budget</button>
-        </div>
+    <div className='flex-col my-3'>
+      <h1 className='text-2xl font-bold my-3'>Set Budget</h1>
+      <div className='my-2'>
+        <label className="my-2" htmlFor="budgetName">Budget Name:</label>
+        <input 
+          id="budgetName"
+          className="mb-2 p-2 border rounded w-full" 
+          type="text" 
+          value={budgetName} 
+          onChange={e => setBudgetName(e.target.value)} 
+          placeholder="Budget Name" 
+        />
       </div>
+      <div className='my-2'>
+        <label className="my-2" htmlFor="startDate">Start Date:</label>
+        <input 
+          id="startDate"
+          className="mb-2 p-2 border rounded w-full" 
+          type="date" 
+          value={startDate} 
+          onChange={e => setStartDate(e.target.value)} 
+        />
+      </div>
+      <div className='my-2'>
+        <label className="my-2" htmlFor="endDate">End Date:</label>
+        <input 
+          id="endDate"
+          className="mb-2 p-2 border rounded w-full" 
+          type="date" 
+          value={endDate} 
+          onChange={e => setEndDate(e.target.value)} 
+        />
+      </div>
+      <div className='my-2'>
+        <label className="my-2" htmlFor="budgetAmount">Budget Amount:</label>
+        <input 
+          id="budgetAmount"
+          className="mb-2 p-2 border rounded w-full" 
+          type="number" 
+          value={budgetAmount} 
+          onChange={e => setBudgetAmount(e.target.value)} 
+          placeholder="Budget Amount" 
+        />
+      </div>
+      <button 
+        onClick={handleSetBudget}
+        className='border-2 border-gray-200 rounded-md p-2 hover:border-gray-300 transition-colors'
+      >Set Budget</button>
     </div>
   );
 };
