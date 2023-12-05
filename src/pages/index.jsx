@@ -93,10 +93,6 @@ export default function PlaidLink() {
                 <motion.button 
                   className="text-background bg-primary font-semibold py-3 px-5 rounded-lg hover:bg-primary-hover transition-all"
 
-                  whileHover={{
-                    y: -1,
-                    transition: { duration: 0.1, type: "linear" },
-                  }}
                   whileTap={{ scale: 0.9 }}
 
                   onClick={() => open()} disabled={!ready}>
@@ -106,7 +102,7 @@ export default function PlaidLink() {
 
 
               <motion.hr 
-                  className="border-primary my-10 justify-center block mx-auto" 
+                  className="border-primary my-8 justify-center block mx-auto" 
                   initial={{ width: 0 }}
                   animate={{ width: "85%" }}
 
