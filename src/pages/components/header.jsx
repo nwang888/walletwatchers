@@ -14,7 +14,7 @@ export default function NavBar({ setPageNum }) {
         }}
       >
         <h1 
-          className="text-2xl md:text-3xl lg:text-4xl font-bold font-custom 'poppin' text-text cursor-pointer" 
+          className="text-2xl md:text-3xl lg:text-4xl font-bold font-custom 'poppin' text-[#302e52] cursor-pointer" 
           onClick={() => setPageNum(0)}
         >
           WALLETWATCHERS
