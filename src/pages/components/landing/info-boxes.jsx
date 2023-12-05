@@ -19,7 +19,7 @@ export default function InfoBoxes() {
     return (
         <>
             <motion.hr 
-                className="border-primary my-8 justify-center block mx-auto" 
+                className="border-primary my-10 justify-center block mx-auto" 
                 initial={{ width: 0 }}
                 animate={{ width: "85%" }}
 

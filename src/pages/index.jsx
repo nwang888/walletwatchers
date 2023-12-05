@@ -84,7 +84,7 @@ export default function PlaidLink() {
 
 
               <motion.div 
-                className="flex justify-center my-7"
+                className="flex justify-center mt-7 mb-10"
                 initial={{opacity: 0 }}
                 animate={{opacity: 1 }}
 
