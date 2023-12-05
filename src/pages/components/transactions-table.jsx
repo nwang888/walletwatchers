@@ -9,10 +9,9 @@ import { MultiSelect } from "react-multi-select-component";
 
 //TODO: Add search
 //TODO: Add filtering for all columns
-//TODO: WTF is wrong with category_mapping
 // THings i was doing: making sure checkboxes are checked by default
 // Making sur eSElect none works
-// Getting SElect all for dettailed_categories to work
+// Getting SElect all for detailed_categories to work
 
 export default function TransactionsTable(walletID) {
 	const [transactions, setTransactions] = useState([]);
@@ -167,7 +166,7 @@ export default function TransactionsTable(walletID) {
 			"Water",
 			"Other Utilities"
 		]
-	};
+	}; // so apprarently the mapping that plaid gives us is not the same as the one in the sandbox data...
 
 	const categoryMapping = {
 		"Income": [
@@ -184,10 +183,8 @@ export default function TransactionsTable(walletID) {
 			"Deposit",
 			"Investment and Retirement Funds",
 			"Savings",
-			"Account Transfer",
 			"Other Transfer In",
 			"Payroll",
-			"Savings",
 			"Withdrawal",
 			"Account Transfer",
 			"Other Transfer Out"
@@ -300,8 +297,8 @@ export default function TransactionsTable(walletID) {
 	};
 
 	const [curFilters, setFilters] = useState({
-		// category_primary: Object.keys(categoryMapping),
-		// category_detailed: [].concat(...Object.values(categoryMapping))
+		category_primary: Object.keys(categoryMapping),
+		category_detailed: [].concat(...Object.values(categoryMapping))
 		// Add other filters here...
 	});
 	// cur_filters should be a dict of this format: { "account_id": "Plaid Checking", "category_primary": ["income", "transfer in"], "category_detailed": ["income dividends", "income interest earned"] }
@@ -375,12 +372,12 @@ export default function TransactionsTable(walletID) {
 		const newFilters = { ...curFilters };
 		if (allornone) {
 			newFilters[attribute] = Object.keys(categoryMapping);
-			console.log(Object.keys(categoryMapping));
+			// console.log(Object.keys(categoryMapping));
 		} else {
-			newFilters[attribute] = [];
-			console.log(newFilters[attribute]);
+			newFilters[category_primary] = [];
+			newFilters[category_detailed] = [];
+			// console.log(newFilters[attribute]);
 		}
-		console.log("handleAllPrimaryFilterChange newFilters:", newFilters);
 		setFilters(newFilters);
 		getTransactionsData({
 			sort_by: sortAttribute,
@@ -401,11 +398,10 @@ export default function TransactionsTable(walletID) {
 						curFilters.category_primary.includes(category)
 				)
 				.flatMap(([category, subcategories]) => subcategories);
-			console.log(newFilters[attribute]);
 		} else {
-			newFilters[attribute] = [];
+			newFilters[category_primary] = [];
+			newFilters[category_detailed] = [];
 		}
-		console.log("handleAllDetailedFilterChange newFilters:", newFilters);
 		setFilters(newFilters);
 		getTransactionsData({
 			sort_by: sortAttribute,
@@ -594,10 +590,10 @@ export default function TransactionsTable(walletID) {
 														<button
 															onClick={() =>
 																handleAllDetailedFilterChange(
+																	// Object.keys(categoryMapping).flatMap(
+																	// 	(key) => categoryMapping[key]
+																	// ),
 																	"category_detailed",
-																	Object.keys(categoryMapping).flatMap(
-																		(key) => categoryMapping[key]
-																	),
 																	true
 																)
 															}
@@ -607,10 +603,10 @@ export default function TransactionsTable(walletID) {
 														<button
 															onClick={() =>
 																handleAllDetailedFilterChange(
+																	// Object.keys(categoryMapping).flatMap(
+																	// 	(key) => categoryMapping[key]
+																	// ),
 																	"category_detailed",
-																	Object.keys(categoryMapping).flatMap(
-																		(key) => categoryMapping[key]
-																	),
 																	false
 																)
 															}
@@ -772,8 +768,7 @@ export default function TransactionsTable(walletID) {
 							</Button>
 						</motion.div>
 						<div style={{ margin: "0 10px" }}>
-							Page {currentPage} / {Math.ceil(totalRows / rowsPerPage)}
-							Total Rows: {totalRows}{" "}
+							Page {currentPage} / {Math.ceil(totalRows / rowsPerPage)}{" "}
 						</div>
 						<motion.div
 							whileHover={{ scale: 1.05 }}
