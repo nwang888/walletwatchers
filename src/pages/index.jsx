@@ -76,7 +76,7 @@ export default function PlaidLink() {
 
                   transition={{ duration: 1, delay: 1.5 }}
                 >
-                  <motion.span className='font-semibold' animate={{color: ["#525252", "#25311c", "#3e522e", "#577240", "#709353", "#89ac6c"]}} transition={{ duration: 0.4, delay: 1.8 }}>Supercharge </motion.span> your finances with cross-account viewing, smart budget optimization, and comprehensive expense reports
+                  <motion.span className='font-semibold' animate={{color: ["#525252", "#25311c", "#3e522e", "#577240", "#709353", "#89ac6c", "#a3bf8d"]}} transition={{ duration: 0.4, delay: 1.8 }}>Supercharge </motion.span> your finances with cross-account viewing, smart budget optimization, and comprehensive expense reports
                 </motion.p>
               </div>
 
