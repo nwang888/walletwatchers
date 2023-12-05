@@ -91,7 +91,7 @@ export default function WishlistTable({ balance }) {
             newPrice.push(payload[i].item_price);
             remainingBalances.push(remainingBalances[i] - newPrice[i]);
         }
-        
+         
         remainingBalances.shift();
         setID(newId); 
         setName(newName);
@@ -110,7 +110,6 @@ export default function WishlistTable({ balance }) {
         getWishlistData(1, rowsPerPage);
         const newRemainingBalance = remainingBalances[remainingBalances.length - 1] - priceTextBox;
 
-        // Add the new remaining balance to the array
         setRemainingBalances([...remainingBalances, newRemainingBalance]);
         
         
@@ -205,12 +204,21 @@ export default function WishlistTable({ balance }) {
 
                 <Table.Body>  
                   {id.map((wishlist, idx) => (
+
                     <Table.Row key={id[idx]}>
-                      <Table.Cell><button onClick={() => handleRemove(id[idx])}>Remove</button></Table.Cell>  
-                      <Table.Cell>{name[idx]}</Table.Cell>
+                      <Table.Cell><Button radius="large"
+                        variant="surface"
+                        highContrast
+                        color="orange"
+                        size="1"
+                        onClick={() => handleRemove(id[idx])}
+                        style={{ marginLeft: "5px" }}> Remove </Button></Table.Cell>  
+                      <Table.Cell>{name[idx]}</Table.Cell> 
                       <Table.Cell>{price[idx]}</Table.Cell>
-                      <Table.Cell> <progress value={totalBalance} max={price[idx]} /> <h1>{Math.trunc(Math.min(totalBalance/price[idx]*100, 100), 2)}%, ${totalBalance} / ${price[idx]} </h1></Table.Cell>
-                      <Table.Cell>  {remainingBalances[idx]} </Table.Cell>
+                      <Table.Cell> <progress value={price[idx]} max={totalBalance} /> <h1>{Math.trunc(Math.min((price[idx]/remainingBalances[idx] + price[idx])*100, 2))}%, ${price[idx]} / ${remainingBalances[idx] + price[idx]} </h1></Table.Cell>
+                      {/* <h1>{Math.trunc(Math.max(Math.min(remainingBalances[idx]/price[idx]*100, 100), 2),0)}% </h1> */}
+
+                      {/* <Table.Cell>  {remainingBalances[idx]} </Table.Cell> */}
                     </Table.Row>
                   ))} 
                 </Table.Body>
