@@ -27,12 +27,12 @@ export default function InfoBoxes() {
 
                 {
                     data.header.map((header, index) => (
-                        <InfoBox 
+                        <InfoBox
+                            key={index}
                             header={header}
                             text={data.text[index]}
                             image={data.image[index]}
                             delay={delay + stagger * index}
-                        
                         />
                     ))
                 }
