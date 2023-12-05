@@ -88,7 +88,7 @@ export default function PlaidLink() {
                 initial={{opacity: 0 }}
                 animate={{opacity: 1 }}
 
-                transition={{ duration: 0.4, delay: 2.3 }}
+                transition={{ duration: 0.4, delay: 1.5 }}
               >
                 <motion.button 
                   className="text-background bg-primary font-semibold py-3 px-5 rounded-lg hover:bg-primary-hover transition-all"
@@ -106,7 +106,7 @@ export default function PlaidLink() {
                   initial={{ width: 0 }}
                   animate={{ width: "85%" }}
 
-                  transition={{ duration: 0.8, delay: 3, type: "easeOut" }}
+                  transition={{ duration: 0.8, delay: 2, type: "easeOut" }}
               />
 
               <InfoBoxes />
