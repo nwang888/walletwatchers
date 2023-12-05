@@ -297,14 +297,14 @@ export default function TransactionsTable(walletID) {
 						<div className="text-center">Rows per page:</div>
 						<div className="flex space-x-4 items-center justify-center pt-5">
 							<motion.div
-								whileHover={{ scale: 1.05 }}
+								whileHover={{ scale: 1.03 }}
 								transition={{
 									type: "spring",
 									duration: 0.3
 								}}
 							>
 								<Button
-									color={rowsPerPage === 10 ? "cyan" : "indigo"}
+									color={rowsPerPage === 10 ? "primary" : "primary-light"}
 									onClick={() => handleRowsPerPageChange(10)}
 								>
 									10
@@ -312,14 +312,14 @@ export default function TransactionsTable(walletID) {
 							</motion.div>
 							<motion.div
 								className="mx-[10vw]"
-								whileHover={{ scale: 1.05 }}
+								whileHover={{ scale: 1.03 }}
 								transition={{
 									type: "spring",
 									duration: 0.3
 								}}
 							>
 								<Button
-									color={rowsPerPage === 20 ? "cyan" : "indigo"}
+									color={rowsPerPage === 20 ? "primary" : "primary-light"}
 									onClick={() => handleRowsPerPageChange(20)}
 								>
 									20
@@ -327,14 +327,14 @@ export default function TransactionsTable(walletID) {
 							</motion.div>
 							<motion.div
 								className="mx-[10vw]"
-								whileHover={{ scale: 1.05 }}
+								whileHover={{ scale: 1.03 }}
 								transition={{
 									type: "spring",
 									duration: 0.3
 								}}
 							>
 								<Button
-									color={rowsPerPage === 50 ? "cyan" : "indigo"}
+									color={rowsPerPage === 50 ? "primary" : "primary-light"}
 									onClick={() => handleRowsPerPageChange(50)}
 								>
 									50
@@ -351,7 +351,7 @@ export default function TransactionsTable(walletID) {
 							}}
 						>
 							<motion.div
-								whileHover={{ scale: 1.05 }}
+								whileHover={{ scale: 1.03 }}
 								transition={{
 									type: "spring",
 									duration: 0.3
@@ -368,7 +368,7 @@ export default function TransactionsTable(walletID) {
 								Page {currentPage} / {Math.ceil(totalRows / rowsPerPage)}{" "}
 							</div>
 							<motion.div
-								whileHover={{ scale: 1.05 }}
+								whileHover={{ scale: 1.03 }}
 								transition={{
 									type: "spring",
 									duration: 0.3

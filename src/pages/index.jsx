@@ -60,7 +60,7 @@ export default function PlaidLink() {
 
           transition={{ duration: 1, delay: 1.5 }}
         >
-          <motion.span className='font-semibold' animate={{color: ["#525252", "#25311c", "#3e522e", "#577240", "#709353", "#89ac6c"]}} transition={{ duration: 0.8, delay: 2.3 }}>Supercharge </motion.span> your finances with cross-account viewing, smart budget optimization, and comprehensive expense reports
+          <motion.span className='font-semibold' animate={{color: ["#525252", "#25311c", "#3e522e", "#577240", "#709353", "#89ac6c"]}} transition={{ duration: 0.6, delay: 1.8 }}>Supercharge </motion.span> your finances with cross-account viewing, smart budget optimization, and comprehensive expense reports
         </motion.p>
       </div>
 
@@ -72,7 +72,7 @@ export default function PlaidLink() {
         initial={{opacity: 0 }}
         animate={{opacity: 1 }}
 
-        transition={{ duration: 1, delay: 3 }}
+        transition={{ duration: 0.4, delay: 2.5 }}
       >
         <motion.button 
           className="text-background bg-primary font-semibold py-3 px-5 rounded-lg hover:bg-primary-hover transition-all"
