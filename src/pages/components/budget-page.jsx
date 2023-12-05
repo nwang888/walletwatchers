@@ -3,6 +3,7 @@ import Chart from 'chart.js/auto';
 
 import RecurringTransactions from './budget/recurring-transactions';
 
+
 export default function BudgetPage() {
   const [budgets, setBudgets] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -168,6 +169,7 @@ export default function BudgetPage() {
 
 
       <RecurringTransactions />
+
     </>
   );
 }
