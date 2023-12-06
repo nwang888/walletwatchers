@@ -64,7 +64,7 @@ export default function PlaidLink() {
                   initial={{opacity: 0 }}
                   animate={{opacity: 1 }}
 
-                  transition={{ duration: 1, delay: 0.8 }}
+                  transition={{ duration: 1, delay: 0.3 }}
                 >
                   Reimagine Financial Transparency
                 </motion.p>
@@ -74,9 +74,9 @@ export default function PlaidLink() {
                   initial={{opacity: 0 }}
                   animate={{opacity: 1 }}
 
-                  transition={{ duration: 1, delay: 1.5 }}
+                  transition={{ duration: 1, delay: 1.3 }}
                 >
-                  <motion.span className='font-semibold' animate={{color: ["#525252", "#5b5d58", "#63695f", "#6c7565", "#75816c", "#7e8d72", "#879979", "#90a580", "#9ab286", "#a3bf8d"]}} transition={{ duration: 0.4, delay: 1.5 }}>Supercharge </motion.span> your finances with cross-account viewing, smart budget optimization, and comprehensive expense reports
+                  <motion.span className='font-semibold' animate={{color: ["#525252", "#5b5d58", "#63695f", "#6c7565", "#75816c", "#7e8d72", "#879979", "#90a580", "#9ab286", "#a3bf8d"]}} transition={{ duration: 0.4, delay: 1.3 }}>Supercharge </motion.span> your finances with cross-account viewing, smart budget optimization, and comprehensive expense reports
                 </motion.p>
               </div>
 
@@ -88,7 +88,7 @@ export default function PlaidLink() {
                 initial={{opacity: 0 }}
                 animate={{opacity: 1 }}
 
-                transition={{ duration: 0.4, delay: 1.5 }}
+                transition={{ duration: 0.4, delay: 1.3 }}
               >
                 <motion.button 
                   className="text-background bg-primary font-semibold py-3 px-5 rounded-lg hover:bg-primary-hover transition-all"

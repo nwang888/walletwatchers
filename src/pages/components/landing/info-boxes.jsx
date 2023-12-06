@@ -3,7 +3,7 @@ import InfoBox from './info-box';
 
 export default function InfoBoxes() {
 
-    const delay = 3;
+    const delay = 2;
     const stagger = 0.8;
 
     const data = {
