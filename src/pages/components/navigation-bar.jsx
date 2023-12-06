@@ -16,7 +16,7 @@ export default function NavBar({ pageNum, setPageNum, setWalletId}) {
         >
           <Button 
             onClick={() => setPageNum(0)}
-            style={{ backgroundColor: pageNum === 0 ? '#AA87BE' : 'grey' }}
+            style={{ backgroundColor: pageNum === 0 ? '#779D58' : 'grey' }}
           >
               Home
           </Button>
@@ -32,7 +32,7 @@ export default function NavBar({ pageNum, setPageNum, setWalletId}) {
         >
           <Button 
             onClick={() => {setPageNum(1); setWalletId("");}}
-            style={{ backgroundColor: pageNum === 1 ? '#AA87BE' : 'grey' }}
+            style={{ backgroundColor: pageNum === 1 ? '#779D58' : 'grey' }}
           >
               Transactions
           </Button>
@@ -48,7 +48,7 @@ export default function NavBar({ pageNum, setPageNum, setWalletId}) {
         >
           <Button 
             onClick={() => setPageNum(2)}
-            style={{ backgroundColor: pageNum === 2 ? '#AA87BE' : 'grey' }}
+            style={{ backgroundColor: pageNum === 2 ? '#779D58' : 'grey' }}
           >
               Wishlist
           </Button>
@@ -63,7 +63,7 @@ export default function NavBar({ pageNum, setPageNum, setWalletId}) {
         >
           <Button 
             onClick={() => {setPageNum(3);}}
-            style={{ backgroundColor: pageNum === 3 ? '#AA87BE' : 'grey' }}
+            style={{ backgroundColor: pageNum === 3 ? '#779D58' : 'grey' }}
           >
               Budgets
           </Button>

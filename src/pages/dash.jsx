@@ -23,7 +23,7 @@ export default function Dashboard() {
 			<Header setPageNum={setPageNum} />
 
 
-			<div className="my-16 mx-3">
+			<div className="my-20 mx-3">
 				{pageNum === 0 ? (
 					<HomePage setPageNum={setPageNum} setWalletId={setWalletId} />
 				) : null}
