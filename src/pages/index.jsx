@@ -70,7 +70,7 @@ export default function PlaidLink() {
                 </motion.p>
 
                 <motion.p 
-                  className='text-subtext max-w-[90%] text-center text-xl font-normal my-4 mx-auto'
+                  className='text-subtext max-w-[80%] text-center text-lg font-normal my-4 mx-auto'
                   initial={{opacity: 0 }}
                   animate={{opacity: 1 }}
 
