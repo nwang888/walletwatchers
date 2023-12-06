@@ -480,24 +480,7 @@ export default function TransactionsTable(walletID) {
 								{columns.map((column) => (
 									<Table.ColumnHeaderCell key={column.sortKey}>
 										<div style={{ display: "flex", alignItems: "center" }}>
-											{column.name === "Primary Category" ||
-											column.name === "Detailed Category" ? (
-												<button
-													onClick={() =>
-														column.name === "Primary Category"
-															? setShowPrimaryCategoryCheckboxes(
-																	!showPrimaryCategoryCheckboxes
-															  )
-															: setShowDetailedCategoryCheckboxes(
-																	!showDetailedCategoryCheckboxes
-															  )
-													}
-												>
-													{column.name}
-												</button>
-											) : (
-												column.name
-											)}
+											{column.name}
 											<Flex gap="3">
 												<Button
 													radius="large"
@@ -511,153 +494,6 @@ export default function TransactionsTable(walletID) {
 													Sort
 												</Button>
 											</Flex>
-											{showPrimaryCategoryCheckboxes &&
-												column.name === "Primary Category" && (
-													// <div className="absolute top-full mt-2 w-full bg-white shadow-lg z-10">
-													<div>
-														<button
-															onClick={() =>
-																handleAllPrimaryFilterChange(
-																	"category_primary",
-																	true
-																)
-															}
-														>
-															Select All
-														</button>
-														<button
-															onClick={() =>
-																handleAllPrimaryFilterChange(
-																	"category_primary",
-																	false
-																)
-															}
-														>
-															Select None
-														</button>
-														{Object.keys(categoryMapping).map((category) => (
-															<div key={category} className="flex items-center">
-																<Checkbox.Root
-																	className="shadow-blackA4 hover:bg-violet3 flex h-[25px] w-[25px] appearance-none items-center justify-center rounded-[4px] bg-white shadow-[0_2px_10px] outline-none focus:shadow-[0_0_0_2px_black]"
-																	checked={curFilters.category_primary?.includes(
-																		category
-																	)}
-																	onCheckedChange={(checked) =>
-																		handleFilterChange(
-																			"category_primary",
-																			category,
-																			checked
-																		)
-																	}
-																	id={category}
-																>
-																	<Checkbox.Indicator className="text-violet11">
-																		<CheckIcon />
-																	</Checkbox.Indicator>
-																</Checkbox.Root>
-																<label
-																	className="pl-[15px] leading-none"
-																	htmlFor={category}
-																>
-																	{category}
-																</label>
-															</div>
-														))}
-														{/* <MultiSelect
-															options={Object.keys(categoryMapping).map(
-																(category) => ({
-																	label: category,
-																	value: category
-																})
-															)}
-															value={Object.keys(curFilters).map((filter) => ({
-																label: filter,
-																value: filter
-															}))}
-															onChange={(selectedOptions) =>
-																handleFilterChange(
-																	selectedOptions.map((option) => option.value)
-																)
-															}
-															hasSelectAll
-															labelledBy="Select"
-														/> */}
-													</div>
-												)}
-											{showDetailedCategoryCheckboxes &&
-												column.name === "Detailed Category" && (
-													<div>
-														<button
-															onClick={() =>
-																handleAllDetailedFilterChange(
-																	// Object.keys(categoryMapping).flatMap(
-																	// 	(key) => categoryMapping[key]
-																	// ),
-																	"category_detailed",
-																	true
-																)
-															}
-														>
-															Select All
-														</button>
-														<button
-															onClick={() =>
-																handleAllDetailedFilterChange(
-																	// Object.keys(categoryMapping).flatMap(
-																	// 	(key) => categoryMapping[key]
-																	// ),
-																	"category_detailed",
-																	false
-																)
-															}
-														>
-															Select None
-														</button>
-														{Object.entries(categoryMapping)
-															.filter(
-																([category]) =>
-																	!curFilters.category_primary ||
-																	curFilters.category_primary.length === 0 ||
-																	curFilters.category_primary.includes(category)
-															)
-															.map(([category, subcategories]) => (
-																<div key={category}>
-																	<h3>{category}</h3>
-																	{subcategories.map((subcategory) => (
-																		<div
-																			key={subcategory}
-																			className="flex items-center"
-																		>
-																			<Checkbox.Root
-																				className="shadow-blackA4 hover:bg-violet3 flex h-[25px] w-[25px] appearance-none items-center justify-center rounded-[4px] bg-white shadow-[0_2px_10px] outline-none focus:shadow-[0_0_0_2px_black]"
-																				checked={curFilters.category_detailed?.includes(
-																					subcategory
-																				)}
-																				onCheckedChange={(checked) =>
-																					handleFilterChange(
-																						"category_detailed",
-																						subcategory,
-																						checked
-																					)
-																				}
-																				id={subcategory}
-																			>
-																				<Checkbox.Indicator className="text-violet11">
-																					<CheckIcon />
-																				</Checkbox.Indicator>
-																			</Checkbox.Root>
-																			<label
-																				className="pl-[15px] leading-none"
-																				htmlFor={subcategory}
-																			>
-																				{subcategory}
-																			</label>
-																		</div>
-																	))}
-																</div>
-															))}
-													</div>
-												)}
 										</div>
 									</Table.ColumnHeaderCell>
 								))}
@@ -696,6 +532,7 @@ export default function TransactionsTable(walletID) {
 						)}
 					</Table.Root>
 				</div>
+				{/* ----------- PAGINATION BUTTONS AND OPTIONS -----------*/}
 				<div className="pt-5 items-center justify-center">
 					<div className="text-center">Rows per page:</div>
 					<div className="flex space-x-4 items-center justify-center pt-5">
