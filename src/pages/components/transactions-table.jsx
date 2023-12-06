@@ -3,6 +3,7 @@ import React from "react";
 import * as Select from "@radix-ui/react-select";
 import { Flex, Button, Table } from "@radix-ui/themes";
 import { motion } from "framer-motion";
+import "@radix-ui/colors/gray.css";
 
 //TODO: Add search
 //TODO: Add filtering for all columns
@@ -304,7 +305,7 @@ export default function TransactionsTable(walletID) {
 								}}
 							>
 								<Button
-									color={rowsPerPage === 10 ? "primary" : "primary-light"}
+									color={rowsPerPage === 10 ? "indigo" : "gray"}
 									onClick={() => handleRowsPerPageChange(10)}
 								>
 									10
@@ -319,7 +320,7 @@ export default function TransactionsTable(walletID) {
 								}}
 							>
 								<Button
-									color={rowsPerPage === 20 ? "primary" : "primary-light"}
+									color={rowsPerPage === 20 ? "indigo" : "gray"}
 									onClick={() => handleRowsPerPageChange(20)}
 								>
 									20
@@ -334,7 +335,7 @@ export default function TransactionsTable(walletID) {
 								}}
 							>
 								<Button
-									color={rowsPerPage === 50 ? "primary" : "primary-light"}
+									color={rowsPerPage === 50 ? "indigo" : "gray"}
 									onClick={() => handleRowsPerPageChange(50)}
 								>
 									50
