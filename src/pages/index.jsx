@@ -60,7 +60,7 @@ export default function PlaidLink() {
             <Header setPageNum={(num) => {return}}/>
               <div className='mt-[16vh] max-w-[60%] mx-auto'>
                 <motion.p 
-                  className='text-text text-center text-5xl font-semibold mx-auto'
+                  className='text-text text-center text-4xl font-semibold mx-auto'
                   initial={{opacity: 0 }}
                   animate={{opacity: 1 }}
 
@@ -74,9 +74,9 @@ export default function PlaidLink() {
                   initial={{opacity: 0 }}
                   animate={{opacity: 1 }}
 
-                  transition={{ duration: 1, delay: 1.7 }}
+                  transition={{ duration: 1, delay: 1.5 }}
                 >
-                  <motion.span className='font-semibold' animate={{color: ["#525252", "#25311c", "#3e522e", "#577240", "#709353", "#89ac6c", "#a3bf8d"]}} transition={{ duration: 0.4, delay: 1.8 }}>Supercharge </motion.span> your finances with cross-account viewing, smart budget optimization, and comprehensive expense reports
+                  <motion.span className='font-semibold' animate={{color: ["#525252", "#5b5d58", "#63695f", "#6c7565", "#75816c", "#7e8d72", "#879979", "#90a580", "#9ab286", "#a3bf8d"]}} transition={{ duration: 0.4, delay: 1.5 }}>Supercharge </motion.span> your finances with cross-account viewing, smart budget optimization, and comprehensive expense reports
                 </motion.p>
               </div>
 
@@ -88,7 +88,7 @@ export default function PlaidLink() {
                 initial={{opacity: 0 }}
                 animate={{opacity: 1 }}
 
-                transition={{ duration: 0.4, delay: 1.7 }}
+                transition={{ duration: 0.4, delay: 1.5 }}
               >
                 <motion.button 
                   className="text-background bg-primary font-semibold py-3 px-5 rounded-lg hover:bg-primary-hover transition-all"
