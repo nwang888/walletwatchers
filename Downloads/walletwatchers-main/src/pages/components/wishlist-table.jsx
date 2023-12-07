@@ -183,7 +183,7 @@ export default function WishlistTable({ balance }) {
     }
 
     const [dataFetched, setDataFetched] = useState(false);
-
+ 
 
     useEffect(() => {
       fetch('/api/account')
