@@ -1,6 +1,7 @@
 import WishlistTable from "./wishlist-table";
 import React, { useEffect, useState, useRef} from 'react';
 import { Table, Button, TextField } from '@radix-ui/themes';
+import "@radix-ui/colors/gray.css";
 
 export  async function handler(req, res) {
 	if (req.method === "GET") {
@@ -203,7 +204,7 @@ export default function WishlistsPage({wishlist,
 
       <div className="flex justify-between space-x-4">
         {/* Total Balances Card */}
-        <div className="bg-blue-200 p-4 rounded-md mb-8 w-1/4">
+        <div className="bg-purple-200 p-4 rounded-md mb-8 w-1/4">
           <h2 className="text-xl text-center font-bold mb-2">Total Balance</h2>
           <p className="text-l text-center">${totalBalance}</p>
         </div>

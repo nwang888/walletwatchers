@@ -60,9 +60,8 @@ export default async function handler(req, res) {
         } catch (err) {
             return res.status(500).json({ error: err.message });
         }
-    }
-    if (req.method === "DELETE") {
-        console.log("delete");
+    } else if (req.method === "DELETE") {
+        console.log("deleted");
         const { id } = req.query;
 
         try {
@@ -85,7 +84,26 @@ export default async function handler(req, res) {
         } catch (err) {
             res.status(500).json({ error: err.message });
         }
-    }
+    } if (req.method === "PUT") {
+        console.log("liked");
+        const { id } = req.query;
+      
+        try {
+          const db = await open({
+            filename: './sql/big.db',
+            driver: sqlite3.Database
+          });
+      
+          await db.run('UPDATE wishlist SET liked = 1 WHERE wishlist_id = ?', [id]);
+          await db.run('UPDATE wishlist SET liked = 1 ORDER BY liked DESC;')
+            await db.close();
+
+            return res.status(200).json(wishlists);
+        } catch (err) {
+          res.status(500).json({ error: err.message });
+        }
+      }
+      
 
 	if (req.method === "SORT") {
         console.log("sort");

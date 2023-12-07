@@ -2,9 +2,8 @@ import React, { useEffect, useState, useRef} from 'react';
 // import Chart from 'chart.js/auto';
 // import Image from 'next/image';
 import { Table, Button, TextField } from '@radix-ui/themes';
+import "@radix-ui/colors/gray.css";  
 
-  //       return an error if price value is not a double, also reset both textbox values to empty string '' after submit button is pressed 
-  
 export  async function handler(req, res) {
   if (req.method === "GET") {
       try {
@@ -25,6 +24,7 @@ export  async function handler(req, res) {
 
 export default function WishlistTable({ balance }) {
     const [wishlist, setWishlist] = useState([]);
+    // const [sortedWishlist, setSortedWishlist] = useState([]);
     const [nameTextBox, setNameTextBox] = useState("");
     const [priceTextBox, setPriceTextBox] = useState(0);
     const [currentPage, setCurrentPage] = useState(1);
@@ -35,6 +35,7 @@ export default function WishlistTable({ balance }) {
     const [totalBalance, setTotalBalance] = useState(0);
     const [remainingBalances, setRemainingBalances] = useState([]);
     const [totalPrice, setTotalPrice] = useState(0);
+    const [likedItems, setLikedItems] = useState([]);
           
     // remainingBalances.push(totalBalance);
   
@@ -128,7 +129,7 @@ export default function WishlistTable({ balance }) {
               remainingBalances.push(remainingBalances[i] - newPrice[i]);
           }
   
-          remainingBalances.shift();
+          // remainingBalances.shift();
           setID(newId); 
           setName(newName);
           setPrice(newPrice);
@@ -227,6 +228,75 @@ export default function WishlistTable({ balance }) {
       }
     };
 
+
+    // const handleLike = async (id) => {
+    //   const response = await fetch(`/api/wishlist?id=${id}`, {
+    //     method: 'LIKE'
+    //   });
+
+    //   if (response.ok) {
+    //     // Update the likedItems state
+    //     setLikedItems([...likedItems, id]);
+    
+    //     // Sort the wishlist based on liked items
+    //     const sortedWishlist = [...wishlist].sort((a, b) => {
+    //       const isLikedA = likedItems.includes(a.wishlist_id);
+    //       const isLikedB = likedItems.includes(b.wishlist_id);
+    
+    //       if (isLikedA && !isLikedB) {
+    //         return -1; // Move a to the top
+    //       } else if (!isLikedA && isLikedB) {
+    //         return 1; // Move b to the top
+    //       } else {
+    //         return 0; // Keep the same order
+    //       }
+    //     });
+    
+    //     // Update the wishlist state
+    //     setWishlist(sortedWishlist);
+    
+    //     // Fetch and update the wishlist data
+    //     getWishlistData(1, rowsPerPage);
+    //   } else {
+    //     console.error('Failed to mark item as liked');
+    //   }
+    // };
+
+    const handleLike = async (id) => {
+      const response = await fetch(`/api/wishlist?id=${id}`, {
+        method: 'PUT'
+      });
+      getWishlistData();
+
+
+        // Update the likedItems state
+        setLikedItems([...likedItems, id]);
+    
+        // Sort the wishlist based on liked items
+        const sortedWishlist = [...wishlist].sort((a, b) => {
+          const isLikedA = likedItems.includes(a.wishlist_id);
+          const isLikedB = likedItems.includes(b.wishlist_id);
+    
+          if (isLikedA && !isLikedB) {
+            return -1; // Move a to the top
+          } else if (!isLikedA && isLikedB) {
+            return 1; // Move b to the top
+          } else {
+            return 0; // Keep the same order
+          }
+        });
+    
+        // Update the wishlist state
+        setWishlist(sortedWishlist);
+    
+        // Fetch and update the wishlist data
+        getWishlistData(1, rowsPerPage);
+    };
+
+    
+
+      
+
     return (
       <>
 
@@ -279,13 +349,21 @@ export default function WishlistTable({ balance }) {
                         style={{ marginLeft: "5px" }}> Remove </Button></Table.Cell>  
                       <Table.Cell>{name[idx]}</Table.Cell> 
                       <Table.Cell>{price[idx]}</Table.Cell>
+                      <Table.Cell><Button radius="large"
+                        variant="surface"
+                        highContrast
+                        color="orange"
+                        size="1"
+                        onClick={() => handleLike(id[idx])}
+                        // disabled={likedItems.includes(id[idx])}
+                      >
+                        Like
+                      </Button></Table.Cell>
                       <Table.Cell> <progress value={totalBalance} max={price[idx]} /> <h1>{Math.trunc(Math.min(totalBalance/price[idx]*100, 100), 2)}%, ${price[idx]} / ${remainingBalances[idx]} </h1> </Table.Cell>
-                      <Table.Cell> ${totalBalance}</Table.Cell>
-                      <Table.Cell> ${remainingBalances[idx]}</Table.Cell>
-                      {/* <h1>{Math.trunc(Math.max(Math.min(remainingBalances[idx]/price[idx]*100, 100), 2),0)}% </h1> */}
-
-                      {/* <Table.Cell>  {remainingBalances[idx]} </Table.Cell> */}
-                    </Table.Row>
+                      <Table.Cell>{id[idx]}</Table.Cell>
+                      <Table.Cell>{likedItems}</Table.Cell>
+                      {/* <Table.Cell>{sortedWishlist}</Table.Cell> */}
+                      </Table.Row>
                   ))} 
                 </Table.Body>
               </Table.Root>
