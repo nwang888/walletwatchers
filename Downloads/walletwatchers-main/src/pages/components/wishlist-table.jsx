@@ -35,6 +35,14 @@ export default function WishlistTable({ balance }) {
     const [totalBalance, setTotalBalance] = useState(0);
     const [remainingBalances, setRemainingBalances] = useState([]);
     const [totalPrice, setTotalPrice] = useState(0);
+          
+    // remainingBalances.push(totalBalance);
+  
+          // for(let i = 0; i<wishlist.length;i++){
+          //     remainingBalances.push(remainingBalances[i] - newPrice[i]);
+          // }
+  
+          // remainingBalances.shift();
 
     const handleRowsPerPageChange = (event) => {
       setRowsPerPage(parseInt(event.target.value));
@@ -52,57 +60,85 @@ export default function WishlistTable({ balance }) {
       );
     };
 
+    const [sortAttribute, setSortAttribute] = useState();
+    const [cur_filters, setFilters] = useState({});
+
+    const [sortOrder, setSortOrder] = useState({
+      price: "asc"
+    }); 
+
+    const handleSortByPrice = async () => {
+      const newOrder = sortOrder[price] === "asc" ? "desc" : "asc";
+      const response = await fetch(`/api/wishlist`, {
+        method: 'SORT'
+      });
+
+      getWishlistData();
+    
+      if (response.ok) {
+        // Remove the item from the state
+        setWishlist(wishlist.filter(item => item.id !== id));
+      } else {
+        console.error('Failed to remove item');
+      }
+    };
+
     useEffect(() => {
         fetch('/api/account') 
             .then(response => response.json())
             .then(data => { 
                 const sum = data.reduce((total, account) => total + Number(account.account_balance), 0);
                 setTotalBalance(sum);
-            });
+                getWishlistData();
+                console.log("total balance: ", totalBalance);
+              })
+              .catch(error => {
+                console.error('Error fetching account data:', error);
+              });
     }, []);  
 
-    useEffect(() => {
-        fetch('/api/wishlist') 
-            .then(response => response.json())
-            .then(data => {
-              console.log(data);
-                const sum = data.reduce((total, item) => total + Number(item.item_price), 0); 
-                setTotalPrice(sum);
-            });
-    }, []);
+    // useEffect(() => {
+    //     fetch('/api/wishlist') 
+    //         .then(response => response.json())
+    //         .then(data => {
+    //           // console.log(data);
+    //             const sum = data.reduce((total, item) => total + Number(item.item_price), 0); 
+    //             setTotalPrice(sum);
+    //         });
+    // }, []);
   
  
     const getWishlistData = async ( 
-    page = 1,
-    rowsPerPage = 10,
-    paginate = true) => {
-        const response = await fetch(`/api/wishlist?page=${page}&rowsPerPage=${rowsPerPage}&paginate=${paginate}`);
-        const payload = await response.json();
-    
-        let newId = [];
-        let newName = [];
-        let newPrice = [];
-        let remainingBalances = [];
-        remainingBalances.push(totalBalance);
-        
-        for(let i = 0; i<payload.length;i++){
-            newId.push(payload[i].wishlist_id);
-            newName.push(payload[i].item_name);
-            newPrice.push(payload[i].item_price);
-            remainingBalances.push(remainingBalances[i] - newPrice[i]);
-        }
-         
-        remainingBalances.shift();
-        setID(newId); 
-        setName(newName);
-        setPrice(newPrice);
-        setRemainingBalances(remainingBalances);
-        
-        setWishlist(payload);
-    }
+      page = 1,
+      rowsPerPage = 10,
+      paginate = true) => {
+          const response = await fetch(`/api/wishlist?page=${page}&rowsPerPage=${rowsPerPage}&paginate=${paginate}`);
+          const payload = await response.json();
+  
+          let newId = [];
+          let newName = [];
+          let newPrice = [];
+          let remainingBalances = [];
+          remainingBalances.push(totalBalance);
+  
+          for(let i = 0; i<payload.length;i++){
+              newId.push(payload[i].wishlist_id); 
+              newName.push(payload[i].item_name);
+              newPrice.push(payload[i].item_price);
+              remainingBalances.push(remainingBalances[i] - newPrice[i]);
+          }
+  
+          remainingBalances.shift();
+          setID(newId); 
+          setName(newName);
+          setPrice(newPrice);
+          setRemainingBalances(remainingBalances);
+  
+          setWishlist(payload);
+      }  
     
     const postWishlistData = async () => {
-      setRemainingBalances(totalBalance);
+      // setRemainingBalances(totalBalance);
         const dataToSend = {
             name: nameTextBox,
             price: priceTextBox
@@ -117,7 +153,7 @@ export default function WishlistTable({ balance }) {
 
         console.log("post request sent");
 
-        const res = await fetch('/api/wishlist/', {
+        const res = await fetch('/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -138,15 +174,36 @@ export default function WishlistTable({ balance }) {
           alert('Price must be a valid number');
           return;
         }
+      totalPrice += pp;
+      setTotalPrice(totalPrice);
       event.preventDefault();
       postWishlistData();
       setNameTextBox('');
       setPriceTextBox('');
     }
 
+    const [dataFetched, setDataFetched] = useState(false);
+
+
     useEffect(() => {
-      getWishlistData();
-      }, []);
+      fetch('/api/account')
+        .then(response => response.json())
+        .then(data => {
+          const sum = data.reduce((total, account) => total + Number(account.account_balance), 0);
+          setTotalBalance(sum);
+          setDataFetched(true); // Set a flag indicating that data has been fetched
+        })
+        .catch(error => {
+          console.error('Error fetching account data:', error);
+        });
+    }, []);
+  
+    useEffect(() => {
+      if (dataFetched) {
+        // Call getWishlistData only after data has been fetched
+        getWishlistData();
+      }
+    }, [dataFetched]);
 
     useEffect(() => {
         fetch('/api/wishlist') // Assuming '/api/wishlist' returns your data
@@ -159,10 +216,11 @@ export default function WishlistTable({ balance }) {
         method: 'DELETE'
       });
 
+      totalPrice -= price[id-1];
+
       getWishlistData();
     
       if (response.ok) {
-        // Remove the item from the state
         setWishlist(wishlist.filter(item => item.id !== id));
       } else {
         console.error('Failed to remove item');
@@ -175,6 +233,12 @@ export default function WishlistTable({ balance }) {
             
 
             <div>
+            <button
+              className="bg-gray-300 p-2 rounded-md hover:bg-gray-400"
+              onClick={handleSortByPrice}
+            >
+              Sort by Price
+            </button>
             {wishlist.length > 0 ? (
               <Table.Root variant="surface">
                 <Table.Header>
@@ -215,7 +279,9 @@ export default function WishlistTable({ balance }) {
                         style={{ marginLeft: "5px" }}> Remove </Button></Table.Cell>  
                       <Table.Cell>{name[idx]}</Table.Cell> 
                       <Table.Cell>{price[idx]}</Table.Cell>
-                      <Table.Cell> <progress value={price[idx]} max={totalBalance} /> <h1>{Math.trunc(Math.min((price[idx]/remainingBalances[idx] + price[idx])*100, 2))}%, ${price[idx]} / ${remainingBalances[idx] + price[idx]} </h1></Table.Cell>
+                      <Table.Cell> <progress value={totalBalance} max={price[idx]} /> <h1>{Math.trunc(Math.min(totalBalance/price[idx]*100, 100), 2)}%, ${price[idx]} / ${remainingBalances[idx]} </h1> </Table.Cell>
+                      <Table.Cell> ${totalBalance}</Table.Cell>
+                      <Table.Cell> ${remainingBalances[idx]}</Table.Cell>
                       {/* <h1>{Math.trunc(Math.max(Math.min(remainingBalances[idx]/price[idx]*100, 100), 2),0)}% </h1> */}
 
                       {/* <Table.Cell>  {remainingBalances[idx]} </Table.Cell> */}

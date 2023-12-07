@@ -1,6 +1,5 @@
 import WishlistTable from "./wishlist-table";
 import React, { useEffect, useState, useRef} from 'react';
-
 import { Table, Button, TextField } from '@radix-ui/themes';
 
 export  async function handler(req, res) {
@@ -51,13 +50,16 @@ export default function WishlistsPage({wishlist,
 		paginate = true) => {
         const response = await fetch(`/api/wishlist?page=${page}&rowsPerPage=${rowsPerPage}&paginate=${paginate}`);
         const payload = await response.json();
+
+      totalBalance = 300;
+
+        
     
         let newId = [];
         let newName = [];
         let newPrice = [];
         let remainingBalances = [];
         remainingBalances.push(totalBalance);
-        // remainingBalances.push(totalBalance);
         
         for(let i = 0; i<payload.length;i++){
             newId.push(payload[i].wishlist_id);
@@ -122,15 +124,15 @@ export default function WishlistsPage({wishlist,
     setRefreshTableKey((prevKey) => prevKey + 1);
   }
 
-  useEffect(() => {
-    getWishlistData();
-    }, []);
+  // useEffect(() => {
+  //   getWishlistData();
+  //   }, []);
 
-	useEffect(() => {
-        fetch('/api/wishlist') // Assuming '/api/wishlist' returns your data
-            .then(response => response.json())
-            .then(data => setWishlist(data));
-    }, []);
+	// useEffect(() => {
+  //       fetch('/api/wishlist') // Assuming '/api/wishlist' returns your data
+  //           .then(response => response.json())
+  //           .then(data => setWishlist(data));
+  //   }, []);
 	
 	useEffect(() => {
         fetch('/api/account') 
@@ -138,6 +140,8 @@ export default function WishlistsPage({wishlist,
             .then(data => { 
                 const sum = data.reduce((total, account) => total + Number(account.account_balance), 0);
                 setTotalBalance(sum);
+
+                getWishlistData();
             });
     }, []);  
 
@@ -198,20 +202,26 @@ export default function WishlistsPage({wishlist,
       </div>
 
       <div className="flex justify-between space-x-4">
+        {/* Total Balances Card */}
+        <div className="bg-blue-200 p-4 rounded-md mb-8 w-1/4">
+          <h2 className="text-xl text-center font-bold mb-2">Total Balance</h2>
+          <p className="text-l text-center">${totalBalance}</p>
+        </div>
+
         {/* Total Items Card */}
-        <div className="bg-blue-200 p-4 rounded-md mb-8 w-1/3">
+        <div className="bg-blue-200 p-4 rounded-md mb-8 w-1/4">
           <h2 className="text-xl text-center font-bold mb-2">Total Items</h2>
           <p className="text-l text-center">{wishlist.length}</p>
         </div>
 
         {/* Total Price Card */}
-        <div className="bg-green-200 p-4 rounded-md mb-8 w-1/3">
+        <div className="bg-green-200 p-4 rounded-md mb-8 w-1/4">
           <h2 className="text-xl text-center font-bold mb-2">Total Price</h2>
           <p className="text-l text-center">${totalPrice}</p>
         </div>
 
         {/* Average Price Card */}
-        <div className="bg-yellow-200 p-4 rounded-md mb-8 w-1/3">
+        <div className="bg-yellow-200 p-4 rounded-md mb-8 w-1/4">
           <h2 className="text-xl text-center font-bold mb-2">Average Price</h2>
           <p className="text-l text-center">${Math.trunc(totalPrice/wishlist.length,2)}</p>
         </div>
