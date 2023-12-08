@@ -12,23 +12,55 @@ import BudgetPage from "./components/budget-page";
 import Header from "./components/header";
 import NavBar from "./components/navigation-bar";
 
-//TODO: Need to test transactions pagination with larger dataset
-
 export default function Dashboard() {
 	const [pageNum, setPageNum] = useState(0);
 	const [walletId, setWalletId] = useState("");
+
+	const [wishlist, setWishlist] = useState([]);
+    const [nameTextBox, setNameTextBox] = useState("");
+    const [priceTextBox, setPriceTextBox] = useState(0);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [name, setName] = useState([]);
+    const [price, setPrice] = useState([]);
+    const [id, setID] = useState([]);
+    const [totalBalance, setTotalBalance] = useState(0);
+    const [remainingBalances, setRemainingBalances] = useState([]);
+    const [totalPrice, setTotalPrice] = useState(0);
 
 	return (
 		<>
 			<Header setPageNum={setPageNum} />
 
-
-			<div className="my-20 mx-3">
+			<div className="my-16 mx-3">
 				{pageNum === 0 ? (
 					<HomePage setPageNum={setPageNum} setWalletId={setWalletId} />
 				) : null}
 				{pageNum === 1 ? <TransactionsPage walletId={walletId} /> : null}
-				{pageNum === 2 ? <WishlistPage /> : null}
+				{pageNum === 2 ? <WishlistPage 
+										wishlist={wishlist} 
+										setWishlist={setWishlist}
+										nameTextBox={nameTextBox}
+										setNameTextBox={setNameTextBox}
+										priceTextBox={priceTextBox}
+										setPriceTextBox={setPriceTextBox}
+										currentPage={currentPage}
+										setCurrentPage={setCurrentPage}
+										rowsPerPage={rowsPerPage}
+										setRowsPerPage={setRowsPerPage}
+										name={name}
+										setName={setName}
+										price={price}
+										setPrice={setPrice}
+										id={id}
+										setID={setID}
+										totalBalance={totalBalance}
+										setTotalBalance={setTotalBalance}
+										remainingBalances={remainingBalances}
+										setRemainingBalances={setRemainingBalances}
+										totalPrice={totalPrice}
+										setTotalPrice={setTotalPrice}
+										/> : null}
 				{pageNum === 3 ? <BudgetPage /> : null}
 			</div>
 
