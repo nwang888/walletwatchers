@@ -303,12 +303,7 @@ export default function WishlistTable({ balance }) {
             
 
             <div>
-            <button
-              className="bg-gray-300 p-2 rounded-md hover:bg-gray-400"
-              onClick={handleSortByPrice}
-            >
-              Sort by Price
-            </button>
+            
             {wishlist.length > 0 ? (
               <Table.Root variant="surface">
                 <Table.Header>
@@ -349,21 +344,9 @@ export default function WishlistTable({ balance }) {
                         style={{ marginLeft: "5px" }}> Remove </Button></Table.Cell>  
                       <Table.Cell>{name[idx]}</Table.Cell> 
                       <Table.Cell>{price[idx]}</Table.Cell>
-                      <Table.Cell><Button radius="large"
-                        variant="surface"
-                        highContrast
-                        color="orange"
-                        size="1"
-                        onClick={() => handleLike(id[idx])}
-                        // disabled={likedItems.includes(id[idx])}
-                      >
-                        Like
-                      </Button></Table.Cell>
-                      <Table.Cell> <progress value={totalBalance} max={price[idx]} /> <h1>{Math.trunc(Math.min(totalBalance/price[idx]*100, 100), 2)}%, ${price[idx]} / ${remainingBalances[idx]} </h1> </Table.Cell>
-                      <Table.Cell>{id[idx]}</Table.Cell>
-                      <Table.Cell>{likedItems}</Table.Cell>
-                      {/* <Table.Cell>{sortedWishlist}</Table.Cell> */}
-                      </Table.Row>
+                      
+                      <Table.Cell> <progress value={remainingBalances[idx]} max={price[idx]} /> <h1>{Math.trunc(Math.min(totalBalance/price[idx]*100, 100), 2)}%, ${price[idx]} / ${remainingBalances[idx]} </h1> </Table.Cell>
+                  </Table.Row>
                   ))} 
                 </Table.Body>
               </Table.Root>
