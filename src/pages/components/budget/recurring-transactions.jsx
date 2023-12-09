@@ -11,6 +11,20 @@ export default function RecurringTransactions() {
     const [detailedCategory, setDetailedCategory] = useState('income dividends');
 
     const postTransactionData = async () => {
+        // Input validation
+        if (!primaryCategory.trim() || !detailedCategory.trim()) {
+            alert('Please enter a valid category.');
+            return;
+        }
+        if (!merchantTextBox.trim()) {
+            alert('Please enter a valid merchant name.');
+            return;
+        }
+        if (!priceTextBox || isNaN(priceTextBox) || priceTextBox <= 0) {
+            alert('Please enter a valid transaction amount.');
+            return;
+        }
+        
         const dataToSend = {
             primary_category: primaryCategory.toUpperCase().replace(/ /g, "_"),
             detailed_category: detailedCategory.toUpperCase().replace(/ /g, "_"),
@@ -34,6 +48,7 @@ export default function RecurringTransactions() {
 
         return data;
     }
+    
 
     const handleAddButton = (event) => {
         const pp = parseFloat(priceTextBox);
