@@ -1,11 +1,12 @@
 import { useRef, useEffect, useState } from "react";
 import React from "react";
-import * as Select from "@radix-ui/react-select";
+// import * as Select from "@radix-ui/react-select";
 import { Flex, Button, Table } from "@radix-ui/themes";
 import { motion } from "framer-motion";
-import * as Checkbox from "@radix-ui/react-checkbox";
-import { CheckIcon } from "@radix-ui/react-icons";
-import { MultiSelect } from "react-multi-select-component";
+// import * as Checkbox from "@radix-ui/react-checkbox";
+// import { CheckIcon } from "@radix-ui/react-icons";
+// import { MultiSelect } from "react-multi-select-component";
+import Select from "react-select";
 
 //TODO: Add search
 //TODO: Add filtering for all columns
@@ -30,10 +31,10 @@ export default function TransactionsTable(walletID) {
 		account_name: "asc"
 	});
 
-	const [showPrimaryCategoryCheckboxes, setShowPrimaryCategoryCheckboxes] =
-		useState(false);
-	const [showDetailedCategoryCheckboxes, setShowDetailedCategoryCheckboxes] =
-		useState(false);
+	// const [showPrimaryCategoryCheckboxes, setShowPrimaryCategoryCheckboxes] =
+	// 	useState(false);
+	// const [showDetailedCategoryCheckboxes, setShowDetailedCategoryCheckboxes] =
+	// 	useState(false);
 	const realCategoryMapping = {
 		"Income": [
 			"Dividends",
@@ -303,7 +304,7 @@ export default function TransactionsTable(walletID) {
 	});
 	// cur_filters should be a dict of this format: { "account_id": "Plaid Checking", "category_primary": ["income", "transfer in"], "category_detailed": ["income dividends", "income interest earned"] }
 
-	console.log("curFilters", curFilters);
+	// console.log("curFilters", curFilters);
 
 	const handleRowsPerPageChange = (value) => {
 		const newRowsPerPage = parseInt(value);
@@ -353,55 +354,17 @@ export default function TransactionsTable(walletID) {
 				newFilters[attribute] = newFilters[attribute].filter(
 					(value) => value !== attributeValues
 				);
-				// // If the array of values for the given attribute is empty, delete the attribute key from newFilters
-				// if (newFilters[attribute].length === 0) {
-				// 	delete newFilters[attribute];
-				// }
+				// If a primary category is being deselected, also deselect the associated detailed categories
+				if (attribute === "category_primary") {
+					const detailedCategories = categoryMapping[attributeValues];
+					newFilters["category_detailed"] = newFilters[
+						"category_detailed"
+					].filter((value) => !detailedCategories.includes(value));
+				}
 			}
 		}
-		setFilters(newFilters);
-		getTransactionsData({
-			sort_by: sortAttribute,
-			order: sortOrder[sortAttribute],
-			rowsPerPage: rowsPerPage,
-			filters: newFilters
-		});
-	};
-
-	const handleAllPrimaryFilterChange = (attribute, allornone) => {
-		const newFilters = { ...curFilters };
-		if (allornone) {
-			newFilters[attribute] = Object.keys(categoryMapping);
-			// console.log(Object.keys(categoryMapping));
-		} else {
-			newFilters[category_primary] = [];
-			newFilters[category_detailed] = [];
-			// console.log(newFilters[attribute]);
-		}
-		setFilters(newFilters);
-		getTransactionsData({
-			sort_by: sortAttribute,
-			order: sortOrder[sortAttribute],
-			rowsPerPage: rowsPerPage,
-			filters: newFilters
-		});
-	};
-
-	const handleAllDetailedFilterChange = (attribute, allornone) => {
-		const newFilters = { ...curFilters };
-		if (allornone) {
-			newFilters[attribute] = Object.entries(categoryMapping)
-				.filter(
-					([category]) =>
-						!curFilters.category_primary ||
-						curFilters.category_primary.length === 0 ||
-						curFilters.category_primary.includes(category)
-				)
-				.flatMap(([category, subcategories]) => subcategories);
-		} else {
-			newFilters[category_primary] = [];
-			newFilters[category_detailed] = [];
-		}
+		console.log("params", attribute, attributeValues, checked);
+		console.log("newFilters", newFilters);
 		setFilters(newFilters);
 		getTransactionsData({
 			sort_by: sortAttribute,
@@ -465,14 +428,64 @@ export default function TransactionsTable(walletID) {
 	];
 	return (
 		<div>
-			<div
-				style={{
-					display: "flex",
-					flexDirection: "column",
-					height: "80vh",
-					position: "relative"
-				}}
-			>
+			{/* ----------- FILTERS -----------*/}
+			<div>
+				<div className="flex justify-center items-center">
+					{columns.map(
+						(column) =>
+							(column.sortKey === "category_primary" ||
+								column.sortKey === "category_detailed") && (
+								<div key={column.sortKey}>
+									<label>{column.name}</label>
+									<Select
+										options={
+											column.sortKey === "category_primary"
+												? Object.keys(categoryMapping).map((option) => ({
+														label: option,
+														value: option
+												  }))
+												: Object.values(categoryMapping)
+														.flat()
+														.map((option) => ({
+															label: option,
+															value: option
+														}))
+										}
+										placeholder={`Select ${column.name}`}
+										onChange={(selectedOptions) => {
+											// Convert selectedOptions from array of objects to array of values
+											const newSelectedOptions = selectedOptions
+												? selectedOptions.map((option) => option.value)
+												: [];
+
+											// Find options that were selected
+											const selected = newSelectedOptions.filter(
+												(option) => !curFilters[column.sortKey].includes(option)
+											);
+											selected.forEach((option) =>
+												handleFilterChange(column.sortKey, option, true)
+											);
+											console.log(selected);
+
+											// Find options that were deselected
+											const deselected = curFilters[column.sortKey].filter(
+												(option) => !newSelectedOptions.includes(option)
+											);
+											deselected.forEach((option) =>
+												handleFilterChange(column.sortKey, option, false)
+											);
+											console.log(deselected);
+										}}
+										isSearchable={true}
+										isMulti
+									/>
+								</div>
+							)
+					)}
+				</div>
+			</div>
+			{/* ----------- TABLES -----------*/}
+			<div className="flex flex-col h-screen relative">
 				<div style={{ flexGrow: 1, overflowY: "auto" }}>
 					<Table.Root variant="surface">
 						<Table.Header>

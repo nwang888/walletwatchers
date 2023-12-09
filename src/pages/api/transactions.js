@@ -187,7 +187,7 @@ async function getTransactionsData(
 
 	const filters_parsed = JSON.parse(decodeURIComponent(filters));
 
-	console.log("filters: ", filters_parsed);
+	// console.log("filters: ", filters_parsed);
 	let whereClause = "";
 	let whereValues = [];
 	for (const [key, value] of Object.entries(filters_parsed)) {
@@ -205,8 +205,8 @@ async function getTransactionsData(
 			console.error(`Invalid filter key: ${key}`);
 		}
 	}
-	console.log("whereClause: ", whereClause);
-	console.log("whereValues: ", whereValues);
+	// console.log("whereClause: ", whereClause);
+	// console.log("whereValues: ", whereValues);
 
 	let payload;
 	const totalRows = await db.get(
