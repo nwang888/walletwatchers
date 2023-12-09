@@ -1,20 +1,81 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'; // Import useLayoutEffect
 import Chart from 'chart.js/auto';
-
-import RecurringTransactions from './budget/recurring-transactions';
 import BudgetForm from './budget/set-budget';
+import RecurringTransactions from './budget/recurring-transactions';
 
 export default function BudgetPage() {
-  const [budgets, setBudgets] = useState([]);
-  const [recurringTransactions, setRecurringTransactions] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isRecurringLoading, setIsRecurringLoading] = useState(true);
+  const [budgets, setBudgets] = useState([]);
+  const [recurringTransactions, setRecurringTransactions] = useState([]);
+  const [categorySums, setCategorySums] = useState([]); // Define categorySums state
   const chartRef = useRef(null);
+  const barChartRef = useRef(null);
   const [chartInstance, setChartInstance] = useState(null);
-  const [budgetName, setBudgetName] = useState('');
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
-  const [budgetAmount, setBudgetAmount] = useState('');
+  const [barChartInstance, setBarChartInstance] = useState(null);
+
+
+  useLayoutEffect(() => {
+    if (isLoading || !categorySums.length) return;
+  
+    const positiveCategorySums = categorySums.filter(item => item.total_amount >= 0);
+  
+    const barColors = positiveCategorySums.map((item, index) => {
+        const colors = ['#CCDFF1', '#EDDEF3', '#E8F5E4', '#C4E6DE', '#CFEAF2', '#F5E6E8'];
+        return colors[index % colors.length];
+    });
+  
+    const barData = {
+        labels: positiveCategorySums.map(item => item.category_primary),
+        datasets: [{
+            label: 'Total Spent per Category',
+            data: positiveCategorySums.map(item => item.total_amount),
+            backgroundColor: barColors,
+            borderColor: barColors, 
+            borderWidth: 1
+        }]
+    };
+
+    const barConfig = {
+        type: 'bar',
+        data: barData,
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: true // Set to false or true based on your preference
+                },
+                title: {
+                    display: true,
+                    text: 'Category Spending'
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        color: '#444',
+                    }
+                },
+                x: {
+                    ticks: {
+                        color: '#444', // Match the color to your style
+                    }
+                }
+            }
+        }
+    };
+  
+    const newBarChartInstance = new Chart(barChartRef.current, barConfig);
+    setBarChartInstance(newBarChartInstance);
+  
+    return () => {
+        if (barChartInstance) {
+            barChartInstance.destroy();
+        }
+    };
+  }, [isLoading, categorySums]);
+
 
   // Fetch budgets
   useEffect(() => {
@@ -34,6 +95,25 @@ export default function BudgetPage() {
     };
     getBudgets();
   }, []);
+
+  // Fetch category sums
+useEffect(() => {
+  const getCategorySums = async () => {
+    try {
+      const response = await fetch('/api/sum'); // Replace with your actual API endpoint
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const payload = await response.json();
+      setCategorySums(payload);
+    } catch (error) {
+      console.error("Failed to fetch category sums:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  getCategorySums();
+}, []);
 
   // Fetch recurring transactions
   useEffect(() => {
@@ -113,6 +193,11 @@ export default function BudgetPage() {
           <canvas ref={chartRef} id="budgetChart" />
         ) : (
           <div>No budget data to display</div>
+        )}
+        {categorySums.length > 0 ? (
+          <canvas ref={barChartRef} id="categorySpendingChart" />
+        ) : (
+          <div>No category spending data to display</div>
         )}
       </div>
       <BudgetForm />
