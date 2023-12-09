@@ -12,6 +12,8 @@ import BudgetPage from "./components/budget-page";
 import Header from "./components/header";
 import NavBar from "./components/navigation-bar";
 
+//TODO: Need to test transactions pagination with larger dataset
+
 export default function Dashboard() {
 	const [pageNum, setPageNum] = useState(0);
 	const [walletId, setWalletId] = useState("");
@@ -20,7 +22,8 @@ export default function Dashboard() {
 		<>
 			<Header setPageNum={setPageNum} />
 
-			<div className="my-16 mx-3">
+
+			<div className="my-20 mx-3">
 				{pageNum === 0 ? (
 					<HomePage setPageNum={setPageNum} setWalletId={setWalletId} />
 				) : null}

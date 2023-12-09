@@ -66,6 +66,7 @@ export default function Wallets({ accountData, setPageNum, setWalletId }) {
           <button
             className="text-center text-md font-bold"
             onClick={() => setViewAll(true)}
+
           >
             View All...
           </button>
