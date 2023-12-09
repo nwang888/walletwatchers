@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 
 export default function Wallet({ wallet, index }) {
     function generateBackgroundColor(index) {
-        const colors = ["bg-customColor1", "bg-customColor2", "bg-customColor3"];
+        const colors = ["bg-primary-light", "bg-secondary-light", "bg-accent-light"];
         return colors[index % colors.length];
     }
 
@@ -17,11 +17,12 @@ export default function Wallet({ wallet, index }) {
           duration: 0.3
       }}
     >
-      <h2 className="text-xl">{wallet.account_name}</h2>
-      <hr className="py-[1px] my-1 bg-black w-full" />
+
+      <h2 className="text-xl font-medium">{wallet.account_name}</h2>
+      <hr className="py-[1px] my-1 bg-subtext w-full" />
       <h3 className="mt-2">Total Balance</h3>
       <h2 className="font-bold">${wallet.account_balance}</h2>
-      <p className="text-right">{wallet.routing_number}</p>
+      <p className="text-right text-sm">{wallet.routing_number}</p>
     </motion.div>
   );
 }
