@@ -9,11 +9,12 @@ async function getCategory(column, isMap) {
 
 	let info;
 	if (isMap === "true") {
+		// get a map of category_primary to category_detailed
 		const rows = await db.all(`
-      SELECT category_primary, GROUP_CONCAT(DISTINCT category_detailed) as category_detailed
-      FROM Transactions
-      GROUP BY category_primary
-    `);
+			SELECT category_primary, GROUP_CONCAT(DISTINCT category_detailed) as category_detailed
+			FROM Transactions
+			GROUP BY category_primary
+		`);
 
 		info = rows.reduce((acc, row) => {
 			acc[row.category_primary] = row.category_detailed.split(",");
@@ -35,15 +36,13 @@ async function getCategory(column, isMap) {
 	return info;
 }
 export default async function categoryHandler(req, res) {
-	// Handling Get request
+	// handle get request to categories
 	if (req.method == "GET") {
 		try {
 			const { column, isMap } = req.query;
 			const payload = await getCategory(column, isMap);
 			if (payload.length == 0) {
-				return res
-					.status(200)
-					.json({ message: "no tuples returned for this column ;-;" });
+				return res.status(200).json({ message: "no tuples returned ;-;" });
 			} else {
 				return res.status(200).json(payload);
 			}
