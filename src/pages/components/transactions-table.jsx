@@ -129,7 +129,7 @@ export default function TransactionsTable(walletID) {
 			.then((response) => response.json())
 			.then((data) => {
 				setCategoryMapping(data);
-				setCurrentFilters({
+				setFilters({
 					category_primary: Object.keys(data),
 					category_detailed: [].concat(...Object.values(data))
 				});
@@ -137,7 +137,7 @@ export default function TransactionsTable(walletID) {
 			.catch((error) => console.error("Error:", error));
 
 		if (walletID.walletId && walletID.walletId !== "") {
-			const newFilters = { ...filters, "account_id": walletID.walletId };
+			const newFilters = { ...curFilters, "account_id": walletID.walletId };
 			setFilters(newFilters);
 			getTransactionsData({
 				sort_by: "transaction_amount",
