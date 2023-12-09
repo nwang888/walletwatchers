@@ -23,7 +23,7 @@ export  async function handler(req, res) {
   }
 }
 
-export default function WishlistTable({ balance }) {
+export default function WishlistTable() {
     const [wishlist, setWishlist] = useState([]);
     const [wishlist1, setWishlist1] = useState([]);
     const [nameTextBox, setNameTextBox] = useState("");
@@ -38,14 +38,6 @@ export default function WishlistTable({ balance }) {
     const [totalPrice, setTotalPrice] = useState(0);
     const [likedItems, setLikedItems] = useState([]);
     const [totalRows, setTotalRows] = useState(0);
-          
-    // remainingBalances.push(totalBalance);
-  
-          // for(let i = 0; i<wishlist.length;i++){
-          //     remainingBalances.push(remainingBalances[i] - newPrice[i]);
-          // }
-  
-          // remainingBalances.shift();
 
     const handleRowsPerPageChange = (event) => {
       setRowsPerPage(parseInt(event.target.value));
@@ -114,6 +106,7 @@ export default function WishlistTable({ balance }) {
             setRemainingBalances(remainingBalances);
     
             setWishlist(payload.wishlists);
+            setTotalRows(payload.totalRows);
       }  
     
     const postWishlistData = async () => {
@@ -126,7 +119,6 @@ export default function WishlistTable({ balance }) {
         const newRemainingBalance = remainingBalances[remainingBalances.length - 1] - priceTextBox;
 
         setRemainingBalances([...remainingBalances, newRemainingBalance]);
-        setTotalRows(totalRows + 1);
         
         console.log("sending data: ", dataToSend);
 
@@ -168,24 +160,11 @@ export default function WishlistTable({ balance }) {
         .then(data => {
           const sum = data.reduce((total, account) => total + Number(account.account_balance), 0);
           setTotalBalance(sum);
-          setDataFetched(true); // Set a flag indicating that data has been fetched
+          getWishlistData();
         })
         .catch(error => {
           console.error('Error fetching account data:', error);
         });
-    }, []);
-  
-    useEffect(() => {
-      if (dataFetched) {
-        // Call getWishlistData only after data has been fetched
-        getWishlistData();
-      }
-    }, [dataFetched]);
-
-    useEffect(() => {
-        fetch('/api/wishlist') // Assuming '/api/wishlist' returns your data
-            .then(response => response.json())
-            .then(data => setWishlist(data));
     }, []);
 
     const handleRemove = async (id) => {
@@ -195,7 +174,6 @@ export default function WishlistTable({ balance }) {
 
       totalPrice -= price[id-1];
       getWishlistData();
-      setTotalRows(totalRows - 1);
     
       if (response.ok) {
         setWishlist(wishlist.filter(item => item.id !== id));
@@ -225,7 +203,75 @@ export default function WishlistTable({ balance }) {
         <>
               <div>
               {/* <button onClick={() => handleSortLiked()}> Sort </button> */}
+              <div className="text-neutral-800 text-xl font-semibold leading-7 self-stretch mb-4">
+          Wishlist
+              </div>
+              <h1 className="mb-4">Enter items into your wishlist</h1>
+              <div className="flex items-center mb-4">
+                <label htmlFor="name" className="mr-2">
+                  Item name:
+                </label>
+                <TextField.Root className="w-1/3">
+                  <TextField.Slot></TextField.Slot>
+                  <TextField.Input
+                    id="name"
+                    placeholder="Name"
+                    value={nameTextBox}
+                    onChange={(event) => setNameTextBox(event.target.value)}
+                    className="w-full ml-3"
+                  />
+                </TextField.Root>
+              </div>
+              <div className="flex items-center mb-4">
+                <label htmlFor="price" className="mr-2">
+                  Price:
+                </label>
+                <TextField.Root className="w-1/3 ml-10">
+                  <TextField.Slot></TextField.Slot>
+                  <TextField.Input
+                    id="price"
+                    placeholder="Price"
+                    value={priceTextBox}
+                    onChange={(event) => setPriceTextBox(event.target.value)}
+                    className="w-full ml-3"
+                  />
+                </TextField.Root>
+              </div>     
+              <div className="items-center mb-8"> 
+                        <Button radius="large"
+                        variant="surface"
+                        highContrast
+                        color="orange"
+                        size="1"
+                        onClick={handleAddButton}
+                        style={{ marginLeft: "5px" }}> Add </Button>  
+              </div>
 
+              <div className="flex justify-between space-x-4">
+                {/* Total Balances Card */}
+                <div className="bg-primary-light p-4 rounded-md mb-8 w-1/4">
+                  <h2 className="text-xl text-center font-bold mb-2">Total Balance</h2>
+                  <p className="text-l text-center">${totalBalance}</p>
+                </div>
+
+                {/* Total Items Card */}
+                <div className="bg-secondary-light p-4 rounded-md mb-8 w-1/4">
+                  <h2 className="text-xl text-center font-bold mb-2">Total Items</h2>
+                  <p className="text-l text-center">{wishlist.length}</p>
+                </div>
+
+                {/* Total Price Card */}
+                <div className="bg-accent-light p-4 rounded-md mb-8 w-1/4">
+                  <h2 className="text-xl text-center font-bold mb-2">Total Price</h2>
+                  <p className="text-l text-center">${totalPrice}</p>
+                </div>
+
+                {/* Average Price Card */}
+                <div className="bg-primary-hover p-4 rounded-md mb-8 w-1/4">
+                  <h2 className="text-xl text-center font-bold mb-2">Average Price</h2>
+                  <p className="text-l text-center">${Math.trunc(totalPrice/wishlist.length,2)}</p>
+                </div>
+              </div>      
               
               {wishlist.length > 0 ? (
                   <div style={{ flexGrow: 1, overflowY: "auto" }}>

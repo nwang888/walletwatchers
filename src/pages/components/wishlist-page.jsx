@@ -21,28 +21,21 @@ export  async function handler(req, res) {
 	}
 }
 
-export default function WishlistsPage({wishlist, 
-										setWishlist, 
-										nameTextBox, 
-										setNameTextBox,
-										priceTextBox,
-										setPriceTextBox,
-										currentPage,
-										setCurrentPage,
-										rowsPerPage,
-										setRowsPerPage,
-										name,
-										setName,
-										price,
-										setPrice,
-										id,
-										setID,
-										totalBalance,
-										setTotalBalance,
-										remainingBalances,
-										setRemainingBalances,
-										totalPrice,
-										setTotalPrice}) {
+export default function WishlistsPage() {
+  const [wishlist, setWishlist] = useState([]);
+  const [wishlist1, setWishlist1] = useState([]);
+  const [nameTextBox, setNameTextBox] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [name, setName] = useState([]);
+  const [price, setPrice] = useState([]);
+  const [like, setLike] = useState([]);
+  const [id, setID] = useState([]);
+  const [totalBalance, setTotalBalance] = useState(0);
+  const [remainingBalances, setRemainingBalances] = useState([]);
+  const [totalPrice, setTotalPrice] = useState(0);
+  const [likedItems, setLikedItems] = useState([]);
+  const [totalRows, setTotalRows] = useState(0);
 
 
 	const getWishlistData = async ( 
@@ -76,6 +69,7 @@ export default function WishlistsPage({wishlist,
         setRemainingBalances(remainingBalances);
         
         setWishlist(payload);
+
     }
     
     const postWishlistData = async () => {

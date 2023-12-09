@@ -18,8 +18,8 @@ export default async function handler(req, res) {
 				`SELECT COUNT(*) as count
 				FROM Wishlists`
 			);
-			console.log(totalRows);
-			console.log(wishlists);
+			// console.log(totalRows);
+			// console.log(wishlists);
             await db.close();
 
             return res.status(200).json({wishlists: wishlists, totalRows: totalRows.count});
