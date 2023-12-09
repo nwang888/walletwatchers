@@ -31,280 +31,11 @@ export default function TransactionsTable(walletID) {
 		account_name: "asc"
 	});
 
-	// const [showPrimaryCategoryCheckboxes, setShowPrimaryCategoryCheckboxes] =
-	// 	useState(false);
-	// const [showDetailedCategoryCheckboxes, setShowDetailedCategoryCheckboxes] =
-	// 	useState(false);
-	const realCategoryMapping = {
-		"Income": [
-			"Dividends",
-			"Interest Earned",
-			"Retirement Pension",
-			"Tax Refund",
-			"Unemployment",
-			"Wages",
-			"Other Income"
-		],
-		"Transfer In": [
-			"Cash Advances and Loans",
-			"Deposit",
-			"Investment and Retirement Funds",
-			"Savings",
-			"Account Transfer",
-			"Other Transfer In"
-		],
-		"Transfer Out": [
-			"Investment and Retirement Funds",
-			"Savings",
-			"Withdrawal",
-			"Account Transfer",
-			"Other Transfer Out"
-		],
-		"Loan Payments": [
-			"Car Payment",
-			"Credit Card Payment",
-			"Personal Loan Payment",
-			"Mortgage Payment",
-			"Student Loan Payment",
-			"Other Payment"
-		],
-		"Bank Fees": [
-			"ATM Fees",
-			"Foreign Transaction Fees",
-			"Insufficient Funds",
-			"Interest Charge",
-			"Overdraft Fees",
-			"Other Bank Fees"
-		],
-		"Entertainment": [
-			"Casinos and Gambling",
-			"Music and Audio",
-			"Sporting Events Amusement Parks and Museums",
-			"TV and Movies",
-			"Video Games",
-			"Other Entertainment"
-		],
-		"Food and Drink": [
-			"Beer Wine and Liquor",
-			"Coffee",
-			"Fast Food",
-			"Groceries",
-			"Restaurants",
-			"Vending Machines",
-			"Other food and drink"
-		],
-		"General Merchandise": [
-			"Bookstores and Newsstands",
-			"Clothing and Accessories",
-			"Convenience Stores",
-			"Department Stores",
-			"Discount Stores",
-			"Electronics",
-			"Gifts and Novelties",
-			"Office Supplies",
-			"Online Marketplaces",
-			"Pet Supplies",
-			"Sporting Goods",
-			"Superstores",
-			"Tobacco and Vape",
-			"Other General Merchandise"
-		],
-		"Home Improvement": [
-			"Furniture",
-			"Hardware",
-			"Repair and Maintenance",
-			"Security",
-			"Other Home Improvement"
-		],
-		"Medical": [
-			"Dental Care",
-			"Eye Care",
-			"Nursing Care",
-			"Pharmacies and Supplements",
-			"Primary Care",
-			"Veterinary Services",
-			"Other Medical"
-		],
-		"Personal Care": [
-			"Gyms and Fitness Centers",
-			"Hair and Beauty",
-			"Laundry and Dry Cleaning",
-			"Other Personal Care"
-		],
-		"General Services": [
-			"Accounting and Financial Planning",
-			"Automotive",
-			"Childcare",
-			"Consulting and Legal",
-			"Education",
-			"Insurance",
-			"Postage and Shipping",
-			"Storage",
-			"Other General Services"
-		],
-		"Government and Non Profit": [
-			"Donations",
-			"Government Departments and Agencies",
-			"Tax Payment",
-			"Other Government and Non Profit"
-		],
-		"Transportation": [
-			"Bikes and Scooters",
-			"Gas",
-			"Parking",
-			"Public Transit",
-			"Taxi and Rideshares",
-			"Tolls",
-			"Other Transportation"
-		],
-		"Travel": ["Flights", "Lodging", "Rental Cars", "Other Travel"],
-		"Rent and Utilities": [
-			"Gas and Electricity",
-			"Internet and Cable",
-			"Rent",
-			"Sewage and Waste Management",
-			"Telephone",
-			"Water",
-			"Other Utilities"
-		]
-	}; // so apprarently the mapping that plaid gives us is not the same as the one in the sandbox data...
-
-	const categoryMapping = {
-		"Income": [
-			"Dividends",
-			"Interest Earned",
-			"Retirement Pension",
-			"Tax Refund",
-			"Unemployment",
-			"Wages",
-			"Other Income"
-		],
-		"Transfer": [
-			"Cash Advances and Loans",
-			"Deposit",
-			"Investment and Retirement Funds",
-			"Savings",
-			"Other Transfer In",
-			"Payroll",
-			"Withdrawal",
-			"Account Transfer",
-			"Other Transfer Out"
-		],
-		"Payment": [
-			"Credit Card",
-			"Personal Loan Payment",
-			"Mortgage Payment",
-			"Student Loan Payment",
-			"Other Payment"
-		],
-		"Bank Fees": [
-			"ATM Fees",
-			"Foreign Transaction Fees",
-			"Insufficient Funds",
-			"Interest Charge",
-			"Overdraft Fees",
-			"Other Bank Fees"
-		],
-		"Entertainment": [
-			"Casinos and Gambling",
-			"Music and Audio",
-			"Sporting Events Amusement Parks and Museums",
-			"TV and Movies",
-			"Video Games",
-			"Other Entertainment"
-		],
-		"Food and Drink": [
-			"Beer Wine and Liquor",
-			"Coffee",
-			"Fast Food",
-			"Groceries",
-			"Restaurants",
-			"Vending Machines",
-			"Other food and drink"
-		],
-		"General Merchandise": [
-			"Bookstores and Newsstands",
-			"Clothing and Accessories",
-			"Convenience Stores",
-			"Department Stores",
-			"Discount Stores",
-			"Electronics",
-			"Gifts and Novelties",
-			"Office Supplies",
-			"Online Marketplaces",
-			"Pet Supplies",
-			"Sporting Goods",
-			"Superstores",
-			"Tobacco and Vape",
-			"Other General Merchandise"
-		],
-		"Home Improvement": [
-			"Furniture",
-			"Hardware",
-			"Repair and Maintenance",
-			"Security",
-			"Other Home Improvement"
-		],
-		"Medical": [
-			"Dental Care",
-			"Eye Care",
-			"Nursing Care",
-			"Pharmacies and Supplements",
-			"Primary Care",
-			"Veterinary Services",
-			"Other Medical"
-		],
-		"Personal Care": [
-			"Gyms and Fitness Centers",
-			"Hair and Beauty",
-			"Laundry and Dry Cleaning",
-			"Other Personal Care"
-		],
-		"General Services": [
-			"Accounting and Financial Planning",
-			"Automotive",
-			"Childcare",
-			"Consulting and Legal",
-			"Education",
-			"Insurance",
-			"Postage and Shipping",
-			"Storage",
-			"Other General Services"
-		],
-		"Government and Non Profit": [
-			"Donations",
-			"Government Departments and Agencies",
-			"Tax Payment",
-			"Other Government and Non Profit"
-		],
-		"Transportation": [
-			"Bikes and Scooters",
-			"Gas",
-			"Parking",
-			"Public Transit",
-			"Tolls",
-			"Other Transportation"
-		],
-		"Travel": ["Taxi", "Airlines and Aviation Services"],
-		"Rent and Utilities": [
-			"Gas and Electricity",
-			"Internet and Cable",
-			"Rent",
-			"Sewage and Waste Management",
-			"Telephone",
-			"Water",
-			"Other Utilities"
-		]
-	};
-
-	const [curFilters, setFilters] = useState({
-		category_primary: Object.keys(categoryMapping),
-		category_detailed: [].concat(...Object.values(categoryMapping))
-		// Add other filters here...
-	});
+	const [curFilters, setFilters] = useState({});
 	// cur_filters should be a dict of this format: { "account_id": "Plaid Checking", "category_primary": ["income", "transfer in"], "category_detailed": ["income dividends", "income interest earned"] }
-
 	// console.log("curFilters", curFilters);
+
+	const [categoryMapping, setCategoryMapping] = useState({});
 
 	const handleRowsPerPageChange = (value) => {
 		const newRowsPerPage = parseInt(value);
@@ -394,9 +125,21 @@ export default function TransactionsTable(walletID) {
 	};
 
 	useEffect(() => {
+		fetch("http://localhost:3000/api/categories?isMap=true")
+			.then((response) => response.json())
+			.then((data) => {
+				setCategoryMapping(data);
+				setCurrentFilters({
+					category_primary: Object.keys(data),
+					category_detailed: [].concat(...Object.values(data))
+				});
+			})
+			.catch((error) => console.error("Error:", error));
+		console.log(categoryMapping);
+
 		console.log("walletID", walletID.walletId);
 		if (walletID.walletId && walletID.walletId !== "") {
-			const newFilters = { "account_id": walletID.walletId };
+			const newFilters = { ...filters, "account_id": walletID.walletId };
 			setFilters(newFilters);
 			getTransactionsData({
 				sort_by: "transaction_amount",
@@ -408,13 +151,6 @@ export default function TransactionsTable(walletID) {
 			});
 		} else getTransactionsData();
 	}, [walletID]);
-	// handleFilter({ "account_name": "Plaid Checking" });
-	// sortAttribute,
-	// sortOrder[sortAttribute],
-	// 1,
-	// rowsPerPage,
-	// true,
-	// { "account_name": "Plaid Checking" }
 
 	const columns = [
 		{ name: "Account", sortKey: "account_name" },
