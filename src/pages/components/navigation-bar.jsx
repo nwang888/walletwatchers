@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Flex, Button } from '@radix-ui/themes';
 import { motion } from 'framer-motion';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHouse, faMoneyBillTransfer, faGifts, faChartPie } from '@fortawesome/free-solid-svg-icons'; // import the icon
 
 export default function NavBar({ pageNum, setPageNum, setWalletId}) {
   return (
@@ -14,12 +16,12 @@ export default function NavBar({ pageNum, setPageNum, setWalletId}) {
               duration: 0.3
           }}
         >
-          <Button 
+          <FontAwesomeIcon 
+            className={pageNum === 0 ? 'text-accent' : 'text-accent2'} 
             onClick={() => setPageNum(0)}
-            style={{ backgroundColor: pageNum === 0 ? '#779D58' : 'grey' }}
-          >
-              Home
-          </Button>
+            icon={faHouse} 
+            size='2x'
+          />
         </motion.div>
 
         <motion.div
@@ -30,12 +32,12 @@ export default function NavBar({ pageNum, setPageNum, setWalletId}) {
               duration: 0.3
           }}
         >
-          <Button 
-            onClick={() => {setPageNum(1); setWalletId("");}}
-            style={{ backgroundColor: pageNum === 1 ? '#779D58' : 'grey' }}
-          >
-              Transactions
-          </Button>
+          <FontAwesomeIcon 
+            className={pageNum === 1 ? 'text-accent' : 'text-accent2'} 
+            onClick={() => setPageNum(1)}
+            icon={faMoneyBillTransfer} 
+            size='2x'
+          />
         </motion.div>
 
         <motion.div
@@ -46,12 +48,12 @@ export default function NavBar({ pageNum, setPageNum, setWalletId}) {
               duration: 0.3
           }}
         >
-          <Button 
+          <FontAwesomeIcon 
+            className={pageNum === 2 ? 'text-accent' : 'text-accent2'} 
             onClick={() => setPageNum(2)}
-            style={{ backgroundColor: pageNum === 2 ? '#779D58' : 'grey' }}
-          >
-              Wishlist
-          </Button>
+            icon={faGifts} 
+            size='2x'
+          />
         </motion.div>
         <motion.div
           className="mx-[10vw]"
@@ -61,12 +63,12 @@ export default function NavBar({ pageNum, setPageNum, setWalletId}) {
               duration: 0.3
           }}
         >
-          <Button 
-            onClick={() => {setPageNum(3);}}
-            style={{ backgroundColor: pageNum === 3 ? '#779D58' : 'grey' }}
-          >
-              Budgets
-          </Button>
+          <FontAwesomeIcon 
+            className={pageNum === 3 ? 'text-accent' : 'text-accent2'} 
+            onClick={() => setPageNum(3)}
+            icon={faChartPie} 
+            size='2x'
+          />
         </motion.div>
       </Flex>
     </div>
