@@ -185,7 +185,6 @@ export default function TransactionsTable(walletID) {
 							(column.sortKey === "category_primary" ||
 								column.sortKey === "category_detailed") && (
 								<div key={column.sortKey}>
-									{/* <label>{column.name}</label> */}
 									<Select
 										options={
 											column.sortKey === "category_primary"
@@ -246,6 +245,7 @@ export default function TransactionsTable(walletID) {
 							<Table.Row>
 								{columns.map((column) => (
 									<Table.ColumnHeaderCell key={column.sortKey}>
+										{/* -------- SORT BUTTON -------- */}
 										<div style={{ display: "flex", alignItems: "center" }}>
 											{column.name}
 											<Flex gap="3">
@@ -299,7 +299,7 @@ export default function TransactionsTable(walletID) {
 						)}
 					</Table.Root>
 				</div>
-				{/* ----------- PAGINATION BUTTONS AND OPTIONS -----------*/}
+				{/* ----------- ROWS PER PAGE OPTIONS -----------*/}
 				<div className="pt-5 items-center justify-center">
 					<div className="text-center">Rows per page:</div>
 					<div className="flex space-x-4 items-center justify-center pt-5">
@@ -349,6 +349,7 @@ export default function TransactionsTable(walletID) {
 						</motion.div>
 					</div>
 				</div>
+				{/* ----------- PAGINATION BUTTONS -----------*/}
 				<div className="pt-5 mt-5 pb-20 flex justify-center">
 					<motion.div
 						whileHover={{ scale: 1.05 }}
