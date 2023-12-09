@@ -2,6 +2,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import Wallets from './homepage/wallets';
 import Chart from 'chart.js/auto';
 import TransactionsTable from "./transactions-table";
+import WishlistTable from './wishlist-table';
 
 export default function HomePage({ setPageNum, setWalletId }) {
   const [accountData, setAccountData] = useState([]);
@@ -104,7 +105,8 @@ export default function HomePage({ setPageNum, setWalletId }) {
           <TransactionsTable />
         </div>
         <div className="w-1/3 p-3 bg-slate-50 rounded-md">
-          <h1 className="text-xl font-semibold">Placeholder</h1>
+          <h1 className="text-xl font-semibold">Wishlists</h1>
+          <WishlistTable />
           <p>Insert something here</p>
         </div>
       </div>
