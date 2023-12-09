@@ -1,6 +1,8 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
 import Wallet from './wallet';
+import Router from 'next/router';
+
 
 export default function Wallets({ accountData, setPageNum, setWalletId }) {
   const [viewAll, setViewAll] = useState(false);
@@ -15,6 +17,10 @@ export default function Wallets({ accountData, setPageNum, setWalletId }) {
     hidden: { opacity: 0 },
     visible: { opacity: 1 },
   };
+
+  function connectMoreAccounts() {
+    Router.push('/');
+  }
 
   return (
     <>
@@ -46,31 +52,55 @@ export default function Wallets({ accountData, setPageNum, setWalletId }) {
           </button>
         ))}
       </motion.div>
-      
-      <motion.div 
-        className="flex justify-end mt-3"
-        whileHover={{ scale: 1.01, x: -5 }}
-        transition={{
-            type: "spring",
-            duration: 0.3
-        }}
-      >
-        {viewAll ? (
-          <button
-            className="text-center text-md font-bold"
-            onClick={() => setViewAll(false)}
-          >
-            View Less...
+
+
+      <div className="flex justify-between">
+        <motion.div 
+          className="mt-3"
+          whileHover={{ scale: 1.01, x: 2 }}
+          transition={{
+              type: "spring",
+              duration: 0.3
+          }}
+        >
+          <button>
+              <a 
+                className="text-center text-md font-bold"
+                onClick={() => connectMoreAccounts()}
+              >
+                Connect More Accounts...
+              </a>
           </button>
-        ) : (
-          <button
-            className="text-center text-md font-bold"
-            onClick={() => setViewAll(true)}
-          >
-            View All...
-          </button>
-        )}
-      </motion.div>
+
+        </motion.div>
+
+        
+        <motion.div 
+          className="mt-3"
+          whileHover={{ scale: 1.01, x: -2 }}
+          transition={{
+              type: "spring",
+              duration: 0.3
+          }}
+        >
+          {viewAll ? (
+            <button
+              className="text-center text-md font-bold"
+              onClick={() => setViewAll(false)}
+            >
+              View Less...
+            </button>
+          ) : (
+            <button
+              className="text-center text-md font-bold"
+              onClick={() => setViewAll(true)}
+
+            >
+              View All...
+            </button>
+          )}
+        </motion.div>
+      </div>
     </>
   );
 }
