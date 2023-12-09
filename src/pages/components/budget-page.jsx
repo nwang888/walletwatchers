@@ -200,7 +200,7 @@ useEffect(() => {
           <div>No category spending data to display</div>
         )}
       </div>
-      <BudgetForm />
+      <BudgetForm/>
       <RecurringTransactions />
     </>
   );

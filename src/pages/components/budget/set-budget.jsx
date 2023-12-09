@@ -7,9 +7,22 @@ const BudgetForm = () => {
   const [budgetAmount, setBudgetAmount] = useState('');
 
   const handleSetBudget = async () => {
-    const budget_id = Math.floor(Math.random() * 1000000); // Random ID for the budget
+    if (!budgetName.trim()) {
+      alert('Please enter a budget name.');
+      return;
+    }
+    if (!startDate || !endDate || new Date(startDate) > new Date(endDate)) {
+      alert('Please enter a valid date range.');
+      return;
+    }
+    if (!budgetAmount || isNaN(budgetAmount) || budgetAmount <= 0) {
+      alert('Please enter a valid budget amount.');
+      return;
+    }
+  
+    const budget_id = Math.floor(Math.random() * 1000000);
     const budget = { budget_id, budget_name: budgetName, start_date: startDate, end_date: endDate, budget_amount: budgetAmount };
-
+  
     try {
       const response = await fetch('/api/budgets', {
         method: 'POST',
@@ -18,12 +31,18 @@ const BudgetForm = () => {
         },
         body: JSON.stringify(budget),
       });
-
+  
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const result = await response.json();
-      // Update UI as needed
+
+
+    setBudgetName('');
+    setStartDate('');
+    setEndDate('');
+    setBudgetAmount('');
+
     } catch (error) {
       console.error("Failed to post budget:", error);
       alert("Failed to set budget.");

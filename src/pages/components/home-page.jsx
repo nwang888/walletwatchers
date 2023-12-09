@@ -80,11 +80,11 @@ export default function HomePage({ setPageNum, setWalletId }) {
     <>
       <div className="flex my-5">
         <div className="w-2/3 mr-5 p-3 bg-slate-50 rounded-md">
-          <h1 className="text-xl font-semibold">Wallets</h1>
+          <h1 className="text-xl">Wallets</h1>
           <Wallets accountData={accountData} setPageNum={setPageNum} setWalletId={setWalletId} />
         </div>
         <div className="w-1/3 p-3 bg-slate-50 rounded-md">
-          <h1 className="text-xl font-semibold">Budget</h1>
+          <h1 className="text-xl">Budget</h1>
           {Array.isArray(budgetData) && budgetData.length > 0 ? (
             <canvas ref={chartRef} id="budgetChart" />
           ) : (
@@ -95,11 +95,11 @@ export default function HomePage({ setPageNum, setWalletId }) {
 
       <div className="flex">
         <div className="w-2/3 mr-5 p-3 bg-slate-50 rounded-md">
-          <h1 className="text-xl font-semibold">Transactions</h1>
+          <h1 className="text-xl">Transactions</h1>
           <TransactionsTable />
         </div>
         <div className="w-1/3 p-3 bg-slate-50 rounded-md">
-          <h1 className="text-xl font-semibold">Category Spending</h1>
+          <h1 className="text-xl">Category Spending</h1>
           <div>Placeholder</div>
         </div>
       </div>
