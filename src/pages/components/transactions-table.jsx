@@ -180,11 +180,12 @@ export default function TransactionsTable(walletID) {
 			{/* ----------- FILTERS -----------*/}
 			<div>
 				<div className="flex justify-center items-center">
+					<span className="mr-2">Filter:</span>
 					{columns.map(
 						(column) =>
 							(column.sortKey === "category_primary" ||
 								column.sortKey === "category_detailed") && (
-								<div key={column.sortKey}>
+								<div key={column.sortKey} class="pl-3">
 									{/* <label>{column.name}</label> */}
 									<Select
 										options={
