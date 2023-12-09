@@ -109,14 +109,18 @@ export default function WishlistsPage({wishlist,
         }
     }  
 
-  const [refreshTableKey, setRefreshTableKey] = useState(0);
-  const handleAddButton = (event) => {
+    const [refreshTableKey, setRefreshTableKey] = useState(0);
+    const handleAddButton = (event) => {
     const pp = parseFloat(priceTextBox);
 
-      if (isNaN(pp)) {
-        alert('Price must be a valid number');
-        return;
-      }
+    if (isNaN(pp)) {
+      alert('Price must be a valid number');
+      return;
+    }
+    if (nameTextBox.trim() === '') {
+      alert('Name must not be empty');
+      return;
+    }
     event.preventDefault();
     postWishlistData();
     setNameTextBox('');
@@ -124,16 +128,6 @@ export default function WishlistsPage({wishlist,
 
     setRefreshTableKey((prevKey) => prevKey + 1);
   }
-
-  // useEffect(() => {
-  //   getWishlistData();
-  //   }, []);
-
-	// useEffect(() => {
-  //       fetch('/api/wishlist') // Assuming '/api/wishlist' returns your data
-  //           .then(response => response.json())
-  //           .then(data => setWishlist(data));
-  //   }, []);
 	
 	useEffect(() => {
         fetch('/api/account') 
@@ -150,9 +144,13 @@ export default function WishlistsPage({wishlist,
       fetch('/api/wishlist') 
           .then(response => response.json())
           .then(data => {
-            console.log(data);
-              const sum = data.reduce((total, item) => total + Number(item.item_price), 0); 
+            // if (Array.isArray(data)) {
+              const sum = data.reduce((total, item) => total + Number(item.item_price), 0);
               setTotalPrice(sum);
+            // } else {
+            //   console.warn('Data is not an array; setting totalPrice to 0:', data);
+            //   setTotalPrice(0);
+            // }
            });
     }, []);
 	

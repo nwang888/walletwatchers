@@ -107,7 +107,6 @@ export default function HomePage({ setPageNum, setWalletId }) {
         <div className="w-1/3 p-3 bg-slate-50 rounded-md">
           <h1 className="text-xl font-semibold">Wishlists</h1>
           <WishlistTable />
-          <p>Insert something here</p>
         </div>
       </div>
     </>

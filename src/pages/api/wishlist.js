@@ -14,10 +14,15 @@ export default async function handler(req, res) {
             const offset = (page - 1) * recordsPerPage;
 
             const wishlists = await db.all(`SELECT * FROM wishlists LIMIT ? OFFSET ?`, [recordsPerPage, offset]);
+			const totalRows = await db.get(
+				`SELECT COUNT(*) as count
+				FROM Wishlists`
+			);
+			console.log(totalRows);
 			console.log(wishlists);
             await db.close();
 
-            return res.status(200).json(wishlists);
+            return res.status(200).json({wishlists: wishlists, totalRows: totalRows.count});
         } catch (err) {
             return res.status(500).json({ error: err.message });
         }
@@ -95,41 +100,31 @@ export default async function handler(req, res) {
           });
       
           await db.run('UPDATE wishlist SET liked = 1 WHERE wishlist_id = ?', [id]);
-          await db.run('UPDATE wishlist SET liked = 1 ORDER BY liked DESC;')
-            await db.close();
+          await db.close();
 
-            return res.status(200).json(wishlists);
+          return res.status(200).json(wishlists);
         } catch (err) {
           res.status(500).json({ error: err.message });
         }
       }
-      
-
-	if (req.method === "SORT") {
-        console.log("sort");
-        // const { id } = req.query;
-
+	  if (req.method === "HEAD") {
         try {
             const db = await open({
-            filename: './sql/big.db',
-            driver: sqlite3.Database
+                filename: "./sql/big.db",
+                driver: sqlite3.Database
             });
 
-            await db.run(
-            `
-			SELECT * FROM wishlists
-			ORDER BY ${price}
-			LIMIT ? OFFSET ?`, [recordsPerPage, offset]);
+            const page = req.query.page ? parseInt(req.query.page) : 1;
+            const recordsPerPage = 10;
+            const offset = (page - 1) * recordsPerPage;
 
+            const wishlists = await db.all(`SELECT * FROM wishlists ORDER BY liked DESC LIMIT ? OFFSET ?`, [recordsPerPage, offset]);
+			console.log(wishlists);
             await db.close();
 
-            res.status(200).json({ message: `Item with id ${id} deleted.` });
+            return res.status(200).json(wishlists);
         } catch (err) {
-            res.status(500).json({ error: err.message });
+            return res.status(500).json({ error: err.message });
         }
-    }
-
-
-
-	
+	}
 }

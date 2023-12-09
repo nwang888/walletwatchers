@@ -386,7 +386,7 @@ export default function TransactionsTable(walletID) {
 					</div>
 				</div>
 			) : (
-				<p>No transactions found.</p>
+				<p>No items found.</p>
 			)}
 		</div>
 	);
