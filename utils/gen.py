@@ -1,7 +1,10 @@
+#!/usr/bin/env python3
+
 import secrets
 from random import randint
 from faker import Faker
 import sqlite3
+import argparse
 
 
 class Account:
@@ -198,4 +201,22 @@ def generate_data(num_accounts: int, num_transactions: int, filename: str) -> No
 
 
 if __name__ == "__main__":
-    generate_data(10, 10, "../sql/big.db")
+    parser = argparse.ArgumentParser(description="""Input Generation Data""")
+    # flags for reading input
+    parser.add_argument("--a", help="num accounts")
+    parser.add_argument("--t", help="num transactions per account")
+    parser.add_argument("--f", help="filename of db")
+
+    args = parser.parse_args()
+
+    num_accounts: int = int(args.a) if args.a else 5
+    num_transactions: int = int(args.t) if args.t else 5
+    filename: str = f"../sql/{args.f if args.f else 'big.db'}"
+
+    print(
+        f"Generating {num_accounts} accounts with {num_transactions} transactions each"
+    )
+
+    generate_data(num_accounts, num_transactions, filename)
+
+    print(f"Wrote to data {filename}")
