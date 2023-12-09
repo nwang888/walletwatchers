@@ -93,8 +93,14 @@ const postTransactionsData = async (
 	console.log("Response (from client):", data);
 };
 
+function delay(ms) {
+	return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 export const getServerSideProps = withIronSessionSsr(
 	async function getServerSideProps({ req }) {
+
+
 		const protocol = req.headers["x-forwarded-proto"] || "http";
 		const baseUrl = req ? `${protocol}://${req.headers.host}` : "";
 
@@ -126,6 +132,7 @@ export const getServerSideProps = withIronSessionSsr(
 		);
 
 		// ----------------- Transactions -----------------
+		delay(10000);
 
 		// get first cursor
 		const initial_cursor_data = await fetch(`${baseUrl}/api/cursor`);
@@ -141,7 +148,7 @@ export const getServerSideProps = withIronSessionSsr(
 				"count": 500
 			});
 			console.log("Fetched transactions page");
-			// console.log(transactionsPage.data);
+			console.log(transactionsPage.data);
 
 			const next_cursor = transactionsPage.data.next_cursor;
 
