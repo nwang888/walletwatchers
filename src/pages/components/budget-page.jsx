@@ -8,77 +8,14 @@ export default function BudgetPage() {
   const [isRecurringLoading, setIsRecurringLoading] = useState(true);
   const [budgets, setBudgets] = useState([]);
   const [recurringTransactions, setRecurringTransactions] = useState([]);
-  const [categorySums, setCategorySums] = useState([]); // Define categorySums state
+  const [categorySums, setCategorySums] = useState([]); 
   const chartRef = useRef(null);
   const barChartRef = useRef(null);
   const [chartInstance, setChartInstance] = useState(null);
   const [barChartInstance, setBarChartInstance] = useState(null);
-  const [dataChanged, setDataChanged] = useState(false);
 
 
-  useLayoutEffect(() => {
-    if (isLoading || !categorySums.length) return;
   
-    const positiveCategorySums = categorySums.filter(item => item.total_amount >= 0);
-  
-    const barColors = positiveCategorySums.map((item, index) => {
-        const colors = ['#CCDFF1', '#EDDEF3', '#E8F5E4', '#C4E6DE', '#CFEAF2', '#F5E6E8'];
-        return colors[index % colors.length];
-    });
-  
-    const barData = {
-        labels: positiveCategorySums.map(item => item.category_primary),
-        datasets: [{
-            label: 'Total Spent per Category',
-            data: positiveCategorySums.map(item => item.total_amount),
-            backgroundColor: barColors,
-            borderColor: barColors, 
-            borderWidth: 1
-        }]
-    };
-
-    const barConfig = {
-        type: 'bar',
-        data: barData,
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    display: true // Set to false or true based on your preference
-                },
-                title: {
-                    display: true,
-                    text: 'Category Spending'
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: {
-                        color: '#444',
-                    }
-                },
-                x: {
-                    ticks: {
-                        color: '#444', // Match the color to your style
-                    }
-                }
-            }
-        }
-    };
-  
-    const newBarChartInstance = new Chart(barChartRef.current, barConfig);
-    setBarChartInstance(newBarChartInstance);
-    console.log("created the first bar chart");
-  
-    return () => {
-        if (barChartInstance) {
-            barChartInstance.destroy();
-        }
-    };
-  }, [isLoading, categorySums]);
-
-
   // Fetch budgets
   useEffect(() => {
     const getBudgets = async () => {
@@ -136,53 +73,110 @@ useEffect(() => {
     getRecurringTransactions();
   }, []);
 
-  // Create chart
   useLayoutEffect(() => {
-    if (isLoading || isRecurringLoading || chartInstance || !Array.isArray(budgets) || !Array.isArray(recurringTransactions)) return;
+    // Category Spending Chart
 
-    const budgetLabels = budgets.map(budget => budget.budget_name);
-    const budgetAmounts = budgets.map(budget => budget.budget_amount);
-    const recurringAmounts = recurringTransactions.map(transaction => transaction.transaction_amount);
-    const combinedAmounts = budgetAmounts.concat(recurringAmounts);
-    const combinedLabels = budgetLabels.concat(recurringTransactions.map(transaction => transaction.merchant_name));
+    if (!isLoading && categorySums.length > 0 && !barChartInstance) {
+      const positiveCategorySums = categorySums.filter(item => item.total_amount >= 0);
+      const barColors = positiveCategorySums.map((item, index) => {
+        const colors = ['#CCDFF1', '#EDDEF3', '#E8F5E4', '#C4E6DE', '#CFEAF2', '#F5E6E8'];
+        return colors[index % colors.length];
+      });
 
-    const data = {
-      labels: combinedLabels,
-      datasets: [{
-        label: 'Budget and Recurring Transactions',
-        data: combinedAmounts,
-        backgroundColor: ['#CCDFF1', '#EDDEF3', '#E8F5E4', '#C4E6DE', '#CFEAF2'],
-        hoverOffset: 4
-      }]
-    };
+      const barData = {
+        labels: positiveCategorySums.map(item => item.category_primary),
+        datasets: [{
+          label: 'Total Spent per Category',
+          data: positiveCategorySums.map(item => item.total_amount),
+          backgroundColor: barColors,
+          borderColor: barColors, 
+          borderWidth: 1
+        }]
+      };
 
-    const config = {
-      type: 'bar',
-      data: data,
-      options: {
-        responsive: true,
-        plugins: {
-          legend: {
-            position: 'top',
+      const barConfig = {
+        type: 'bar',
+        data: barData,
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              display: true
+            },
+            title: {
+              display: true,
+              text: 'Category Spending'
+            }
           },
-          title: {
-            display: true,
-            text: 'Budget and Recurring Transactions'
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                color: '#444',
+              }
+            },
+            x: {
+              ticks: {
+                color: '#444',
+              }
+            }
           }
         }
-      },
-    };
+      };
 
-    const newChartInstance = new Chart(chartRef.current, config);
-    setChartInstance(newChartInstance);
-    console.log("created the second chart");
+      const newBarChartInstance = new Chart(barChartRef.current, barConfig);
+      setBarChartInstance(newBarChartInstance);
+    }
+
+    // Budget Chart
+    if (!isLoading && !isRecurringLoading && Array.isArray(budgets) && Array.isArray(recurringTransactions) && !chartInstance) {
+      const budgetLabels = budgets.map(budget => budget.budget_name);
+      const budgetAmounts = budgets.map(budget => budget.budget_amount);
+      const recurringAmounts = recurringTransactions.map(transaction => transaction.transaction_amount);
+      const combinedAmounts = budgetAmounts.concat(recurringAmounts);
+      const combinedLabels = budgetLabels.concat(recurringTransactions.map(transaction => transaction.merchant_name));
+
+      const data = {
+        labels: combinedLabels,
+        datasets: [{
+          label: 'Budget and Recurring Transactions',
+          data: combinedAmounts,
+          backgroundColor: ['#CCDFF1', '#EDDEF3', '#E8F5E4', '#C4E6DE', '#CFEAF2'],
+          hoverOffset: 4
+        }]
+      };
+
+      const config = {
+        type: 'bar',
+        data: data,
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              position: 'top',
+            },
+            title: {
+              display: true,
+              text: 'Budget and Recurring Transactions'
+            }
+          }
+        },
+      };
+
+      const newChartInstance = new Chart(chartRef.current, config);
+      setChartInstance(newChartInstance);
+    }
     return () => {
       if (chartInstance) {
         chartInstance.destroy();
       }
+    
+      if (barChartInstance) {
+        barChartInstance.destroy();
+      }
     };
-  }, [isLoading, isRecurringLoading, budgets, recurringTransactions, chartInstance]);
-
+  }, [isLoading, isRecurringLoading, categorySums, budgets, recurringTransactions]);
+  
   if (isLoading || isRecurringLoading) {
     return <div>Loading...</div>;
   }
@@ -191,16 +185,20 @@ useEffect(() => {
     <>
       <h1>Budget</h1>
       <div className="w-full p-3 bg-slate-50 rounded-md">
-        {Array.isArray(budgets) && budgets.length > 0 ? (
-          <canvas ref={chartRef} id="budgetChart" />
-        ) : (
-          <div>No budget data to display</div>
-        )}
-        {categorySums.length > 0 ? (
-          <canvas ref={barChartRef} id="categorySpendingChart" />
-        ) : (
-          <div>No category spending data to display</div>
-        )}
+        <div>
+          {Array.isArray(budgets) && budgets.length > 0 ? (
+            <canvas ref={chartRef} id="budgetChart" />
+          ) : (
+            <div>No budget data to display</div>
+          )}
+        </div>
+        <div>
+          {categorySums.length > 0 ? (
+            <canvas ref={barChartRef} id="categorySpendingChart" />
+          ) : (
+            <div>No category spending data to display</div>
+          )}
+        </div>
       </div>
       <BudgetForm />
       <RecurringTransactions />
