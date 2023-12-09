@@ -2,9 +2,9 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/api/budgets": "pages/api/budgets.js",
   "/api/wishlist": "pages/api/wishlist.js",
-  "/api/transactions": "pages/api/transactions.js",
   "/api/account": "pages/api/account.js",
-  "/dash": "pages/dash.js"
+  "/api/transactions": "pages/api/transactions.js",
+  "/dash": "pages/dash.js",
+  "/api/budgets": "pages/api/budgets.js"
 }

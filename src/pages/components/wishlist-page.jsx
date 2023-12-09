@@ -29,7 +29,9 @@ export async function handler(req, res) {
     }
 }
 
-export default function WishlistsPage() {
+export default function WishlistsPage(cards_only = false) {
+    cards_only = cards_only.cards_only;
+    console.log("cards only: ", cards_only);
     const [wishlist, setWishlist] = useState([]);
     const [priceTextBox, setPriceTextBox] = useState("");
     const [nameTextBox, setNameTextBox] = useState("");
@@ -214,11 +216,51 @@ export default function WishlistsPage() {
         console.log("total balance: ", totalBalance);
     }, [totalBalance]);
 
-    return (
+    return cards_only ? (
+        <div className="justify-between space-x-0">
+            <div className="flex justify-between space-x-4">
+                {/* Total Balances Card */}
+                <div className="bg-primary-light p-4 rounded-md mb-4 w-1/2">
+                    <h2 className="text-xl text-center font-bold mb-2">
+                        Total Balance
+                    </h2>
+                    <p className="text-l text-center">${totalBalance}</p>
+                </div>
+
+                {/* Total Items Card */}
+                <div className="bg-secondary-light p-4 rounded-md mb-4 w-1/2">
+                    <h2 className="text-xl text-center font-bold mb-2">
+                        Total Items
+                    </h2>
+                    <p className="text-l text-center">{wishlist.length}</p>
+                </div>
+            </div>
+            <div className="flex justify-between space-x-4">
+                {/* Total Price Card */}
+                <div className="bg-accent-light p-4 rounded-md mb-8 w-1/2">
+                    <h2 className="text-xl text-center font-bold mb-2">
+                        Total Price
+                    </h2>
+                    <p className="text-l text-center">${totalPrice}</p>
+                </div>
+
+                {/* Average Price Card */}
+                <div className="bg-primary-hover p-4 rounded-md mb-8 w-1/2">
+                    <h2 className="text-xl text-center font-bold mb-2">
+                        Average Price
+                    </h2>
+                    <p className="text-l text-center">
+                        ${Math.trunc(totalPrice / totalRows, 2)}
+                    </p>
+                </div>
+            </div>
+        </div>
+    ) : (
         <>
             <div className="text-neutral-800 text-xl font-semibold leading-7 self-stretch mb-4">
                 Wishlist
             </div>
+
             <h1 className="mb-4">Enter items into your wishlist</h1>
             <div className="flex items-center mb-4">
                 <label htmlFor="name" className="mr-2">
@@ -429,22 +471,22 @@ export default function WishlistsPage() {
                                         <Table.Cell>
                                             {" "}
                                             {/* <Button
-                                                onClick={() =>
-                                                    handleLike(
-                                                        wishlist.wishlist_id
-                                                    )
-                                                }
-                                                style={{
-                                                    backgroundColor:
-                                                        wishlist.liked
-                                                            ? "red"
-                                                            : "blue",
-                                                }}
-                                            >
-                                                {wishlist.liked
-                                                    ? "Unfavorite"
-                                                    : "Favorite"}
-                                            </Button> */}{" "}
+                                                    onClick={() =>
+                                                        handleLike(
+                                                            wishlist.wishlist_id
+                                                        )
+                                                    }
+                                                    style={{
+                                                        backgroundColor:
+                                                            wishlist.liked
+                                                                ? "red"
+                                                                : "blue",
+                                                    }}
+                                                >
+                                                    {wishlist.liked
+                                                        ? "Unfavorite"
+                                                        : "Favorite"}
+                                                </Button> */}{" "}
                                             <button
                                                 onClick={() =>
                                                     handleLike(
