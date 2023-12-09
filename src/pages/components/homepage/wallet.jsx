@@ -2,10 +2,11 @@ import { motion } from 'framer-motion';
 
 export default function Wallet({ wallet, index }) {
     function generateBackgroundColor(index) {
-        const colors = ["bg-primary-light", "bg-secondary-light", "bg-accent-light"];
-        return colors[index % colors.length];
+      const colors = ["bg-primary-light", "bg-secondary-light", "bg-accent-light"];
+      return colors[parseInt(wallet.routing_number) % colors.length];
     }
 
+  // Generate Background Color based on Routing Number
   const backgroundColorClass = generateBackgroundColor(index);
 
   return (

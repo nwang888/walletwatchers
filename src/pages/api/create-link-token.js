@@ -1,6 +1,7 @@
 import { plaidClient } from '../../lib/plaid';
 
 export default async function handler(req, res) {
+  // Create a link token with configs which we can then use to initialize Plaid Link in
   const tokenResponse = await plaidClient.linkTokenCreate({
     user: { client_user_id: process.env.PLAID_CLIENT_ID },
     client_name: "WalletWatchers",

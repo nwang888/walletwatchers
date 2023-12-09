@@ -7,6 +7,7 @@ import Router from 'next/router';
 export default function Wallets({ accountData, setPageNum, setWalletId }) {
   const [viewAll, setViewAll] = useState(false);
 
+  // Framer Motion Variants
   const container = {
     hidden: { opacity: 0 },
     visible: { opacity: 1 },
@@ -18,6 +19,7 @@ export default function Wallets({ accountData, setPageNum, setWalletId }) {
     visible: { opacity: 1 },
   };
 
+  // Redirects to homepage to connect more accounts
   function connectMoreAccounts() {
     Router.push('/');
   }
@@ -30,6 +32,8 @@ export default function Wallets({ accountData, setPageNum, setWalletId }) {
         initial="hidden"
         animate="visible"
       >
+        {/* Generate Wallets */}
+
         {accountData.map((account, index) => (
           <button 
             key={account.account_id} 
@@ -53,7 +57,7 @@ export default function Wallets({ accountData, setPageNum, setWalletId }) {
         ))}
       </motion.div>
 
-
+      {/* Connect More Accounts Button */}
       <div className="flex justify-between">
         <motion.div 
           className="mt-3"
@@ -74,7 +78,7 @@ export default function Wallets({ accountData, setPageNum, setWalletId }) {
 
         </motion.div>
 
-        
+        {/* View All Button */}
         <motion.div 
           className="mt-3"
           whileHover={{ scale: 1.01, x: -2 }}
