@@ -31,7 +31,6 @@ const BudgetForm = () => {
         },
         body: JSON.stringify(budget),
       });
-  
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -42,6 +41,7 @@ const BudgetForm = () => {
     setStartDate('');
     setEndDate('');
     setBudgetAmount('');
+    setReloadData(prevState => !prevState);
 
     } catch (error) {
       console.error("Failed to post budget:", error);

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import { Table, Button, TextField } from '@radix-ui/themes';
 
-export default function RecurringTransactions() {
+export default function RecurringTransactions({ setReloadData }) {
 
     const [merchantTextBox, setMerchantTextBox] = useState('');
     const [priceTextBox, setPriceTextBox] = useState('');
@@ -11,7 +11,6 @@ export default function RecurringTransactions() {
     const [detailedCategory, setDetailedCategory] = useState('income dividends');
 
     const postTransactionData = async () => {
-        // Input validation
         if (!primaryCategory.trim() || !detailedCategory.trim()) {
             alert('Please enter a valid category.');
             return;
@@ -45,7 +44,7 @@ export default function RecurringTransactions() {
         });
 
         const data = await res.json();
-
+        setReloadData(prevState => !prevState);
         return data;
     }
     

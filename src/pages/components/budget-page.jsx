@@ -14,6 +14,7 @@ export default function BudgetPage() {
   const [chartInstance, setChartInstance] = useState(null);
   const [barChartInstance, setBarChartInstance] = useState(null);
   const [dataChanged, setDataChanged] = useState(false);
+  const [reloadData, setReloadData] = useState(false);
 
 
   useLayoutEffect(() => {
@@ -96,7 +97,7 @@ export default function BudgetPage() {
       }
     };
     getBudgets();
-  }, []);
+  }, [reloadData]);
 
   // Fetch category sums
 useEffect(() => {
@@ -115,7 +116,7 @@ useEffect(() => {
     }
   };
   getCategorySums();
-}, []);
+}, [reloadData]);
 
   // Fetch recurring transactions
   useEffect(() => {
@@ -134,7 +135,7 @@ useEffect(() => {
       }
     };
     getRecurringTransactions();
-  }, []);
+  }, [reloadData]);
 
   // Create chart
   useLayoutEffect(() => {
@@ -203,8 +204,8 @@ useEffect(() => {
           <div>No category spending data to display</div>
         )}
       </div>
-      <BudgetForm/>
-      <RecurringTransactions />
+      <BudgetForm setReloadData={setReloadData} />
+      <RecurringTransactions setReloadData={setReloadData} />
     </>
   );
 }
