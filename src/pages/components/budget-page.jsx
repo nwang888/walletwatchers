@@ -69,6 +69,7 @@ export default function BudgetPage() {
   
     const newBarChartInstance = new Chart(barChartRef.current, barConfig);
     setBarChartInstance(newBarChartInstance);
+    console.log("created the first bar chart");
   
     return () => {
         if (barChartInstance) {
@@ -174,7 +175,7 @@ useEffect(() => {
 
     const newChartInstance = new Chart(chartRef.current, config);
     setChartInstance(newChartInstance);
-
+    console.log("created the second chart");
     return () => {
       if (chartInstance) {
         chartInstance.destroy();
