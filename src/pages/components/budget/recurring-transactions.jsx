@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import { Table, Button, TextField } from '@radix-ui/themes';
 
-export default function RecurringTransactions({ setReloadData }) {
+export default function RecurringTransactions() {
 
     const [merchantTextBox, setMerchantTextBox] = useState('');
     const [priceTextBox, setPriceTextBox] = useState('');
@@ -44,7 +44,6 @@ export default function RecurringTransactions({ setReloadData }) {
         });
 
         const data = await res.json();
-        setReloadData(prevState => !prevState);
         return data;
     }
 

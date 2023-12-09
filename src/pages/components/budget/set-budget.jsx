@@ -7,7 +7,24 @@ const BudgetForm = () => {
   const [budgetAmount, setBudgetAmount] = useState('');
 
   const handleSetBudget = async () => {
-    const budget_id = Math.floor(Math.random() * 1000000); // Random ID for the budget
+    if (!budgetName.trim()) {
+      alert('Please enter a valid budget name.');
+      return;
+    }
+    
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    if (isNaN(start) || isNaN(end) || start > end) {
+      alert('Please enter valid start and end dates.');
+      return;
+    }
+    
+    if (!budgetAmount || isNaN(budgetAmount) || budgetAmount <= 0) {
+      alert('Please enter a valid budget amount.');
+      return;
+    }
+    
+    const budget_id = Math.floor(Math.random() * 1000000); 
     const budget = { budget_id, budget_name: budgetName, start_date: startDate, end_date: endDate, budget_amount: budgetAmount };
 
     try {
@@ -28,7 +45,6 @@ const BudgetForm = () => {
     setStartDate('');
     setEndDate('');
     setBudgetAmount('');
-    setReloadData(prevState => !prevState);
 
     } catch (error) {
       console.error("Failed to post budget:", error);
