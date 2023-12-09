@@ -181,6 +181,8 @@ async function getTransactionsData(
 		"datetime"
 	];
 	const validDirections = ["asc", "desc"];
+
+	// protect against sql injection
 	if (!validColumns.includes(sort_by) || !validDirections.includes(order)) {
 		throw new Error("Invalid sort_by or order", sort_by, order);
 	}
@@ -191,15 +193,22 @@ async function getTransactionsData(
 	let whereClause = "";
 	let whereValues = [];
 	for (const [key, value] of Object.entries(filters_parsed)) {
+		if (value.length == 0) continue;
 		if (value && validColumns.includes(key)) {
-			whereClause += ` AND ${key} = ?`;
-			whereValues.push(value);
+			if (Array.isArray(value)) {
+				const subclauses = value.map((_, i) => `${key} = ?`).join(" OR ");
+				whereClause += ` AND (${subclauses})`;
+				whereValues.push(...value);
+			} else {
+				whereClause += ` AND ${key} = ?`;
+				whereValues.push(value);
+			}
 		} else {
 			console.error(`Invalid filter key: ${key}`);
 		}
 	}
-	// console.log("whereClause: ", whereClause);
-	// console.log("whereValues: ", whereValues);
+	console.log("whereClause: ", whereClause);
+	console.log("whereValues: ", whereValues);
 
 	let payload;
 	const totalRows = await db.get(
@@ -228,6 +237,8 @@ async function getTransactionsData(
 	}
 
 	await db.close();
+
+	// console.log(payload);
 
 	return { transactions: payload, totalRows: totalRows.count };
 }
