@@ -6,12 +6,9 @@ import TransactionsTable from "./transactions-table";
 export default function HomePage({ setPageNum, setWalletId }) {
   const [accountData, setAccountData] = useState([]);
   const [budgetData, setBudgetData] = useState([]);
-  const [categorySums, setCategorySums] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const chartRef = useRef(null);
-  const barChartRef = useRef(null);
   const [chartInstance, setChartInstance] = useState(null);
-  const [barChartInstance, setBarChartInstance] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -23,10 +20,6 @@ export default function HomePage({ setPageNum, setWalletId }) {
         const budgetResponse = await fetch('/api/budgets');
         const budgetPayload = await budgetResponse.json();
         setBudgetData(budgetPayload);
-
-        const categoryResponse = await fetch('/api/sum'); 
-        const categoryPayload = await categoryResponse.json();
-        setCategorySums(categoryPayload);
       } catch (error) {
         console.error("Failed to fetch data:", error);
       } finally {
@@ -79,68 +72,6 @@ export default function HomePage({ setPageNum, setWalletId }) {
     };
   }, [isLoading, budgetData]);
 
-  useLayoutEffect(() => {
-    if (isLoading || !categorySums.length) return;
-  
-    const positiveCategorySums = categorySums.filter(item => item.total_amount >= 0);
-  
-    const barColors = positiveCategorySums.map((item, index) => {
-        const colors = ['#CCDFF1', '#EDDEF3', '#E8F5E4', '#C4E6DE', '#CFEAF2', '#F5E6E8'];
-        return colors[index % colors.length];
-    });
-  
-    const barData = {
-        labels: positiveCategorySums.map(item => item.category_primary),
-        datasets: [{
-            label: 'Total Spent per Category',
-            data: positiveCategorySums.map(item => item.total_amount),
-            backgroundColor: barColors,
-            borderColor: barColors, 
-            borderWidth: 1
-        }]
-    };
-
-    const barConfig = {
-        type: 'bar',
-        data: barData,
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    display: false // Set to false or true based on your preference
-                },
-                title: {
-                    display: true,
-                    text: 'Category Spending'
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: {
-                        color: '#444',
-                    }
-                },
-                x: {
-                    ticks: {
-                        color: '#444', // Match the color to your style
-                    }
-                }
-            }
-        }
-    };
-  
-    const newBarChartInstance = new Chart(barChartRef.current, barConfig);
-    setBarChartInstance(newBarChartInstance);
-  
-    return () => {
-        if (barChartInstance) {
-            barChartInstance.destroy();
-        }
-    };
-  }, [isLoading, categorySums]);
-
-
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -169,11 +100,7 @@ export default function HomePage({ setPageNum, setWalletId }) {
         </div>
         <div className="w-1/3 p-3 bg-slate-50 rounded-md">
           <h1 className="text-xl">Category Spending</h1>
-          {categorySums.length > 0 ? (
-              <canvas ref={barChartRef} id="categorySpendingChart" />
-          ) : (
-              <div>No category spending data to display</div>
-          )}
+          <div>Placeholder</div>
         </div>
       </div>
     </>
