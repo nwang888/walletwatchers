@@ -204,25 +204,25 @@ export default function WishlistsPage({wishlist,
 
       <div className="flex justify-between space-x-4">
         {/* Total Balances Card */}
-        <div className="bg-purple-200 p-4 rounded-md mb-8 w-1/4">
+        <div className="bg-primary-light p-4 rounded-md mb-8 w-1/4">
           <h2 className="text-xl text-center font-bold mb-2">Total Balance</h2>
           <p className="text-l text-center">${totalBalance}</p>
         </div>
 
         {/* Total Items Card */}
-        <div className="bg-blue-200 p-4 rounded-md mb-8 w-1/4">
+        <div className="bg-secondary-light p-4 rounded-md mb-8 w-1/4">
           <h2 className="text-xl text-center font-bold mb-2">Total Items</h2>
           <p className="text-l text-center">{wishlist.length}</p>
         </div>
 
         {/* Total Price Card */}
-        <div className="bg-green-200 p-4 rounded-md mb-8 w-1/4">
+        <div className="bg-accent-light p-4 rounded-md mb-8 w-1/4">
           <h2 className="text-xl text-center font-bold mb-2">Total Price</h2>
           <p className="text-l text-center">${totalPrice}</p>
         </div>
 
         {/* Average Price Card */}
-        <div className="bg-yellow-200 p-4 rounded-md mb-8 w-1/4">
+        <div className="bg-primary-hover p-4 rounded-md mb-8 w-1/4">
           <h2 className="text-xl text-center font-bold mb-2">Average Price</h2>
           <p className="text-l text-center">${Math.trunc(totalPrice/wishlist.length,2)}</p>
         </div>
