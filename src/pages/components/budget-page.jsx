@@ -202,8 +202,8 @@ useEffect(() => {
           <div>No category spending data to display</div>
         )}
       </div>
-      <BudgetForm setReloadData={setReloadData} />
-      <RecurringTransactions setReloadData={setReloadData} />
+      <BudgetForm />
+      <RecurringTransactions />
     </>
   );
 }
