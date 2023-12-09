@@ -100,7 +100,7 @@ export default function BudgetPage() {
 useEffect(() => {
   const getCategorySums = async () => {
     try {
-      const response = await fetch('/api/sum'); // Replace with your actual API endpoint
+      const response = await fetch('/api/sum');
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
