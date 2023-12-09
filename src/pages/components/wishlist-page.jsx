@@ -2,6 +2,9 @@ import WishlistTable from "./wishlist-table";
 import React, { useEffect, useState, useRef } from "react";
 import { Flex, Table, Button, TextField } from "@radix-ui/themes";
 import { motion } from "framer-motion";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHeart as solidHeart } from "@fortawesome/free-solid-svg-icons";
+import { faHeart as regularHeart } from "@fortawesome/free-regular-svg-icons";
 
 import "@radix-ui/colors/gray.css";
 import { SandboxIncomeFireWebhookRequestVerificationStatusEnum } from "plaid";
@@ -34,47 +37,39 @@ export default function WishlistsPage() {
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [name, setName] = useState([]);
     const [price, setPrice] = useState([]);
-    // const [like, setLike] = useState([]);
     const [id, setID] = useState([]);
-    const [totalBalance, setTotalBalance] = useState(0);
+    const [totalBalance, setTotalBalance] = useState(-1);
     const [remainingBalances, setRemainingBalances] = useState([]);
     const [totalPrice, setTotalPrice] = useState(0);
-    // const [likedItems, setLikedItems] = useState([]);
     const [totalRows, setTotalRows] = useState(0);
 
     const getWishlistData = async ({
         sort_by = "wishlist_id",
         order = "asc",
-        page = 1,
+        page = currentPage,
         rowsPerPage = 10,
         paginate = true,
     } = {}) => {
+        console.log("new page from get end: ", page);
         const response = await fetch(
             `/api/wishlist?sort_by=${sort_by}&order=${order}&page=${page}&rowsPerPage=${rowsPerPage}&paginate=${paginate}`
         );
         const payload = await response.json();
 
-        let newId = [];
-        let newName = [];
-        let newPrice = [];
         let remainingBalances = [];
         remainingBalances.push(totalBalance);
 
         for (let i = 0; i < payload.wishlists.length; i++) {
-            newId.push(payload.wishlists[i].wishlist_id);
-            newName.push(payload.wishlists[i].item_name);
-            newPrice.push(payload.wishlists[i].item_price);
             totalPrice += payload.wishlists[i].item_price;
-            remainingBalances.push(remainingBalances[i] - newPrice[i]);
+            remainingBalances.push(
+                remainingBalances[i] - payload.wishlists[i].item_price
+            );
         }
 
-        setID(newId);
-        setName(newName);
-        setPrice(newPrice);
         setTotalPrice(totalPrice);
         setRemainingBalances(remainingBalances);
-
         setWishlist(payload.wishlists);
+        console.log("getwishlist balance: ", totalBalance);
         console.log("payload: ", payload);
         setTotalRows(payload.totalRows);
     };
@@ -107,6 +102,18 @@ export default function WishlistsPage() {
         getWishlistData(1, rowsPerPage);
     };
 
+    const handlePageChange = (newPage) => {
+        setCurrentPage(newPage);
+        console.log("new page: ", newPage);
+        getWishlistData({
+            sort_by: "wishlist_id",
+            order: "asc",
+            page: newPage,
+            rowsPerPage: 10,
+            paginate: true,
+        });
+    };
+
     const [refreshTableKey, setRefreshTableKey] = useState(0);
     const handleAddButton = (event) => {
         const pp = parseFloat(priceTextBox);
@@ -132,7 +139,6 @@ export default function WishlistsPage() {
             method: "DELETE",
         });
 
-        // totalPrice -= price[id];
         getWishlistData({
             sort_by: "wishlist_id",
             order: "asc",
@@ -148,6 +154,28 @@ export default function WishlistsPage() {
         }
     };
 
+    const handleLike = async (id) => {
+        const response = await fetch(`/api/wishlist?id=${id}`, {
+            method: "PUT",
+        });
+        setWishlist(response);
+
+        // const [likedStatus, setLikedStatus] = useState(false);
+
+        // for (let i = 0; i < wishlist; i++) {
+        //     if (wishlist[i].wishlist_id === id) {
+        //         setLikedStatus(!likedStatus);
+        //     }
+        // }
+        getWishlistData({
+            sort_by: "wishlist_id",
+            order: "asc",
+            page: 1,
+            rowsPerPage: 10,
+            paginate: true,
+        });
+    };
+
     useEffect(() => {
         console.log("WishlistPage component mounted");
         fetch("/api/account")
@@ -157,20 +185,34 @@ export default function WishlistsPage() {
                     (total, account) => total + Number(account.account_balance),
                     0
                 );
+                console.log(sum);
                 setTotalBalance(sum);
-                getWishlistData({
-                    sort_by: "wishlist_id",
-                    order: "asc",
-                    page: 1,
-                    rowsPerPage: 10,
-                    paginate: true,
-                });
-                console.log("total balance: ", totalBalance);
+                console.log("total balance here:" + totalBalance);
+
+                // getWishlistData({
+                //     sort_by: "wishlist_id",
+                //     order: "asc",
+                //     page: 1,
+                //     rowsPerPage: 10,
+                //     paginate: true,
+                // });
+                // console.log("total balance: ", totalBalance);
             })
             .catch((error) => {
                 console.error("Error fetching account data:", error);
             });
     }, []);
+
+    useEffect(() => {
+        getWishlistData({
+            sort_by: "wishlist_id",
+            order: "asc",
+            page: 1,
+            rowsPerPage: 10,
+            paginate: true,
+        });
+        console.log("total balance: ", totalBalance);
+    }, [totalBalance]);
 
     return (
         <>
@@ -315,6 +357,16 @@ export default function WishlistsPage() {
                                             Progress
                                         </div>
                                     </Table.ColumnHeaderCell>
+                                    <Table.ColumnHeaderCell>
+                                        <div
+                                            style={{
+                                                display: "flex",
+                                                alignItems: "center",
+                                            }}
+                                        >
+                                            Liked
+                                        </div>
+                                    </Table.ColumnHeaderCell>
                                 </Table.Row>
                             </Table.Header>
 
@@ -374,10 +426,51 @@ export default function WishlistsPage() {
                                                 )}{" "}
                                             </h1>{" "}
                                         </Table.Cell>
-                                        {/* <Table.Cell> <button onClick={() => handleLike(id[idx])}>
-        Favorite
-      </button> </Table.Cell> */}
-                                        {/* <Table.Cell>{like[idx]}</Table.Cell> */}
+                                        <Table.Cell>
+                                            {" "}
+                                            {/* <Button
+                                                onClick={() =>
+                                                    handleLike(
+                                                        wishlist.wishlist_id
+                                                    )
+                                                }
+                                                style={{
+                                                    backgroundColor:
+                                                        wishlist.liked
+                                                            ? "red"
+                                                            : "blue",
+                                                }}
+                                            >
+                                                {wishlist.liked
+                                                    ? "Unfavorite"
+                                                    : "Favorite"}
+                                            </Button> */}{" "}
+                                            <button
+                                                onClick={() =>
+                                                    handleLike(
+                                                        wishlist.wishlist_id
+                                                    )
+                                                }
+                                                style={{
+                                                    backgroundColor:
+                                                        "transparent",
+                                                    border: "none",
+                                                }}
+                                            >
+                                                <FontAwesomeIcon
+                                                    icon={
+                                                        wishlist.liked
+                                                            ? solidHeart
+                                                            : regularHeart
+                                                    }
+                                                    color={
+                                                        wishlist.liked
+                                                            ? "red"
+                                                            : "grey"
+                                                    }
+                                                />
+                                            </button>{" "}
+                                        </Table.Cell>
                                     </Table.Row>
                                 ))}
                             </Table.Body>

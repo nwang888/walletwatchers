@@ -1,38 +1,33 @@
 import sqlite3 from "sqlite3";
 import { open, Database } from "sqlite";
 
-async function getWishlistData(
+async function getWishlistData({
     sort_by = "wishlist_id",
     order = "ASC",
     page = 1,
     rowsPerPage = 10,
     paginate = true
-) { 
+}) { 
     const db = await open({
         filename: "./sql/big.db",
         driver: sqlite3.Database
     });
 
-    const validColumns = [
-        "wishlist_id",
-        "item_name",
-        "item_price"
-    ];
-    if (!validColumns.includes(sort_by)) {
-		console.log("Invalid sort_by");
-        console.log(sort_by);
-	}
-
-    let wishlists;
+    
     const totalRows = await db.get(
 		`SELECT COUNT(*) as count
 		FROM Wishlists`
 	)
+    console.log("page ", page);
 
+    let wishlists;
     if (paginate){
+        console.log("page in paginate: ", page);
+        console.log("rowsPerPage: ", rowsPerPage);
         const offset = (page - 1) * rowsPerPage;
+        console.log("offset: ", offset);
         wishlists = await db.all(`SELECT * FROM Wishlists 
-                                    ORDER BY wishlist_id ${order}
+                                    ORDER BY liked DESC, wishlist_id ${order}
                                     LIMIT ? OFFSET ?`, 
                                     [rowsPerPage, offset]);
     } else {
@@ -42,7 +37,7 @@ async function getWishlistData(
     }
 
     await db.close();
-    console.log(wishlists);
+    // console.log(wishlists);
     console.log(totalRows);
 
     return {wishlists: wishlists, totalRows: totalRows.count};
@@ -53,6 +48,7 @@ export default async function handler(req, res) {
         try {
             const { sort_by, order, page, rowsPerPage, paginate} = req.query;
 
+            console.log("page before passing: ", page);
             const db = await getWishlistData({
                 sort_by,
                 order,
@@ -79,14 +75,15 @@ export default async function handler(req, res) {
             console.log(requestData);
 
             const wishlist_id = Math.floor(Math.random);
+            const liked = 0;
             console.log(requestData.wishlist_id);
 
             await db.run(
                 `
-                INSERT INTO Wishlists (wishlist_id, item_name, item_price)
-                VALUES (?, ?, ?)
+                INSERT INTO Wishlists (wishlist_id, item_name, item_price, liked)
+                VALUES (?, ?, ?, ?)
                 `,
-                    [wishlist_id, requestData.name, requestData.price]
+                    [wishlist_id, requestData.name, requestData.price, liked]
             );
             console.log("added");
 
@@ -131,9 +128,20 @@ export default async function handler(req, res) {
             filename: './sql/big.db',
             driver: sqlite3.Database
           });
-      
-          await db.run('UPDATE wishlist SET liked = 1 WHERE wishlist_id = ?', [id]);
+
+          const likedStatus = await db.get(
+            `SELECT liked as likedStatus
+            FROM Wishlists
+            WHERE wishlist_id = ?`, [id]
+            );
+
+          if (likedStatus.likedStatus == 0) {
+            await db.run('UPDATE wishlists SET liked = 1 WHERE wishlist_id = ?', [id]);
+          } else if (likedStatus.likedStatus == 1) {
+            await db.run('UPDATE wishlists SET liked = 0 WHERE wishlist_id = ?', [id]);
+          }
           await db.close();
+          
 
           return res.status(200).json(wishlists);
         } catch (err) {

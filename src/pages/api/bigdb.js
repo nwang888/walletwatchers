@@ -78,8 +78,6 @@ export default async function instantiateBigDB(req, res) {
                 PRIMARY KEY (wishlist_id)
             );
 
-            UPDATE Wishlists SET liked = 0;
-
         `);
 
         
