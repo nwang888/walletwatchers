@@ -47,7 +47,6 @@ export default function RecurringTransactions({ setReloadData }) {
         setReloadData(prevState => !prevState);
         return data;
     }
-    
 
     const handleAddButton = (event) => {
         const pp = parseFloat(priceTextBox);

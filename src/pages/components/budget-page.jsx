@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'; // Import useLayoutEffect
 import Chart from 'chart.js/auto';
 import BudgetForm from './budget/set-budget';
 import RecurringTransactions from './budget/recurring-transactions';
@@ -8,7 +8,7 @@ export default function BudgetPage() {
   const [isRecurringLoading, setIsRecurringLoading] = useState(true);
   const [budgets, setBudgets] = useState([]);
   const [recurringTransactions, setRecurringTransactions] = useState([]);
-  const [categorySums, setCategorySums] = useState([]); 
+  const [categorySums, setCategorySums] = useState([]); // Define categorySums state
   const chartRef = useRef(null);
   const barChartRef = useRef(null);
   const [chartInstance, setChartInstance] = useState(null);
@@ -61,7 +61,7 @@ export default function BudgetPage() {
                 },
                 x: {
                     ticks: {
-                        color: '#444',
+                        color: '#444', // Match the color to your style
                     }
                 }
             }
@@ -70,14 +70,13 @@ export default function BudgetPage() {
   
     const newBarChartInstance = new Chart(barChartRef.current, barConfig);
     setBarChartInstance(newBarChartInstance);
-    setDataChanged(false);
   
     return () => {
         if (barChartInstance) {
             barChartInstance.destroy();
         }
     };
-  }, [isLoading, categorySums, dataChanged]);
+  }, [isLoading, categorySums]);
 
 
   // Fetch budgets
@@ -176,14 +175,13 @@ useEffect(() => {
 
     const newChartInstance = new Chart(chartRef.current, config);
     setChartInstance(newChartInstance);
-    setDataChanged(false);
 
     return () => {
       if (chartInstance) {
         chartInstance.destroy();
       }
     };
-  }, [isLoading, isRecurringLoading, budgets, recurringTransactions, chartInstance, dataChanged]);
+  }, [isLoading, isRecurringLoading, budgets, recurringTransactions, chartInstance]);
 
   if (isLoading || isRecurringLoading) {
     return <div>Loading...</div>;
