@@ -181,6 +181,8 @@ async function getTransactionsData(
 		"datetime"
 	];
 	const validDirections = ["asc", "desc"];
+
+	// protect against sql injection
 	if (!validColumns.includes(sort_by) || !validDirections.includes(order)) {
 		throw new Error("Invalid sort_by or order", sort_by, order);
 	}
@@ -205,8 +207,8 @@ async function getTransactionsData(
 			console.error(`Invalid filter key: ${key}`);
 		}
 	}
-	// console.log("whereClause: ", whereClause);
-	// console.log("whereValues: ", whereValues);
+	console.log("whereClause: ", whereClause);
+	console.log("whereValues: ", whereValues);
 
 	let payload;
 	const totalRows = await db.get(

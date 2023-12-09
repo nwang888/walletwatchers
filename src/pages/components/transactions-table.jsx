@@ -129,25 +129,24 @@ export default function TransactionsTable(walletID) {
 			.then((response) => response.json())
 			.then((data) => {
 				setCategoryMapping(data);
-				setFilters({
+				const newFilters = {
 					category_primary: Object.keys(data),
-					category_detailed: [].concat(...Object.values(data))
+					category_detailed: [].concat(...Object.values(data)),
+					...(walletID.walletId && walletID.walletId !== ""
+						? { "account_id": walletID.walletId }
+						: {})
+				};
+				setFilters(newFilters);
+				getTransactionsData({
+					sort_by: "transaction_amount",
+					order: "desc",
+					page: 1,
+					rowsPerPage: 10,
+					paginate: true,
+					filters: newFilters
 				});
 			})
 			.catch((error) => console.error("Error:", error));
-
-		if (walletID.walletId && walletID.walletId !== "") {
-			const newFilters = { ...curFilters, "account_id": walletID.walletId };
-			setFilters(newFilters);
-			getTransactionsData({
-				sort_by: "transaction_amount",
-				order: "desc",
-				page: 1,
-				rowsPerPage: 10,
-				paginate: true,
-				filters: newFilters
-			});
-		} else getTransactionsData();
 	}, [walletID]);
 
 	const columns = [
