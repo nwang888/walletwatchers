@@ -1,0 +1,14 @@
+{
+  "/_app": "pages/_app.js",
+  "/_error": "pages/_error.js",
+  "/_document": "pages/_document.js",
+  "/": "pages/index.js",
+  "/api/create-link-token": "pages/api/create-link-token.js",
+  "/dash": "pages/dash.js",
+  "/api/bigdb": "pages/api/bigdb.js",
+  "/api/account": "pages/api/account.js",
+  "/api/cursor": "pages/api/cursor.js",
+  "/api/wishlist": "pages/api/wishlist.js",
+  "/api/transactions": "pages/api/transactions.js",
+  "/api/budgets": "pages/api/budgets.js"
+}
