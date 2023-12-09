@@ -94,7 +94,7 @@ export default function TransactionsTable(walletID) {
 				}
 			}
 		}
-		console.log("params", attribute, attributeValues, checked);
+		console.log("filter params", attribute, attributeValues, checked);
 		console.log("newFilters", newFilters);
 		setFilters(newFilters);
 		getTransactionsData({
@@ -220,7 +220,7 @@ export default function TransactionsTable(walletID) {
 			</div>
 			{/* ----------- TABLES -----------*/}
 			<div className="flex flex-col h-screen relative">
-				<div style={{ flexGrow: 1, overflowY: "auto" }}>
+				<div class={{ flexGrow: 1, overflowY: "auto" }}>
 					<Table.Root variant="surface">
 						<Table.Header>
 							<Table.Row>
@@ -329,46 +329,38 @@ export default function TransactionsTable(walletID) {
 						</motion.div>
 					</div>
 				</div>
-				<div>
-					<Flex
-						style={{
-							paddingTop: "20px",
-							justifyContent: "center",
-							marginTop: "20px"
+				<div className="pt-5 mt-5 pb-20 flex justify-center">
+					<motion.div
+						whileHover={{ scale: 1.05 }}
+						transition={{
+							type: "spring",
+							duration: 0.3
 						}}
 					>
-						<motion.div
-							whileHover={{ scale: 1.05 }}
-							transition={{
-								type: "spring",
-								duration: 0.3
-							}}
+						<Button
+							onClick={() => handlePageChange(currentPage - 1)}
+							disabled={currentPage === 1}
 						>
-							<Button
-								onClick={() => handlePageChange(currentPage - 1)}
-								disabled={currentPage === 1}
-							>
-								Previous
-							</Button>
-						</motion.div>
-						<div style={{ margin: "0 10px" }}>
-							Page {currentPage} / {Math.ceil(totalRows / rowsPerPage)}{" "}
-						</div>
-						<motion.div
-							whileHover={{ scale: 1.05 }}
-							transition={{
-								type: "spring",
-								duration: 0.3
-							}}
+							Prev
+						</Button>
+					</motion.div>
+					<div className="mx-2.5">
+						Page {currentPage} / {Math.ceil(totalRows / rowsPerPage)}{" "}
+					</div>
+					<motion.div
+						whileHover={{ scale: 1.05 }}
+						transition={{
+							type: "spring",
+							duration: 0.3
+						}}
+					>
+						<Button
+							onClick={() => handlePageChange(currentPage + 1)}
+							disabled={currentPage === Math.ceil(totalRows / rowsPerPage)}
 						>
-							<Button
-								onClick={() => handlePageChange(currentPage + 1)}
-								disabled={currentPage === Math.ceil(totalRows / rowsPerPage)}
-							>
-								Next
-							</Button>
-						</motion.div>
-					</Flex>
+							Next
+						</Button>
+					</motion.div>
 				</div>
 			</div>
 		</div>
