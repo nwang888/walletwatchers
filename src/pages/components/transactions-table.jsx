@@ -135,9 +135,7 @@ export default function TransactionsTable(walletID) {
 				});
 			})
 			.catch((error) => console.error("Error:", error));
-		console.log(categoryMapping);
 
-		console.log("walletID", walletID.walletId);
 		if (walletID.walletId && walletID.walletId !== "") {
 			const newFilters = { ...filters, "account_id": walletID.walletId };
 			setFilters(newFilters);

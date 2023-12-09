@@ -39,11 +39,8 @@ export default async function categoryHandler(req, res) {
 	if (req.method == "GET") {
 		try {
 			const { column, isMap } = req.query;
-			console.log(column, isMap);
 			const payload = await getCategory(column, isMap);
-			console.log(payload);
 			if (payload.length == 0) {
-				console.log(payload);
 				return res
 					.status(200)
 					.json({ message: "no tuples returned for this column ;-;" });
