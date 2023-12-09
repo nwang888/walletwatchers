@@ -79,18 +79,34 @@ export default function TransactionsTable(walletID) {
 			if (!newFilters[attribute]) {
 				newFilters[attribute] = [];
 			}
-			newFilters[attribute].push(attributeValues);
+			newFilters[attribute] = [...newFilters[attribute], ...attributeValues];
+
+			// If a primary category is being selected, also select the associated detailed categories
+			if (attribute === "category_primary") {
+				attributeValues.forEach((attributeValue) => {
+					const detailedCategories = categoryMapping[attributeValue];
+					if (!newFilters["category_detailed"]) {
+						newFilters["category_detailed"] = [];
+					}
+					newFilters["category_detailed"] = [
+						...newFilters["category_detailed"],
+						...detailedCategories
+					];
+				});
+			}
 		} else {
 			if (newFilters[attribute]) {
 				newFilters[attribute] = newFilters[attribute].filter(
-					(value) => value !== attributeValues
+					(value) => !attributeValues.includes(value)
 				);
 				// If a primary category is being deselected, also deselect the associated detailed categories
 				if (attribute === "category_primary") {
-					const detailedCategories = categoryMapping[attributeValues];
-					newFilters["category_detailed"] = newFilters[
-						"category_detailed"
-					].filter((value) => !detailedCategories.includes(value));
+					attributeValues.forEach((attributeValue) => {
+						const detailedCategories = categoryMapping[attributeValue];
+						newFilters["category_detailed"] = newFilters[
+							"category_detailed"
+						].filter((value) => !detailedCategories.includes(value));
+					});
 				}
 			}
 		}
@@ -169,7 +185,7 @@ export default function TransactionsTable(walletID) {
 							(column.sortKey === "category_primary" ||
 								column.sortKey === "category_detailed") && (
 								<div key={column.sortKey}>
-									<label>{column.name}</label>
+									{/* <label>{column.name}</label> */}
 									<Select
 										options={
 											column.sortKey === "category_primary"
@@ -177,8 +193,11 @@ export default function TransactionsTable(walletID) {
 														label: option,
 														value: option
 												  }))
-												: Object.values(categoryMapping)
-														.flat()
+												: Object.entries(categoryMapping)
+														.filter(([key]) =>
+															curFilters["category_primary"].includes(key)
+														)
+														.flatMap(([, value]) => value)
 														.map((option) => ({
 															label: option,
 															value: option
@@ -195,19 +214,21 @@ export default function TransactionsTable(walletID) {
 											const selected = newSelectedOptions.filter(
 												(option) => !curFilters[column.sortKey].includes(option)
 											);
-											selected.forEach((option) =>
-												handleFilterChange(column.sortKey, option, true)
-											);
-											console.log(selected);
+
+											// If there are any selected options, handle them
+											if (selected.length > 0) {
+												handleFilterChange(column.sortKey, selected, true);
+											}
 
 											// Find options that were deselected
 											const deselected = curFilters[column.sortKey].filter(
 												(option) => !newSelectedOptions.includes(option)
 											);
-											deselected.forEach((option) =>
-												handleFilterChange(column.sortKey, option, false)
-											);
-											console.log(deselected);
+
+											// If there are any deselected options, handle them
+											if (deselected.length > 0) {
+												handleFilterChange(column.sortKey, deselected, false);
+											}
 										}}
 										isSearchable={true}
 										isMulti
