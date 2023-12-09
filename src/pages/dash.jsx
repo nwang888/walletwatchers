@@ -135,8 +135,7 @@ export const getServerSideProps = withIronSessionSsr(
 		);
 
 		// ----------------- Transactions -----------------
-		delay(10000);
-
+		
 		// get first cursor
 		const initial_cursor_data = await fetch(`${baseUrl}/api/cursor`);
 		let initial_cursor = await initial_cursor_data.data;
