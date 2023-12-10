@@ -4,9 +4,11 @@ import { motion } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart as solidHeart } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as regularHeart } from "@fortawesome/free-regular-svg-icons";
+import { faTrashCan } from "@fortawesome/free-regular-svg-icons";
 
 import "@radix-ui/colors/gray.css";
 import { SandboxIncomeFireWebhookRequestVerificationStatusEnum } from "plaid";
+import { HeartIcon } from "@radix-ui/react-icons";
 
 export async function handler(req, res) {
     if (req.method === "GET") {
@@ -340,14 +342,6 @@ export default function WishlistsPage(cards_only = false) {
                                                 display: "flex",
                                                 alignItems: "center",
                                             }}
-                                        ></div>
-                                    </Table.ColumnHeaderCell>
-                                    <Table.ColumnHeaderCell>
-                                        <div
-                                            style={{
-                                                display: "flex",
-                                                alignItems: "center",
-                                            }}
                                         >
                                             Name
                                         </div>
@@ -392,20 +386,20 @@ export default function WishlistsPage(cards_only = false) {
                                             Liked
                                         </div>
                                     </Table.ColumnHeaderCell>
+                                    <Table.ColumnHeaderCell>
+                                        <div
+                                            style={{
+                                                display: "flex",
+                                                alignItems: "center",
+                                            }}
+                                        ></div>
+                                    </Table.ColumnHeaderCell>
                                 </Table.Row>
                             </Table.Header>
 
                             <Table.Body>
                                 {wishlist.map((wishlist, idx) => (
                                     <Table.Row key={idx}>
-                                        <Table.Cell>
-                                            <motion.button
-                                                onClick={() => handleRemove(wishlist.wishlist_id)}
-                                                className="text-background bg-primary text-xs font-semibold mx-3 p-1 rounded-lg hover:bg-primary-hover transition-all"
-                                            >
-                                                Remove
-                                            </motion.button>
-                                        </Table.Cell>
                                         <Table.Cell>
                                             {wishlist.item_name}
                                         </Table.Cell>
@@ -470,6 +464,17 @@ export default function WishlistsPage(cards_only = false) {
                                                     }
                                                 />
                                             </button>{" "}
+                                        </Table.Cell>
+                                        <Table.Cell>
+                                            <motion.button>
+                                                <FontAwesomeIcon 
+                                                    icon={faTrashCan}
+                                                    className={'text-accent2 hover:text-danger m-auto'} 
+                                                    onClick={() => handleRemove(wishlist.wishlist_id)}
+                                                    size='2x'
+                                                />
+                                            </motion.button>
+
                                         </Table.Cell>
                                     </Table.Row>
                                 ))}
