@@ -1,10 +1,7 @@
 import sqlite3 from "sqlite3";
 import { open } from "sqlite";
 
-//DEBUG INFO: i think location and datetime details do not exist in the Plaid Sandbox Data
-//TODO: Fix potential sql injection on where clause
-
-// an async function that posts the trasnactions to the database
+// an async function that posts the transactions to the database
 async function postTransactionsData(
 	added,
 	modified,
@@ -37,8 +34,6 @@ async function postTransactionsData(
 				account_id
 			);
 			const account_name = account ? account.account_name : null;
-			// console.log("account_name: ", account_name);
-
 			await db.run(
 				`
                 INSERT INTO Transactions (
@@ -189,7 +184,6 @@ async function getTransactionsData(
 
 	const filters_parsed = JSON.parse(decodeURIComponent(filters));
 
-	// console.log("filters: ", filters_parsed);
 	let whereClause = "";
 	let whereValues = [];
 	for (const [key, value] of Object.entries(filters_parsed)) {
@@ -208,8 +202,6 @@ async function getTransactionsData(
 		}
 	}
 	// Very useful debug, pls do not delete
-	// console.log("whereClause: ", whereClause);
-	// console.log("whereValues: ", whereValues);
 
 	let payload;
 	const totalRows = await db.get(
