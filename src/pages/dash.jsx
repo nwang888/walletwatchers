@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 
 import HomePage from "./components/home-page";
 import TransactionsPage from "./components/transactions-page";
-import WishlistPage from "./components/wishlist-page";
+import WishlistsPage from "./components/wishlist-page";
 import BudgetPage from "./components/budget-page";
 
 import Header from "./components/header";
@@ -16,13 +16,13 @@ export default function Dashboard() {
     const [pageNum, setPageNum] = useState(0);
     const [walletId, setWalletId] = useState("");
 
+    const [cards_only, setCardsOnly] = useState(false);
+
     return (
         <>
-            {/* Header */}
             <Header setPageNum={setPageNum} />
 
-            {/* Page Content */}
-            <div className="my-20 mx-3">
+            <div className="my-16 mx-3">
                 {pageNum === 0 ? (
                     <HomePage
                         setPageNum={setPageNum}
@@ -32,23 +32,20 @@ export default function Dashboard() {
                 {pageNum === 1 ? (
                     <TransactionsPage walletId={walletId} />
                 ) : null}
-                {pageNum === 2 ? <WishlistPage /> : null}
+                {pageNum === 2 ? <WishlistsPage cards_only={false} /> : null}
                 {pageNum === 3 ? <BudgetPage /> : null}
             </div>
 
-            {/* Navigation Bar */}
             <NavBar
                 pageNum={pageNum}
                 setPageNum={setPageNum}
                 setWalletId={setWalletId}
+                setCardsOnly={cards_only}
             />
         </>
     );
 }
 
-// ----------------- API Calls -----------------
-
-// POST to /api/account for Account Table
 const postAccountData = async (accounts, numbers, req) => {
     const dataToSend = {
         accounts: accounts,
@@ -70,7 +67,6 @@ const postAccountData = async (accounts, numbers, req) => {
     console.log("Response (from client):", data);
 };
 
-// POST to /api/transactions for Transactions Table
 const postTransactionsData = async (
     added,
     modified,
@@ -102,9 +98,10 @@ const postTransactionsData = async (
     console.log("Response (from client):", data);
 };
 
-// ----------------- Server Side Props -----------------
+function delay(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+}
 
-// Executes on page load to fetch data from Plaid API
 export const getServerSideProps = withIronSessionSsr(
     async function getServerSideProps({ req }) {
         const protocol = req.headers["x-forwarded-proto"] || "http";
@@ -138,6 +135,7 @@ export const getServerSideProps = withIronSessionSsr(
         );
 
         // ----------------- Transactions -----------------
+        delay(10000);
 
         // get first cursor
         const initial_cursor_data = await fetch(`${baseUrl}/api/cursor`);
