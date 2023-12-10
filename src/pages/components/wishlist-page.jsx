@@ -484,45 +484,28 @@ export default function WishlistsPage(cards_only = false) {
                                     marginTop: "20px",
                                 }}
                             >
-                                <motion.div
-                                    whileHover={{ scale: 1.03 }}
-                                    transition={{
-                                        type: "spring",
-                                        duration: 0.3,
-                                    }}
+                                <motion.button
+                                    onClick={() => handlePageChange(currentPage - 1)}
+                                    whileTap={{ scale: 0.9 }}
+                                    disabled={currentPage === 1}
+                                    className={(currentPage === 1 ? "bg-accent2" : "bg-primary hover:bg-primary-hover") + " text-background text-sm font-semibold mx-3 p-3 rounded-lg transition-all"}
                                 >
-                                    <Button
-                                        onClick={() =>
-                                            handlePageChange(currentPage - 1)
-                                        }
-                                        disabled={currentPage === 1}
-                                    >
-                                        Previous
-                                    </Button>
-                                </motion.div>
-                                <div style={{ margin: "0 10px" }}>
+                                    Prev
+                                </motion.button>
+
+                                <div className='my-auto'>
                                     Page {currentPage} /{" "}
                                     {Math.ceil(totalRows / 10)}{" "}
                                 </div>
-                                <motion.div
-                                    whileHover={{ scale: 1.03 }}
-                                    transition={{
-                                        type: "spring",
-                                        duration: 0.3,
-                                    }}
+
+                                <motion.button
+                                    onClick={() => handlePageChange(currentPage + 1)}
+                                    whileTap={{ scale: 0.9 }}
+                                    disabled={currentPage === Math.ceil(totalRows / 10)}
+                                    className={(currentPage === Math.ceil(totalRows / 10) ? "bg-accent2" : "bg-primary hover:bg-primary-hover") + " text-background text-sm font-semibold mx-3 p-3 rounded-lg transition-all"}
                                 >
-                                    <Button
-                                        onClick={() =>
-                                            handlePageChange(currentPage + 1)
-                                        }
-                                        disabled={
-                                            currentPage ===
-                                            Math.ceil(totalRows / 10)
-                                        }
-                                    >
-                                        Next
-                                    </Button>
-                                </motion.div>
+                                    Next
+                                </motion.button>
                             </Flex>
                         </div>
                     </div>
