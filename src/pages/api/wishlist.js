@@ -34,10 +34,7 @@ async function getWishlistData({
 
     let wishlists;
     if (paginate){
-        console.log("page in paginate: ", page);
-        console.log("rowsPerPage: ", rowsPerPage);
         const offset = (page - 1) * rowsPerPage;
-        console.log("offset: ", offset);
         wishlists = await db.all(`SELECT * FROM Wishlists 
                                     ORDER BY liked DESC, wishlist_id ${order}
                                     LIMIT ? OFFSET ?`, 
@@ -49,7 +46,6 @@ async function getWishlistData({
     }
 
     await db.close();
-    console.log(totalRows);
 
     return {wishlists: wishlists, totalRows: totalRows.count, totalPrice: totalPrice.totalPrice, priceBeforePage: priceBeforePage.priceBeforePage};
 }
@@ -59,7 +55,6 @@ export default async function handler(req, res) {
         try {
             const { sort_by, order, page, rowsPerPage, paginate} = req.query;
 
-            console.log("page before passing: ", page);
             const db = await getWishlistData({
                 sort_by,
                 order,
@@ -72,8 +67,6 @@ export default async function handler(req, res) {
             return res.status(500).json({error: "Error fetching wishlists data" });
         }
     }  else if (req.method === "POST") {
-        console.log("posting!");
-        console.log(req.body);
         try {
             const db = await open({
                 filename: "./sql/big.db",
@@ -82,11 +75,8 @@ export default async function handler(req, res) {
 
             const requestData = req.body; // Access data sent in the request body
 
-            console.log(requestData);
-
             const wishlist_id = Math.floor(Math.random);
             const liked = 0;
-            console.log(requestData.wishlist_id);
 
             await db.run(
                 `
@@ -95,7 +85,6 @@ export default async function handler(req, res) {
                 `,
                     [wishlist_id, requestData.name, requestData.price, liked]
             );
-            console.log("added");
 
             await db.close();
 
@@ -106,7 +95,6 @@ export default async function handler(req, res) {
             return res.status(500).json({ error: err.message });
         }
     } else if (req.method === "DELETE") {
-        console.log("deleted");
         const { id } = req.query;
 
         try {
@@ -168,7 +156,6 @@ export default async function handler(req, res) {
             const offset = (page - 1) * recordsPerPage;
 
             const wishlists = await db.all(`SELECT * FROM wishlists ORDER BY liked DESC LIMIT ? OFFSET ?`, [recordsPerPage, offset]);
-			console.log(wishlists);
             await db.close();
 
             return res.status(200).json(wishlists);
