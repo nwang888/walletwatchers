@@ -9,7 +9,10 @@ export default function HomePage({ setPageNum, setWalletId }) {
     const [budgetData, setBudgetData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const chartRef = useRef(null);
+    const [isRecurringLoading, setIsRecurringLoading] = useState(true);
+    const [recurringTransactions, setRecurringTransactions] = useState([]);
     const [chartInstance, setChartInstance] = useState(null);
+
 
     useEffect(() => {
         const fetchData = async () => {
@@ -31,58 +34,70 @@ export default function HomePage({ setPageNum, setWalletId }) {
         fetchData();
     }, []);
 
+    useEffect(() => {
+      const getRecurringTransactions = async () => {
+        try {
+          const response = await fetch('/api/recurring-transactions');
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          const payload = await response.json();
+          setRecurringTransactions(payload);
+        } catch (error) {
+          console.error("Failed to fetch recurring transactions:", error);
+        } finally {
+          setIsRecurringLoading(false);
+        }
+      };
+      getRecurringTransactions();
+    }, []);
+  
+
     useLayoutEffect(() => {
-        if (isLoading || chartInstance || !Array.isArray(budgetData)) return;
+    // Budget Chart
+    if (!isLoading && !isRecurringLoading && Array.isArray(budgetData) && Array.isArray(recurringTransactions) && !chartInstance) {
+      const budgetLabels = budgetData.map(budgetData => budgetData.budget_name);
+      const budgetAmounts = budgetData.map(budgetData => budgetData.budget_amount);
+      const recurringAmounts = recurringTransactions.map(transaction => transaction.transaction_amount);
+      const combinedAmounts = budgetAmounts.concat(recurringAmounts);
+      const combinedLabels = budgetLabels.concat(recurringTransactions.map(transaction => transaction.merchant_name));
 
-        const data = {
-            labels: budgetData.map((budget) => budget.budget_name),
-            datasets: [
-                {
-                    label: "Budget Distribution",
-                    data: budgetData.map((budget) => budget.budget_amount),
-                    backgroundColor: [
-                        "#CCDFF1",
-                        "#EDDEF3",
-                        "#E8F5E4",
-                        "#C4E6DE",
-                        "#CFEAF2",
-                        "#F5E6E8",
-                    ],
-                    hoverOffset: 4,
-                },
-            ],
-        };
+      const data = {
+        labels: combinedLabels,
+        datasets: [{
+          label: 'Budget and Recurring Transactions',
+          data: combinedAmounts,
+          backgroundColor: ['#CCDFF1', '#EDDEF3', '#E8F5E4', '#C4E6DE', '#CFEAF2'],
+          hoverOffset: 4
+        }]
+      };
 
-        const config = {
-            type: "doughnut",
-            data,
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: "top",
-                    },
-                    title: {
-                        display: true,
-                        text: "Budget Distribution",
-                    },
-                },
+      const config = {
+        type: 'pie',
+        data: data,
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              position: 'top',
             },
-        };
-
-        const newChartInstance = new Chart(chartRef.current, config);
-        setChartInstance(newChartInstance);
-
-        return () => {
-            if (chartInstance) {
-                chartInstance.destroy();
+            title: {
+              display: true,
+              text: 'Budget and Recurring Transactions'
             }
-        };
-    }, [isLoading, budgetData]);
+          }
+        },
+      };
 
-    if (isLoading) {
-        return <div>Loading...</div>;
+      const newChartInstance = new Chart(chartRef.current, config);
+      setChartInstance(newChartInstance);
     }
+  }, [isLoading, isRecurringLoading, budgetData, recurringTransactions]);
+  
+  if (isLoading || isRecurringLoading) {
+    return <div>Loading...</div>;
+  }
+
 
     return (
         <>
