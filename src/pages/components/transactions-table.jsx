@@ -307,12 +307,16 @@ export default function TransactionsTable(walletID) {
 								duration: 0.3
 							}}
 						>
-							<Button
+							{/* <Button
 								color={rowsPerPage === 10 ? "cyan" : "indigo"}
 								onClick={() => handleRowsPerPageChange(10)}
 							>
 								10
-							</Button>
+							</Button> */}
+
+							<button onClick={() => handleRowsPerPageChange(10)} className={(rowsPerPage === 10 ? "bg-primary" : "bg-accent2") + " hover:bg-primary-hover text-white font-bold py-2 px-4 rounded"}>
+								10
+							</button>
 						</motion.div>
 						<motion.div
 							className="mx-[10vw]"
@@ -322,12 +326,9 @@ export default function TransactionsTable(walletID) {
 								duration: 0.3
 							}}
 						>
-							<Button
-								color={rowsPerPage === 20 ? "cyan" : "indigo"}
-								onClick={() => handleRowsPerPageChange(20)}
-							>
+							<button onClick={() => handleRowsPerPageChange(20)} className={(rowsPerPage === 20 ? "bg-primary" : "bg-accent2") + " hover:bg-primary-hover text-white font-bold py-2 px-4 rounded"}>
 								20
-							</Button>
+							</button>
 						</motion.div>
 						<motion.div
 							className="mx-[10vw]"
@@ -337,12 +338,9 @@ export default function TransactionsTable(walletID) {
 								duration: 0.3
 							}}
 						>
-							<Button
-								color={rowsPerPage === 50 ? "cyan" : "indigo"}
-								onClick={() => handleRowsPerPageChange(50)}
-							>
+							<button onClick={() => handleRowsPerPageChange(50)} className={(rowsPerPage === 50 ? "bg-primary" : "bg-accent2") + " hover:bg-primary-hover text-white font-bold py-2 px-4 rounded"}>
 								50
-							</Button>
+							</button>
 						</motion.div>
 					</div>
 				</div>
