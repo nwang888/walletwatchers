@@ -6,173 +6,174 @@ import { useRouter } from "next/router";
 
 import HomePage from "./components/home-page";
 import TransactionsPage from "./components/transactions-page";
-import WishlistPage from "./components/wishlist-page";
+import WishlistsPage from "./components/wishlist-page";
 import BudgetPage from "./components/budget-page";
 
 import Header from "./components/header";
 import NavBar from "./components/navigation-bar";
 
 export default function Dashboard() {
-	const [pageNum, setPageNum] = useState(0);
-	const [walletId, setWalletId] = useState("");
+    const [pageNum, setPageNum] = useState(0);
+    const [walletId, setWalletId] = useState("");
 
-	return (
-		<>
-			{/* Header */}
-			<Header setPageNum={setPageNum} />
+    const [cards_only, setCardsOnly] = useState(false);
 
-			{/* Page Content */}
-			<div className="my-20 mx-3">
-				{pageNum === 0 ? (
-					<HomePage setPageNum={setPageNum} setWalletId={setWalletId} />
-				) : null}
-				{pageNum === 1 ? <TransactionsPage walletId={walletId} /> : null}
-				{pageNum === 2 ? <WishlistPage /> : null}
-				{pageNum === 3 ? <BudgetPage /> : null}
-			</div>
+    return (
+        <>
+            <Header setPageNum={setPageNum} />
 
-			{/* Navigation Bar */}
-			<NavBar
-				pageNum={pageNum}
-				setPageNum={setPageNum}
-				setWalletId={setWalletId}
-			/>
-		</>
-	);
+            <div className="my-16 mx-3">
+                {pageNum === 0 ? (
+                    <HomePage
+                        setPageNum={setPageNum}
+                        setWalletId={setWalletId}
+                    />
+                ) : null}
+                {pageNum === 1 ? (
+                    <TransactionsPage walletId={walletId} />
+                ) : null}
+                {pageNum === 2 ? <WishlistsPage cards_only={false} /> : null}
+                {pageNum === 3 ? <BudgetPage /> : null}
+            </div>
+
+            <NavBar
+                pageNum={pageNum}
+                setPageNum={setPageNum}
+                setWalletId={setWalletId}
+                setCardsOnly={cards_only}
+            />
+        </>
+    );
 }
 
-// ----------------- API Calls -----------------
-
-// POST to /api/account for Account Table
 const postAccountData = async (accounts, numbers, req) => {
-	const dataToSend = {
-		accounts: accounts,
-		numbers: numbers.ach
-	};
+    const dataToSend = {
+        accounts: accounts,
+        numbers: numbers.ach,
+    };
 
-	const protocol = req.headers["x-forwarded-proto"] || "http";
-	const baseUrl = req ? `${protocol}://${req.headers.host}` : "";
+    const protocol = req.headers["x-forwarded-proto"] || "http";
+    const baseUrl = req ? `${protocol}://${req.headers.host}` : "";
 
-	const res = await fetch(`${baseUrl}/api/account`, {
-		method: "POST",
-		headers: {
-			"Content-Type": "application/json"
-		},
-		body: JSON.stringify(dataToSend)
-	});
+    const res = await fetch(`${baseUrl}/api/account`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(dataToSend),
+    });
 
-	const data = await res.json();
-	console.log("Response (from client):", data);
+    const data = await res.json();
+    console.log("Response (from client):", data);
 };
 
-// POST to /api/transactions for Transactions Table
 const postTransactionsData = async (
-	added,
-	modified,
-	removed,
-	initial_cursor,
-	new_cursor,
-	req
+    added,
+    modified,
+    removed,
+    initial_cursor,
+    new_cursor,
+    req
 ) => {
-	const dataToSend = {
-		added: added,
-		modified: modified,
-		removed: removed,
-		cursor: initial_cursor,
-		new_cursor: new_cursor
-	};
+    const dataToSend = {
+        added: added,
+        modified: modified,
+        removed: removed,
+        cursor: initial_cursor,
+        new_cursor: new_cursor,
+    };
 
-	const protocol = req.headers["x-forwarded-proto"] || "http";
-	const baseUrl = req ? `${protocol}://${req.headers.host}` : "";
+    const protocol = req.headers["x-forwarded-proto"] || "http";
+    const baseUrl = req ? `${protocol}://${req.headers.host}` : "";
 
-	const res = await fetch(`${baseUrl}/api/transactions`, {
-		method: "POST",
-		headers: {
-			"Content-Type": "application/json"
-		},
-		body: JSON.stringify(dataToSend)
-	});
+    const res = await fetch(`${baseUrl}/api/transactions`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(dataToSend),
+    });
 
-	const data = await res.json();
-	console.log("Response (from client):", data);
+    const data = await res.json();
+    console.log("Response (from client):", data);
 };
 
-// ----------------- Server Side Props -----------------
+function delay(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+}
 
-// Executes on page load to fetch data from Plaid API
 export const getServerSideProps = withIronSessionSsr(
-	async function getServerSideProps({ req }) {
+    async function getServerSideProps({ req }) {
+        const protocol = req.headers["x-forwarded-proto"] || "http";
+        const baseUrl = req ? `${protocol}://${req.headers.host}` : "";
 
+        // initalizes bigdb on login
+        const initialize_bigdb = await fetch(`${baseUrl}/api/bigdb`);
+        console.log(await initialize_bigdb.json());
 
-		const protocol = req.headers["x-forwarded-proto"] || "http";
-		const baseUrl = req ? `${protocol}://${req.headers.host}` : "";
+        const access_token = req.session.access_token;
 
-		// initalizes bigdb on login
-		const initialize_bigdb = await fetch(`${baseUrl}/api/bigdb`);
-		console.log(await initialize_bigdb.json());
+        console.log("started");
 
-		const access_token = req.session.access_token;
+        if (!access_token) {
+            return {
+                redirect: {
+                    destination: "/",
+                    permanent: false,
+                },
+            };
+        }
 
-		console.log("started");
+        // ----------------- Accounts -----------------
 
-		if (!access_token) {
-			return {
-				redirect: {
-					destination: "/",
-					permanent: false
-				}
-			};
-		}
+        const accountBalance = await plaidClient.authGet({ access_token });
 
-		// ----------------- Accounts -----------------
+        await postAccountData(
+            accountBalance.data.accounts,
+            accountBalance.data.numbers,
+            req
+        );
 
-		const accountBalance = await plaidClient.authGet({ access_token });
+        // ----------------- Transactions -----------------
+        delay(10000);
 
-		await postAccountData(
-			accountBalance.data.accounts,
-			accountBalance.data.numbers,
-			req
-		);
+        // get first cursor
+        const initial_cursor_data = await fetch(`${baseUrl}/api/cursor`);
+        let initial_cursor = await initial_cursor_data.data;
 
-		// ----------------- Transactions -----------------
-		
-		// get first cursor
-		const initial_cursor_data = await fetch(`${baseUrl}/api/cursor`);
-		let initial_cursor = await initial_cursor_data.data;
+        // paginate through all transactions
+        let hasMore = true;
 
-		// paginate through all transactions
-		let hasMore = true;
+        while (hasMore) {
+            const transactionsPage = await plaidClient.transactionsSync({
+                access_token: access_token,
+                cursor: initial_cursor,
+                count: 500,
+            });
+            console.log("Fetched transactions page");
+            console.log(transactionsPage.data);
 
-		while (hasMore) {
-			const transactionsPage = await plaidClient.transactionsSync({
-				"access_token": access_token,
-				"cursor": initial_cursor,
-				"count": 500
-			});
-			console.log("Fetched transactions page");
-			console.log(transactionsPage.data);
+            const next_cursor = transactionsPage.data.next_cursor;
 
-			const next_cursor = transactionsPage.data.next_cursor;
+            await postTransactionsData(
+                transactionsPage.data.added,
+                transactionsPage.data.modified,
+                transactionsPage.data.removed,
+                initial_cursor,
+                next_cursor,
+                req
+            );
+            console.log("Posted transactions page");
 
-			await postTransactionsData(
-				transactionsPage.data.added,
-				transactionsPage.data.modified,
-				transactionsPage.data.removed,
-				initial_cursor,
-				next_cursor,
-				req
-			);
-			console.log("Posted transactions page");
+            hasMore = transactionsPage.data.has_more;
+            initial_cursor = next_cursor;
+        }
 
-			hasMore = transactionsPage.data.has_more;
-			initial_cursor = next_cursor;
-		}
-
-		return {
-			props: {
-				balance: accountBalance.data
-			}
-		};
-	},
-	sessionOptions
+        return {
+            props: {
+                balance: accountBalance.data,
+            },
+        };
+    },
+    sessionOptions
 );
