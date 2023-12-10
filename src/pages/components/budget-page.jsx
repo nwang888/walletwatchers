@@ -1,18 +1,20 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'; // Import useLayoutEffect
 import Chart from 'chart.js/auto';
-
+import BudgetForm from './budget/set-budget';
 import RecurringTransactions from './budget/recurring-transactions';
 
 export default function BudgetPage() {
-  const [budgets, setBudgets] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [budgets, setBudgets] = useState([]);
+  const [categorySums, setCategorySums] = useState([]); 
   const chartRef = useRef(null);
-  const [budgetName, setBudgetName] = useState('');
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
-  const [budgetAmount, setBudgetAmount] = useState('');
+  const barChartRef = useRef(null);
   const [chartInstance, setChartInstance] = useState(null);
+  const [barChartInstance, setBarChartInstance] = useState(null);
 
+
+  
+  // Fetch budgets
   useEffect(() => {
     const getBudgets = async () => {
       try {
@@ -28,88 +30,85 @@ export default function BudgetPage() {
         setIsLoading(false);
       }
     };
-
     getBudgets();
   }, []);
 
-  useLayoutEffect(() => {
-    if (isLoading || chartInstance || !Array.isArray(budgets)) return;
-
-    const budgetLabels = budgets.map(budget => budget.budget_name);
-    const budgetAmounts = budgets.map(budget => budget.budget_amount);
-
-    const data = {
-      labels: budgetLabels,
-      datasets: [{
-        label: 'Budget Distribution',
-        data: budgetAmounts,
-        backgroundColor: [
-          '#CCDFF1',
-          '#EDDEF3',
-          '#E8F5E4',
-          '#C4E6DE',
-          '#CFEAF2',
-        ],
-        hoverOffset: 4
-      }]
-    };
-
-    const config = {
-      type: 'bar',
-      data: data,
-      options: {
-        responsive: true,
-        plugins: {
-          legend: {
- position: 'top',
- },
-          title: {
-            display: true,
-            text: 'Budget Distribution'
-          }
-        }
-      },
-    };
-
-    const newChartInstance = new Chart(chartRef.current, config);
-    setChartInstance(newChartInstance);
-
-    return () => {
-      if (chartInstance) {
-        chartInstance.destroy();
-      }
-    };
-  }, [isLoading, budgets]);
-  const handleSetBudget = async () => {
-    const budget_id = Math.floor(Math.random() * 1000000); // Random ID for the budget
-    const budget = { budget_id, budget_name: budgetName, start_date: startDate, end_date: endDate, budget_amount: budgetAmount };
-
+  // Fetch category sums
+useEffect(() => {
+  const getCategorySums = async () => {
     try {
-      const response = await fetch('/api/budgets', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(budget),
-      });
-
+      const response = await fetch('/api/sum');
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      const result = await response.json();
-      alert(result.message); // Alert the success message
-      // Optionally reset form or update UI here
-      setBudgetName('');
-      setStartDate('');
-      setEndDate('');
-      setBudgetAmount('');
+      const payload = await response.json();
+      setCategorySums(payload);
     } catch (error) {
-      console.error("Failed to post budget:", error);
-      alert("Failed to set budget.");
+      console.error("Failed to fetch category sums:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
+  getCategorySums();
+}, []);
 
+  useLayoutEffect(() => {
+    // Category Spending Chart
 
+    if (!isLoading && categorySums.length > 0 && !barChartInstance) {
+      const positiveCategorySums = categorySums.filter(item => item.total_amount >= 0);
+      const barColors = positiveCategorySums.map((item, index) => {
+        const colors = ['#CCDFF1', '#EDDEF3', '#E8F5E4', '#C4E6DE', '#CFEAF2', '#F5E6E8'];
+        return colors[index % colors.length];
+      });
+
+      const barData = {
+        labels: positiveCategorySums.map(item => item.category_primary),
+        datasets: [{
+          label: 'Total Spent per Category',
+          data: positiveCategorySums.map(item => item.total_amount),
+          backgroundColor: barColors,
+          borderColor: barColors, 
+          borderWidth: 1
+        }]
+      };
+
+      const barConfig = {
+        type: 'bar',
+        data: barData,
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              display: true
+            },
+            title: {
+              display: true,
+              text: 'Category Spending'
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                color: '#444',
+              }
+            },
+            x: {
+              ticks: {
+                color: '#444',
+              }
+            }
+          }
+        }
+      };
+
+      const newBarChartInstance = new Chart(barChartRef.current, barConfig);
+      setBarChartInstance(newBarChartInstance);
+    }
+
+  }, [isLoading, categorySums, budgets]);
+  
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -118,55 +117,15 @@ export default function BudgetPage() {
     <>
       <h1>Budget</h1>
       <div className="w-full p-3 bg-slate-50 rounded-md">
-        {Array.isArray(budgets) && budgets.length > 0 ? (
-          <canvas ref={chartRef} id="budgetChart" />
-        ) : (
-          <div>No budget data to display</div>
-        )}
-      </div>
-      <div className="flex justify-center my-5">
-        <div className="w-1/2 p-3 bg-slate-50 rounded-md">
-          <h1 className="text-xl mb-4">Set Budget</h1>
-          <div className="flex flex-col">
-            <input
-              className="mb-2 p-2 border rounded"
-              type="text"
-              value={budgetName}
-              onChange={e => setBudgetName(e.target.value)}
-              placeholder="Budget Name"
-            />
-            <input
-              className="mb-2 p-2 border rounded"
-              type="date"
-              value={startDate}
-              onChange={e => setStartDate(e.target.value)}
-              placeholder="Start Date"
-            />
-            <input
-              className="mb-2 p-2 border rounded"
-              type="date"
-              value={endDate}
-              onChange={e => setEndDate(e.target.value)}
-              placeholder="End Date"
-            />
-            <input
-              className="mb-2 p-2 border rounded"
-              type="number"
-              value={budgetAmount}
-              onChange={e => setBudgetAmount(e.target.value)}
-              placeholder="Budget Amount"
-            />
-            <button
-              className="p-2 bg-primary text-white rounded hover:bg-primary-hover transition-colors"
-              onClick={handleSetBudget}
-            >
-              Set Budget
-            </button>
-          </div>
+        <div>
+          {categorySums.length > 0 ? (
+            <canvas ref={barChartRef} id="categorySpendingChart" />
+          ) : (
+            <div>No category spending data to display</div>
+          )}
         </div>
       </div>
-
-
+      <BudgetForm />
       <RecurringTransactions />
     </>
   );
