@@ -176,7 +176,8 @@ export default function TransactionsTable(walletID) {
 		{ name: "Datetime", sortKey: "datetime" }
 	];
 	return (
-		<div>
+		<div className="my-5">
+            <p className="text-xl font-bold">All Transactions</p>
 			{/* ----------- FILTERS -----------*/}
 			<div>
 				<div className="flex justify-center items-center">
