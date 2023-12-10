@@ -66,6 +66,7 @@ export default function Histogram() {
     }, [payload])
 
     function getMonthNameFromYearMonth(yearMonth) {
+        if (!yearMonth) return '';
         const [year, month] = yearMonth.split('-');
         const date = new Date(year, month - 1);
         return date.toLocaleString('default', { month: 'short' }) + " '" + year.slice(2);
