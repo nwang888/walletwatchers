@@ -233,7 +233,7 @@ export default function WishlistsPage(cards_only = false) {
                     <h2 className="text-xl text-center font-bold mb-2">
                         Total Price
                     </h2>
-                    <p className="text-l text-center">${totalPrice}</p>
+                    <p className="text-l text-center">${totalPrice || 0}</p>
                 </div>
 
                 {/* Average Price Card */}
@@ -242,7 +242,7 @@ export default function WishlistsPage(cards_only = false) {
                         Average Price
                     </h2>
                     <p className="text-l text-center">
-                        ${Math.trunc(totalPrice / totalRows, 2)}
+                        ${Math.trunc(totalPrice / totalRows, 2) || 0}
                     </p>
                 </div>
             </div>
@@ -323,7 +323,7 @@ export default function WishlistsPage(cards_only = false) {
                     <h2 className="text-xl text-center font-bold mb-2">
                         Total Price
                     </h2>
-                    <p className="text-l text-center">${totalPrice}</p>
+                    <p className="text-l text-center">${totalPrice || 0}</p>
                 </div>
 
                 {/* Average Price Card */}
@@ -332,7 +332,7 @@ export default function WishlistsPage(cards_only = false) {
                         Average Price
                     </h2>
                     <p className="text-l text-center">
-                        ${Math.trunc(totalPrice / totalRows, 2)}
+                        ${Math.trunc(totalPrice / totalRows, 2) || 0}
                     </p>
                 </div>
             </div>
