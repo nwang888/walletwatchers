@@ -31,7 +31,6 @@ export async function handler(req, res) {
 
 export default function WishlistsPage(cards_only = false) {
     cards_only = cards_only.cards_only;
-    console.log("cards only: ", cards_only);
     const [wishlist, setWishlist] = useState([]);
     const [priceTextBox, setPriceTextBox] = useState("");
     const [nameTextBox, setNameTextBox] = useState("");
@@ -53,7 +52,6 @@ export default function WishlistsPage(cards_only = false) {
         rowsPerPage = 10,
         paginate = true,
     } = {}) => {
-        console.log("new page from get end: ", page);
         const response = await fetch(
             `/api/wishlist?sort_by=${sort_by}&order=${order}&page=${page}&rowsPerPage=${rowsPerPage}&paginate=${paginate}`
         );
@@ -75,8 +73,6 @@ export default function WishlistsPage(cards_only = false) {
         setTotalPrice(totalPrice);
         setRemainingBalances(remainingBalances);
         setWishlist(payload.wishlists);
-        console.log("getwishlist balance: ", totalBalance);
-        console.log("payload: ", payload);
         setTotalRows(payload.totalRows);
         setTotalPrice(payload.totalPrice);
     };
@@ -98,9 +94,6 @@ export default function WishlistsPage(cards_only = false) {
 
         setRemainingBalances([...remainingBalances, newRemainingBalance]);
 
-        console.log("sending data: ", dataToSend);
-        console.log("post request sent");
-
         const res = await fetch("/api/wishlist/", {
             method: "POST",
             headers: {
@@ -115,7 +108,6 @@ export default function WishlistsPage(cards_only = false) {
     // Handles page change every time Next or Previous is pressed
     const handlePageChange = (newPage) => {
         setCurrentPage(newPage);
-        console.log("new page: ", newPage);
         getWishlistData({
             sort_by: "wishlist_id",
             order: "asc",
@@ -180,7 +172,6 @@ export default function WishlistsPage(cards_only = false) {
     };
 
     useEffect(() => {
-        console.log("WishlistPage component mounted");
         fetch("/api/account")
             .then((response) => response.json())
             .then((data) => {
@@ -188,9 +179,7 @@ export default function WishlistsPage(cards_only = false) {
                     (total, account) => total + Number(account.account_balance),
                     0
                 );
-                console.log(sum);
                 setTotalBalance(sum);
-                console.log("total balance here:" + totalBalance);
             })
             .catch((error) => {
                 console.error("Error fetching account data:", error);
@@ -205,7 +194,6 @@ export default function WishlistsPage(cards_only = false) {
             rowsPerPage: 10,
             paginate: true,
         });
-        console.log("total balance: ", totalBalance);
     }, [totalBalance]);
 
     return cards_only ? (
