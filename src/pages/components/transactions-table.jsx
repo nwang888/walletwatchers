@@ -246,17 +246,12 @@ export default function TransactionsTable(walletID) {
 										<div style={{ display: "flex", alignItems: "center" }}>
 											{column.name}
 											<Flex gap="3">
-												<Button
-													radius="large"
-													variant="surface"
-													highContrast
-													color="orange"
-													size="1"
+												<motion.button
 													onClick={() => handleSort(column.sortKey)}
-													style={{ marginLeft: "5px" }}
+													className="text-background bg-primary text-xs font-semibold mx-3 p-1 rounded-lg hover:bg-primary-hover transition-all"
 												>
-													Sort
-												</Button>
+													sort
+												</motion.button>
 											</Flex>
 										</div>
 									</Table.ColumnHeaderCell>
