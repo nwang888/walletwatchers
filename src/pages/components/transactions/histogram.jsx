@@ -72,12 +72,10 @@ export default function Histogram() {
     }
 
     return (
-        <>
-            <h1>Histogram</h1>
-            <button onClick={() => console.log(payload)}>Log payload</button>
-            <button onClick={() => console.log(data)}>Log data</button>
+        <div>
+            <p className="text-xl font-bold">Histogram</p>
 
-            <Bar data={data} options={options} />
-        </>
+            <Bar className='m-3' data={data} options={options} />
+        </div>
     );
 }
