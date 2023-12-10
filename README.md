@@ -40,3 +40,5 @@ cd walletwatchers/utils
 ```
 
 This will generate testing data and populate `sql/big.db`.
+
+You can also choose to authenticate using Plaid's Sandbox environment, but the data is sparse and lacks most of the metadata(location, time, etc.) that fill in our transactions table.
