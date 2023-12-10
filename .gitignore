@@ -43,6 +43,7 @@ jspm_packages
 
 # db files
 .db
+sql/big.db
 
 .swp
 ```
