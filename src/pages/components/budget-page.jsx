@@ -5,18 +5,13 @@ import RecurringTransactions from './budget/recurring-transactions';
 
 export default function BudgetPage() {
   const [isLoading, setIsLoading] = useState(true);
-  const [isRecurringLoading, setIsRecurringLoading] = useState(true);
-  const [budgets, setBudgets] = useState([]);
-  const [recurringTransactions, setRecurringTransactions] = useState([]);
   const [categorySums, setCategorySums] = useState([]); 
-  const chartRef = useRef(null);
   const barChartRef = useRef(null);
-  const [chartInstance, setChartInstance] = useState(null);
   const [barChartInstance, setBarChartInstance] = useState(null);
 
 
   
-  // Fetch budgets
+  //This function fetches the budget data from the database, and sets the state of the budget data to the payload or returns an error
   useEffect(() => {
     const getBudgets = async () => {
       try {
@@ -35,7 +30,7 @@ export default function BudgetPage() {
     getBudgets();
   }, []);
 
-  // Fetch category sums
+  // This function fetches the category sums from the database, and sets the state of the category sums to the payload or returns an error
 useEffect(() => {
   const getCategorySums = async () => {
     try {
@@ -54,27 +49,8 @@ useEffect(() => {
   getCategorySums();
 }, []);
 
-  // Fetch recurring transactions
-  useEffect(() => {
-    const getRecurringTransactions = async () => {
-      try {
-        const response = await fetch('/api/recurring-transactions');
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const payload = await response.json();
-        setRecurringTransactions(payload);
-      } catch (error) {
-        console.error("Failed to fetch recurring transactions:", error);
-      } finally {
-        setIsRecurringLoading(false);
-      }
-    };
-    getRecurringTransactions();
-  }, []);
-
+  // This function creates the bar chart for the category sums, Its dispalys only the sums that are positive numbers 
   useLayoutEffect(() => {
-    // Category Spending Chart
 
     if (!isLoading && categorySums.length > 0 && !barChartInstance) {
       const positiveCategorySums = categorySums.filter(item => item.total_amount >= 0);
@@ -127,57 +103,10 @@ useEffect(() => {
       const newBarChartInstance = new Chart(barChartRef.current, barConfig);
       setBarChartInstance(newBarChartInstance);
     }
-
-    // Budget Chart
-    if (!isLoading && !isRecurringLoading && Array.isArray(budgets) && Array.isArray(recurringTransactions) && !chartInstance) {
-      const budgetLabels = budgets.map(budget => budget.budget_name);
-      const budgetAmounts = budgets.map(budget => budget.budget_amount);
-      const recurringAmounts = recurringTransactions.map(transaction => transaction.transaction_amount);
-      const combinedAmounts = budgetAmounts.concat(recurringAmounts);
-      const combinedLabels = budgetLabels.concat(recurringTransactions.map(transaction => transaction.merchant_name));
-
-      const data = {
-        labels: combinedLabels,
-        datasets: [{
-          label: 'Budget and Recurring Transactions',
-          data: combinedAmounts,
-          backgroundColor: ['#CCDFF1', '#EDDEF3', '#E8F5E4', '#C4E6DE', '#CFEAF2'],
-          hoverOffset: 4
-        }]
-      };
-
-      const config = {
-        type: 'bar',
-        data: data,
-        options: {
-          responsive: true,
-          plugins: {
-            legend: {
-              position: 'top',
-            },
-            title: {
-              display: true,
-              text: 'Budget and Recurring Transactions'
-            }
-          }
-        },
-      };
-
-      const newChartInstance = new Chart(chartRef.current, config);
-      setChartInstance(newChartInstance);
-    }
-    return () => {
-      if (chartInstance) {
-        chartInstance.destroy();
-      }
-    
-      if (barChartInstance) {
-        barChartInstance.destroy();
-      }
-    };
-  }, [isLoading, isRecurringLoading, categorySums, budgets, recurringTransactions]);
+ 
+  },[isLoading, categorySums,]); 
   
-  if (isLoading || isRecurringLoading) {
+  if (isLoading) {
     return <div>Loading...</div>;
   }
 
@@ -185,13 +114,6 @@ useEffect(() => {
     <>
       <h1>Budget</h1>
       <div className="w-full p-3 bg-slate-50 rounded-md">
-        <div>
-          {Array.isArray(budgets) && budgets.length > 0 ? (
-            <canvas ref={chartRef} id="budgetChart" />
-          ) : (
-            <div>No budget data to display</div>
-          )}
-        </div>
         <div>
           {categorySums.length > 0 ? (
             <canvas ref={barChartRef} id="categorySpendingChart" />

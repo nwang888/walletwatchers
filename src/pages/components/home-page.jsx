@@ -3,12 +3,15 @@ import Wallets from './homepage/wallets';
 import Chart from 'chart.js/auto';
 import TransactionsTable from "./transactions-table";
 
+
 export default function HomePage({ setPageNum, setWalletId }) {
   const [accountData, setAccountData] = useState([]);
   const [budgetData, setBudgetData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const chartRef = useRef(null);
   const [chartInstance, setChartInstance] = useState(null);
+  const [recurringTransactions, setRecurringTransactions] = useState([]);
+  const [isRecurringLoading, setIsRecurringLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -30,47 +33,65 @@ export default function HomePage({ setPageNum, setWalletId }) {
     fetchData();
   }, []);
 
-  useLayoutEffect(() => {
-    if (isLoading || chartInstance || !Array.isArray(budgetData)) return;
-
-    const data = {
-      labels: budgetData.map(budget => budget.budget_name),
-      datasets: [{
-        label: 'Budget Distribution',
-        data: budgetData.map(budget => budget.budget_amount),
-        backgroundColor: [
-          '#CCDFF1', '#EDDEF3', '#E8F5E4', '#C4E6DE', '#CFEAF2', '#F5E6E8',
-        ],
-        hoverOffset: 4
-      }]
-    };
-
-    const config = {
-      type: 'doughnut',
-      data,
-      options: {
-        responsive: true,
-        plugins: {
-          legend: {
-            position: 'top',
-          },
-          title: {
-            display: true,
-            text: 'Budget Distribution'
-          }
+  // Fetch recurring transactions
+  useEffect(() => {
+    const getRecurringTransactions = async () => {
+      try {
+        const response = await fetch('/api/recurring-transactions');
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
         }
-      },
-    };
-
-    const newChartInstance = new Chart(chartRef.current, config);
-    setChartInstance(newChartInstance);
-
-    return () => {
-      if (chartInstance) {
-        chartInstance.destroy();
+        const payload = await response.json();
+        setRecurringTransactions(payload);
+      } catch (error) {
+        console.error("Failed to fetch recurring transactions:", error);
+      } finally {
+        setIsRecurringLoading(false);
       }
     };
-  }, [isLoading, budgetData]);
+    getRecurringTransactions();
+  }, []);
+
+  useLayoutEffect(() => {
+    // Budget Chart
+    if (!isLoading && !isRecurringLoading && Array.isArray(budgetData) && Array.isArray(recurringTransactions) && !chartInstance) {
+      const budgetLabels = budgetData.map(budgetData => budgetData.budget_name);
+      const budgetAmounts = budgetData.map(budgetData => budgetData.budget_amount);
+      const recurringAmounts = recurringTransactions.map(transaction => transaction.transaction_amount);
+      const combinedAmounts = budgetAmounts.concat(recurringAmounts);
+      const combinedLabels = budgetLabels.concat(recurringTransactions.map(transaction => transaction.merchant_name));
+
+      const data = {
+        labels: combinedLabels,
+        datasets: [{
+          label: 'Budget and Recurring Transactions',
+          data: combinedAmounts,
+          backgroundColor: ['#CCDFF1', '#EDDEF3', '#E8F5E4', '#C4E6DE', '#CFEAF2'],
+          hoverOffset: 4
+        }]
+      };
+
+      const config = {
+        type: 'pie',
+        data: data,
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              position: 'top',
+            },
+            title: {
+              display: true,
+              text: 'Budget and Recurring Transactions'
+            }
+          }
+        },
+      };
+
+      const newChartInstance = new Chart(chartRef.current, config);
+      setChartInstance(newChartInstance);
+    };
+    },[isLoading, isRecurringLoading, budgetData, recurringTransactions]);
 
   if (isLoading) {
     return <div>Loading...</div>;

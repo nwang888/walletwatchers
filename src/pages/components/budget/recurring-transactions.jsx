@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
-
 import { Table, Button, TextField } from '@radix-ui/themes';
 
+//This function fetches the recurring transactions from the database, and defines the text fields for posting new recurring transactions to the database
 export default function RecurringTransactions() {
-
     const [merchantTextBox, setMerchantTextBox] = useState('');
     const [priceTextBox, setPriceTextBox] = useState('');
 
@@ -142,8 +141,6 @@ export default function RecurringTransactions() {
             </>
         )
     }
-
-
     return (
         <>
             {Form()}

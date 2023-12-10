@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 
+// this function creats the form for setting the budget, and defines the text fields for posting new budgets to the database
 const BudgetForm = () => {
   const [budgetName, setBudgetName] = useState('');
   const [startDate, setStartDate] = useState('');
