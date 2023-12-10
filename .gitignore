@@ -42,7 +42,6 @@ jspm_packages
 .db
 
 # db files
-sql/big.db
 .db
 
 .swp
