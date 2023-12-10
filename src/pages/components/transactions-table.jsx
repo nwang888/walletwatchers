@@ -5,9 +5,12 @@ import { Flex, Button, Table } from "@radix-ui/themes";
 import { motion } from "framer-motion";
 import "@radix-ui/colors/gray.css";
 
+<<<<<<< HEAD
 //TODO: Add search
 //TODO: Add filtering for all columns
 
+=======
+>>>>>>> main
 export default function TransactionsTable(walletID) {
 	const [transactions, setTransactions] = useState([]);
 	const [currentPage, setCurrentPage] = useState(1);
@@ -115,6 +118,7 @@ export default function TransactionsTable(walletID) {
 	// { "account_name": "Plaid Checking" }
 
 	return (
+<<<<<<< HEAD
 		<div>
 			{transactions.length > 0 ? (
 				<div
@@ -130,6 +134,81 @@ export default function TransactionsTable(walletID) {
 							<Table.Header>
 								<Table.Row>
 									<Table.ColumnHeaderCell>
+=======
+		<div className="my-5">
+            <p className="text-xl font-bold">All Transactions</p>
+			{/* ----------- FILTERS -----------*/}
+			<div>
+				<div className="flex justify-center items-center">
+					<span className="mr-2">Filter:</span>
+					{columns.map(
+						(column) =>
+							(column.sortKey === "category_primary" ||
+								column.sortKey === "category_detailed") && (
+								<div key={column.sortKey} class="pl-3">
+									{/* <label>{column.name}</label> */}
+									<Select
+										options={
+											column.sortKey === "category_primary"
+												? Object.keys(categoryMapping).map((option) => ({
+														label: option,
+														value: option
+												  }))
+												: Object.entries(categoryMapping)
+														.filter(([key]) =>
+															curFilters["category_primary"].includes(key)
+														)
+														.flatMap(([, value]) => value)
+														.map((option) => ({
+															label: option,
+															value: option
+														}))
+										}
+										placeholder={`Select ${column.name}`}
+										onChange={(selectedOptions) => {
+											// Convert selectedOptions from array of objects to array of values
+											const newSelectedOptions = selectedOptions
+												? selectedOptions.map((option) => option.value)
+												: [];
+
+											// Find options that were selected
+											const selected = newSelectedOptions.filter(
+												(option) => !curFilters[column.sortKey].includes(option)
+											);
+
+											// If there are any selected options, handle them
+											if (selected.length > 0) {
+												handleFilterChange(column.sortKey, selected, true);
+											}
+
+											// Find options that were deselected
+											const deselected = curFilters[column.sortKey].filter(
+												(option) => !newSelectedOptions.includes(option)
+											);
+
+											// If there are any deselected options, handle them
+											if (deselected.length > 0) {
+												handleFilterChange(column.sortKey, deselected, false);
+											}
+										}}
+										isSearchable={true}
+										isMulti
+									/>
+								</div>
+							)
+					)}
+				</div>
+			</div>
+			{/* ----------- TABLES -----------*/}
+			<div className="flex flex-col h-screen relative">
+				<div class={{ flexGrow: 1, overflowY: "auto" }}>
+					<Table.Root variant="surface">
+						<Table.Header>
+							<Table.Row>
+								{columns.map((column) => (
+									<Table.ColumnHeaderCell key={column.sortKey}>
+										{/* -------- SORT BUTTON -------- */}
+>>>>>>> main
 										<div style={{ display: "flex", alignItems: "center" }}>
 											Account
 											<Flex gap="3">

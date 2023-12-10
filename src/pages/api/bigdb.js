@@ -74,6 +74,7 @@ export default async function instantiateBigDB(req, res) {
                 wishlist_id INTEGER NOT NULL,
                 item_name VARCHAR(256) NOT NULL,
                 item_price DECIMAL(10,2) NOT NULL,
+                liked INTEGER NOT NULL,
                 PRIMARY KEY (wishlist_id)
             );
         `);

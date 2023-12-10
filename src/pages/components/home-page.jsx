@@ -1,7 +1,8 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import Wallets from './homepage/wallets';
-import Chart from 'chart.js/auto';
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import Wallets from "./homepage/wallets";
+import Chart from "chart.js/auto";
 import TransactionsTable from "./transactions-table";
+import WishlistsPage from "./wishlist-page";
 
 export default function HomePage({ setPageNum, setWalletId }) {
   const [accountData, setAccountData] = useState([]);
@@ -14,25 +15,25 @@ export default function HomePage({ setPageNum, setWalletId }) {
 
 
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const accountResponse = await fetch('/api/account');
-        const accountPayload = await accountResponse.json();
-        setAccountData(accountPayload);
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const accountResponse = await fetch("/api/account");
+                const accountPayload = await accountResponse.json();
+                setAccountData(accountPayload);
 
-        const budgetResponse = await fetch('/api/budgets');
-        const budgetPayload = await budgetResponse.json();
-        setBudgetData(budgetPayload);
-      } catch (error) {
-        console.error("Failed to fetch data:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+                const budgetResponse = await fetch("/api/budgets");
+                const budgetPayload = await budgetResponse.json();
+                setBudgetData(budgetPayload);
+            } catch (error) {
+                console.error("Failed to fetch data:", error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
 
-    fetchData();
-  }, []);
+        fetchData();
+    }, []);
 
   useEffect(() => {
     const getRecurringTransactions = async () => {
