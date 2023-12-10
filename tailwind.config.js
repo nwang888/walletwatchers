@@ -13,6 +13,7 @@ module.exports = {
         secondary: '#C3B692',
         accent: '#779D58',
         accent2: '#AAAAAA',
+        danger: '#ff4d4d',
 
         'primary-light': '#bfbeda',
         'secondary-light': '#dbd3bd',

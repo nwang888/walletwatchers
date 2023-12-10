@@ -1,13 +1,14 @@
-import WishlistTable from "./wishlist-table";
 import React, { useEffect, useState, useRef } from "react";
 import { Flex, Table, Button, TextField } from "@radix-ui/themes";
 import { motion } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart as solidHeart } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as regularHeart } from "@fortawesome/free-regular-svg-icons";
+import { faTrashCan } from "@fortawesome/free-regular-svg-icons";
 
 import "@radix-ui/colors/gray.css";
 import { SandboxIncomeFireWebhookRequestVerificationStatusEnum } from "plaid";
+import { HeartIcon } from "@radix-ui/react-icons";
 
 export async function handler(req, res) {
     if (req.method === "GET") {
@@ -275,18 +276,10 @@ export default function WishlistsPage(cards_only = false) {
                 </TextField.Root>
             </div>
             <div className="items-center mb-8">
-                <Button
-                    radius="large"
-                    variant="surface"
-                    highContrast
-                    color="orange"
-                    size="1"
-                    onClick={handleAddButton}
-                    style={{ marginLeft: "5px" }}
-                >
-                    {" "}
-                    Add{" "}
-                </Button>
+
+                <motion.button whileTap={{ scale: 0.95 }} onClick={handleAddButton} className="bg-primary hover:bg-primary-hover text-white font-bold py-2 px-4 rounded">
+                    Add Item
+                </motion.button>
             </div>
 
             <div className="flex justify-between space-x-4">
@@ -337,14 +330,6 @@ export default function WishlistsPage(cards_only = false) {
                                                 display: "flex",
                                                 alignItems: "center",
                                             }}
-                                        ></div>
-                                    </Table.ColumnHeaderCell>
-                                    <Table.ColumnHeaderCell>
-                                        <div
-                                            style={{
-                                                display: "flex",
-                                                alignItems: "center",
-                                            }}
                                         >
                                             Name
                                         </div>
@@ -389,30 +374,20 @@ export default function WishlistsPage(cards_only = false) {
                                             Liked
                                         </div>
                                     </Table.ColumnHeaderCell>
+                                    <Table.ColumnHeaderCell>
+                                        <div
+                                            style={{
+                                                display: "flex",
+                                                alignItems: "center",
+                                            }}
+                                        ></div>
+                                    </Table.ColumnHeaderCell>
                                 </Table.Row>
                             </Table.Header>
 
                             <Table.Body>
                                 {wishlist.map((wishlist, idx) => (
                                     <Table.Row key={idx}>
-                                        <Table.Cell>
-                                            <Button
-                                                radius="large"
-                                                variant="surface"
-                                                highContrast
-                                                color="orange"
-                                                size="1"
-                                                onClick={() =>
-                                                    handleRemove(
-                                                        wishlist.wishlist_id
-                                                    )
-                                                }
-                                                style={{ marginLeft: "5px" }}
-                                            >
-                                                {" "}
-                                                Remove{" "}
-                                            </Button>
-                                        </Table.Cell>
                                         <Table.Cell>
                                             {wishlist.item_name}
                                         </Table.Cell>
@@ -478,6 +453,17 @@ export default function WishlistsPage(cards_only = false) {
                                                 />
                                             </button>{" "}
                                         </Table.Cell>
+                                        <Table.Cell>
+                                            <motion.button>
+                                                <FontAwesomeIcon 
+                                                    icon={faTrashCan}
+                                                    className={'text-accent2 hover:text-danger m-auto'} 
+                                                    onClick={() => handleRemove(wishlist.wishlist_id)}
+                                                    size='2x'
+                                                />
+                                            </motion.button>
+
+                                        </Table.Cell>
                                     </Table.Row>
                                 ))}
                             </Table.Body>
@@ -491,45 +477,28 @@ export default function WishlistsPage(cards_only = false) {
                                     marginTop: "20px",
                                 }}
                             >
-                                <motion.div
-                                    whileHover={{ scale: 1.03 }}
-                                    transition={{
-                                        type: "spring",
-                                        duration: 0.3,
-                                    }}
+                                <motion.button
+                                    onClick={() => handlePageChange(currentPage - 1)}
+                                    whileTap={{ scale: 0.9 }}
+                                    disabled={currentPage === 1}
+                                    className={(currentPage === 1 ? "bg-accent2" : "bg-primary hover:bg-primary-hover") + " text-background text-sm font-semibold mx-3 p-3 rounded-lg transition-all"}
                                 >
-                                    <Button
-                                        onClick={() =>
-                                            handlePageChange(currentPage - 1)
-                                        }
-                                        disabled={currentPage === 1}
-                                    >
-                                        Previous
-                                    </Button>
-                                </motion.div>
-                                <div style={{ margin: "0 10px" }}>
+                                    Prev
+                                </motion.button>
+
+                                <div className='my-auto'>
                                     Page {currentPage} /{" "}
                                     {Math.ceil(totalRows / 10)}{" "}
                                 </div>
-                                <motion.div
-                                    whileHover={{ scale: 1.03 }}
-                                    transition={{
-                                        type: "spring",
-                                        duration: 0.3,
-                                    }}
+
+                                <motion.button
+                                    onClick={() => handlePageChange(currentPage + 1)}
+                                    whileTap={{ scale: 0.9 }}
+                                    disabled={currentPage === Math.ceil(totalRows / 10)}
+                                    className={(currentPage === Math.ceil(totalRows / 10) ? "bg-accent2" : "bg-primary hover:bg-primary-hover") + " text-background text-sm font-semibold mx-3 p-3 rounded-lg transition-all"}
                                 >
-                                    <Button
-                                        onClick={() =>
-                                            handlePageChange(currentPage + 1)
-                                        }
-                                        disabled={
-                                            currentPage ===
-                                            Math.ceil(totalRows / 10)
-                                        }
-                                    >
-                                        Next
-                                    </Button>
-                                </motion.div>
+                                    Next
+                                </motion.button>
                             </Flex>
                         </div>
                     </div>

@@ -59,51 +59,42 @@ export default function Wallets({ accountData, setPageNum, setWalletId }) {
 
       {/* Connect More Accounts Button */}
       <div className="flex justify-between">
-        <motion.div 
+        <div 
           className="mt-3"
-          whileHover={{ scale: 1.01, x: 2 }}
-          transition={{
-              type: "spring",
-              duration: 0.3
-          }}
         >
           <button>
               <a 
-                className="text-center text-md font-bold"
+                className="text-center text-md font-bold py-2 px-4 rounded"
                 onClick={() => connectMoreAccounts()}
               >
                 Connect More Accounts...
               </a>
           </button>
 
-        </motion.div>
+        </div>
 
         {/* View All Button */}
-        <motion.div 
+        <div 
           className="mt-3"
-          whileHover={{ scale: 1.01, x: -2 }}
-          transition={{
-              type: "spring",
-              duration: 0.3
-          }}
         >
           {viewAll ? (
-            <button
-              className="text-center text-md font-bold"
+            <motion.button
+              className="bg-primary hover:bg-primary-hover text-center text-md font-bold text-white py-2 px-4 rounded"
               onClick={() => setViewAll(false)}
+              whileTap={{ scale: 0.9 }}
             >
               View Less...
-            </button>
+            </motion.button>
           ) : (
             <button
-              className="text-center text-md font-bold"
+              className="bg-primary hover:bg-primary-hover text-center text-md font-bold text-white py-2 px-4 rounded"
               onClick={() => setViewAll(true)}
 
             >
               View All...
             </button>
           )}
-        </motion.div>
+        </div>
       </div>
     </>
   );

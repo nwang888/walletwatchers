@@ -246,17 +246,12 @@ export default function TransactionsTable(walletID) {
 										<div style={{ display: "flex", alignItems: "center" }}>
 											{column.name}
 											<Flex gap="3">
-												<Button
-													radius="large"
-													variant="surface"
-													highContrast
-													color="orange"
-													size="1"
+												<motion.button
 													onClick={() => handleSort(column.sortKey)}
-													style={{ marginLeft: "5px" }}
+													className="text-background bg-primary text-xs font-semibold mx-3 p-1 rounded-lg hover:bg-primary-hover transition-all"
 												>
-													Sort
-												</Button>
+													sort
+												</motion.button>
 											</Flex>
 										</div>
 									</Table.ColumnHeaderCell>
@@ -307,12 +302,16 @@ export default function TransactionsTable(walletID) {
 								duration: 0.3
 							}}
 						>
-							<Button
+							{/* <Button
 								color={rowsPerPage === 10 ? "cyan" : "indigo"}
 								onClick={() => handleRowsPerPageChange(10)}
 							>
 								10
-							</Button>
+							</Button> */}
+
+							<motion.button whileTap={{ scale: 0.9 }} onClick={() => handleRowsPerPageChange(10)} className={(rowsPerPage === 10 ? "bg-primary" : "bg-accent2") + " hover:bg-primary-hover text-white font-bold py-2 px-4 rounded"}>
+								10
+							</motion.button>
 						</motion.div>
 						<motion.div
 							className="mx-[10vw]"
@@ -322,12 +321,9 @@ export default function TransactionsTable(walletID) {
 								duration: 0.3
 							}}
 						>
-							<Button
-								color={rowsPerPage === 20 ? "cyan" : "indigo"}
-								onClick={() => handleRowsPerPageChange(20)}
-							>
+							<motion.button whileTap={{ scale: 0.9 }} onClick={() => handleRowsPerPageChange(20)} className={(rowsPerPage === 20 ? "bg-primary" : "bg-accent2") + " hover:bg-primary-hover text-white font-bold py-2 px-4 rounded"}>
 								20
-							</Button>
+							</motion.button>
 						</motion.div>
 						<motion.div
 							className="mx-[10vw]"
@@ -337,48 +333,35 @@ export default function TransactionsTable(walletID) {
 								duration: 0.3
 							}}
 						>
-							<Button
-								color={rowsPerPage === 50 ? "cyan" : "indigo"}
-								onClick={() => handleRowsPerPageChange(50)}
-							>
+							<motion.button whileTap={{ scale: 0.9 }} onClick={() => handleRowsPerPageChange(50)} className={(rowsPerPage === 50 ? "bg-primary" : "bg-accent2") + " hover:bg-primary-hover text-white font-bold py-2 px-4 rounded"}>
 								50
-							</Button>
+							</motion.button>
 						</motion.div>
 					</div>
 				</div>
 				{/* ----------- PAGINATION BUTTONS -----------*/}
 				<div className="pt-5 mt-5 pb-20 flex justify-center">
-					<motion.div
-						whileHover={{ scale: 1.05 }}
-						transition={{
-							type: "spring",
-							duration: 0.3
-						}}
+					<motion.button
+						onClick={() => handlePageChange(currentPage - 1)}
+						whileTap={{ scale: 0.9 }}
+						disabled={currentPage === 1}
+						className={(currentPage === 1 ? "bg-accent2" : "bg-primary hover:bg-primary-hover") + " text-background text-sm font-semibold mx-3 p-3 rounded-lg transition-all"}
 					>
-						<Button
-							onClick={() => handlePageChange(currentPage - 1)}
-							disabled={currentPage === 1}
-						>
-							Prev
-						</Button>
-					</motion.div>
-					<div className="mx-2.5">
+						Prev
+					</motion.button>
+
+					<div className="mx-2.5 my-auto">
 						Page {currentPage} / {Math.ceil(totalRows / rowsPerPage)}{" "}
 					</div>
-					<motion.div
-						whileHover={{ scale: 1.05 }}
-						transition={{
-							type: "spring",
-							duration: 0.3
-						}}
+
+					<motion.button
+						onClick={() => handlePageChange(currentPage + 1)}
+						whileTap={{ scale: 0.9 }}
+						disabled={currentPage === Math.ceil(totalRows / rowsPerPage)}
+						className={(currentPage === Math.ceil(totalRows / rowsPerPage) ? "bg-accent2" : "bg-primary hover:bg-primary-hover") + " text-background text-sm font-semibold mx-3 p-3 rounded-lg transition-all"}
 					>
-						<Button
-							onClick={() => handlePageChange(currentPage + 1)}
-							disabled={currentPage === Math.ceil(totalRows / rowsPerPage)}
-						>
-							Next
-						</Button>
-					</motion.div>
+						Next
+					</motion.button>
 				</div>
 			</div>
 		</div>

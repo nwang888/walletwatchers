@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Bar } from 'react-chartjs-2';
+import { motion } from 'framer-motion';
 
 export default function Histogram() {
 
@@ -89,17 +90,17 @@ export default function Histogram() {
             <div className="flex justify-center space-x-4">
                 {
                     payload.slice(timeShift + 1, timeShift + monthPeriod).length > 0 ?
-                    <button onClick={() => setTimeShift(timeShift + monthPeriod)} className="bg-primary hover:bg-primary-hover text-white font-bold py-2 px-4 rounded">
+                    <motion.button whileTap={{ scale: 0.95 }} onClick={() => setTimeShift(timeShift + monthPeriod)} className="bg-primary hover:bg-primary-hover text-white font-bold py-2 px-4 rounded">
                         Previous {monthPeriod} months
-                    </button>
+                    </motion.button>
                     :
                     <></>
                 }
                 {
                     timeShift > 0 ?
-                    <button onClick={() => setTimeShift(timeShift - monthPeriod)} className="bg-primary hover:bg-primary-hover text-white font-bold py-2 px-4 rounded">
+                    <motion.button whileTap={{ scale: 0.95 }} onClick={() => setTimeShift(timeShift - monthPeriod)} className="bg-primary hover:bg-primary-hover text-white font-bold py-2 px-4 rounded">
                         Next {monthPeriod} months
-                    </button>
+                    </motion.button>
                     :
                     <></>
                 }
