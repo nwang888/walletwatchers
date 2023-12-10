@@ -235,7 +235,7 @@ export default function TransactionsTable(walletID) {
 				</div>
 			</div>
 			{/* ----------- TABLES -----------*/}
-			<div className="flex flex-col h-screen relative">
+			<div className="flex flex-col h-screen relative mt-5">
 				<div class={{ flexGrow: 1, overflowY: "auto" }}>
 					<Table.Root variant="surface">
 						<Table.Header>
