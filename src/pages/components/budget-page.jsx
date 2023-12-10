@@ -2,6 +2,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react'; // Import 
 import Chart from 'chart.js/auto';
 import BudgetForm from './budget/set-budget';
 import RecurringTransactions from './budget/recurring-transactions';
+import BudgetCategoryChart from './budget/budget-category';
 
 export default function BudgetPage() {
   const [isLoading, setIsLoading] = useState(true);
@@ -114,19 +115,10 @@ useEffect(() => {
   }
 
   return (
-    <>
-      <h1>Budget</h1>
-      <div className="w-full p-3 bg-slate-50 rounded-md">
-        <div>
-          {categorySums.length > 0 ? (
-            <canvas ref={barChartRef} id="categorySpendingChart" />
-          ) : (
-            <div>No category spending data to display</div>
-          )}
-        </div>
-      </div>
+    <div>
+      <BudgetCategoryChart />
       <BudgetForm />
       <RecurringTransactions />
-    </>
+    </div>
   );
 }
