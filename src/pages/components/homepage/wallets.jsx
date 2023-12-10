@@ -1,10 +1,13 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
 import Wallet from './wallet';
+import Router from 'next/router';
+
 
 export default function Wallets({ accountData, setPageNum, setWalletId }) {
   const [viewAll, setViewAll] = useState(false);
 
+  // Framer Motion Variants
   const container = {
     hidden: { opacity: 0 },
     visible: { opacity: 1 },
@@ -16,6 +19,11 @@ export default function Wallets({ accountData, setPageNum, setWalletId }) {
     visible: { opacity: 1 },
   };
 
+  // Redirects to homepage to connect more accounts
+  function connectMoreAccounts() {
+    Router.push('/');
+  }
+
   return (
     <>
       <motion.div 
@@ -24,6 +32,8 @@ export default function Wallets({ accountData, setPageNum, setWalletId }) {
         initial="hidden"
         animate="visible"
       >
+        {/* Generate Wallets */}
+
         {accountData.map((account, index) => (
           <button 
             key={account.account_id} 
@@ -46,32 +56,55 @@ export default function Wallets({ accountData, setPageNum, setWalletId }) {
           </button>
         ))}
       </motion.div>
-      
-      <motion.div 
-        className="flex justify-end mt-3"
-        whileHover={{ scale: 1.01, x: -5 }}
-        transition={{
-            type: "spring",
-            duration: 0.3
-        }}
-      >
-        {viewAll ? (
-          <button
-            className="text-center text-md font-bold"
-            onClick={() => setViewAll(false)}
-          >
-            View Less...
-          </button>
-        ) : (
-          <button
-            className="text-center text-md font-bold"
-            onClick={() => setViewAll(true)}
 
-          >
-            View All...
+      {/* Connect More Accounts Button */}
+      <div className="flex justify-between">
+        <motion.div 
+          className="mt-3"
+          whileHover={{ scale: 1.01, x: 2 }}
+          transition={{
+              type: "spring",
+              duration: 0.3
+          }}
+        >
+          <button>
+              <a 
+                className="text-center text-md font-bold"
+                onClick={() => connectMoreAccounts()}
+              >
+                Connect More Accounts...
+              </a>
           </button>
-        )}
-      </motion.div>
+
+        </motion.div>
+
+        {/* View All Button */}
+        <motion.div 
+          className="mt-3"
+          whileHover={{ scale: 1.01, x: -2 }}
+          transition={{
+              type: "spring",
+              duration: 0.3
+          }}
+        >
+          {viewAll ? (
+            <button
+              className="text-center text-md font-bold"
+              onClick={() => setViewAll(false)}
+            >
+              View Less...
+            </button>
+          ) : (
+            <button
+              className="text-center text-md font-bold"
+              onClick={() => setViewAll(true)}
+
+            >
+              View All...
+            </button>
+          )}
+        </motion.div>
+      </div>
     </>
   );
 }

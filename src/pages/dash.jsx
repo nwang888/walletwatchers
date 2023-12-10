@@ -12,17 +12,16 @@ import BudgetPage from "./components/budget-page";
 import Header from "./components/header";
 import NavBar from "./components/navigation-bar";
 
-//TODO: Need to test transactions pagination with larger dataset
-
 export default function Dashboard() {
 	const [pageNum, setPageNum] = useState(0);
 	const [walletId, setWalletId] = useState("");
 
 	return (
 		<>
+			{/* Header */}
 			<Header setPageNum={setPageNum} />
 
-
+			{/* Page Content */}
 			<div className="my-20 mx-3">
 				{pageNum === 0 ? (
 					<HomePage setPageNum={setPageNum} setWalletId={setWalletId} />
@@ -32,6 +31,7 @@ export default function Dashboard() {
 				{pageNum === 3 ? <BudgetPage /> : null}
 			</div>
 
+			{/* Navigation Bar */}
 			<NavBar
 				pageNum={pageNum}
 				setPageNum={setPageNum}
@@ -41,6 +41,9 @@ export default function Dashboard() {
 	);
 }
 
+// ----------------- API Calls -----------------
+
+// POST to /api/account for Account Table
 const postAccountData = async (accounts, numbers, req) => {
 	const dataToSend = {
 		accounts: accounts,
@@ -62,6 +65,7 @@ const postAccountData = async (accounts, numbers, req) => {
 	console.log("Response (from client):", data);
 };
 
+// POST to /api/transactions for Transactions Table
 const postTransactionsData = async (
 	added,
 	modified,
@@ -93,8 +97,13 @@ const postTransactionsData = async (
 	console.log("Response (from client):", data);
 };
 
+// ----------------- Server Side Props -----------------
+
+// Executes on page load to fetch data from Plaid API
 export const getServerSideProps = withIronSessionSsr(
 	async function getServerSideProps({ req }) {
+
+
 		const protocol = req.headers["x-forwarded-proto"] || "http";
 		const baseUrl = req ? `${protocol}://${req.headers.host}` : "";
 
@@ -126,7 +135,7 @@ export const getServerSideProps = withIronSessionSsr(
 		);
 
 		// ----------------- Transactions -----------------
-
+		
 		// get first cursor
 		const initial_cursor_data = await fetch(`${baseUrl}/api/cursor`);
 		let initial_cursor = await initial_cursor_data.data;
@@ -141,7 +150,7 @@ export const getServerSideProps = withIronSessionSsr(
 				"count": 500
 			});
 			console.log("Fetched transactions page");
-			// console.log(transactionsPage.data);
+			console.log(transactionsPage.data);
 
 			const next_cursor = transactionsPage.data.next_cursor;
 
