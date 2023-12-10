@@ -8,12 +8,6 @@ import { motion } from "framer-motion";
 // import { MultiSelect } from "react-multi-select-component";
 import Select from "react-select";
 
-//TODO: Add search
-//TODO: Add filtering for all columns
-// THings i was doing: making sure checkboxes are checked by default
-// Making sur eSElect none works
-// Getting SElect all for detailed_categories to work
-
 export default function TransactionsTable(walletID) {
 	const [transactions, setTransactions] = useState([]);
 	const [currentPage, setCurrentPage] = useState(1);
