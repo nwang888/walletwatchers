@@ -25,7 +25,7 @@ class Account:
         self.account_subtype: str = self.account_type[
             randint(0, len(self.account_type) - 1)
         ].lower()
-        self.account_balance: int = randint(0, 1e5 - 1)
+        self.account_balance: int = randint(0, 1e3 - 1)
         self.account_limit: int = randint(0, 1e4 - 1)
 
     def output(self) -> str:
