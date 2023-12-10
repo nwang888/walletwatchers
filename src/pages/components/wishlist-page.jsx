@@ -1,4 +1,3 @@
-import WishlistTable from "./wishlist-table";
 import React, { useEffect, useState, useRef } from "react";
 import { Flex, Table, Button, TextField } from "@radix-ui/themes";
 import { motion } from "framer-motion";
@@ -400,22 +399,12 @@ export default function WishlistsPage(cards_only = false) {
                                 {wishlist.map((wishlist, idx) => (
                                     <Table.Row key={idx}>
                                         <Table.Cell>
-                                            <Button
-                                                radius="large"
-                                                variant="surface"
-                                                highContrast
-                                                color="orange"
-                                                size="1"
-                                                onClick={() =>
-                                                    handleRemove(
-                                                        wishlist.wishlist_id
-                                                    )
-                                                }
-                                                style={{ marginLeft: "5px" }}
+                                            <motion.button
+                                                onClick={() => handleRemove(wishlist.wishlist_id)}
+                                                className="text-background bg-primary text-xs font-semibold mx-3 p-1 rounded-lg hover:bg-primary-hover transition-all"
                                             >
-                                                {" "}
-                                                Remove{" "}
-                                            </Button>
+                                                Remove
+                                            </motion.button>
                                         </Table.Cell>
                                         <Table.Cell>
                                             {wishlist.item_name}
