@@ -11,7 +11,7 @@ export default function Histogram() {
         labels: [],
         datasets: [
             {
-                label: 'Spending (last 12 months)',
+                label: 'Spending (last 6 months)',
                 data: [],
                 backgroundColor: 'rgba(75,192,192,0.4)',
                 borderColor: 'rgba(75,192,192,1)',
