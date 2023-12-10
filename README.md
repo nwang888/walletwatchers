@@ -36,7 +36,7 @@ In your terminal,
 
 ```
 cd walletwatchers/utils
-python gen.py
+python gen.py --a <number of accounts> --t <number of transactions>
 ```
 
 This will generate as many fake transactions as needed.
