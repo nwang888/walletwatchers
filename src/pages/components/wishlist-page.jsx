@@ -1,85 +1,60 @@
-
+import WishlistTable from "./wishlist-table";
 import React, { useEffect, useState, useRef} from 'react';
-import Chart from 'chart.js/auto';
-import Image from 'next/image';
 import { Table, Button, TextField } from '@radix-ui/themes';
-import * as Progress from '@radix-ui/react-progress'
+import "@radix-ui/colors/gray.css";
 
-  //       return an error if price value is not a double, also reset both textbox values to empty string '' after submit button is pressed 
-  
 export  async function handler(req, res) {
-  if (req.method === "GET") {
-      try {
-          const db = await open({
-              filename: "./sql/big.db",
-              driver: sqlite3.Database
-          });
-
-          const accountBalance = await db.get("SELECT account_balance FROM Accounts");
-          await db.close();
-
-          return res.status(200).json(accountBalance);
-      } catch (err) {
-          return res.status(500).json({ error: err.message });
-      }
-  }
+	if (req.method === "GET") {
+		try {
+			const db = await open({
+				filename: "./sql/big.db",
+				driver: sqlite3.Database
+			});
+  
+			const accountBalance = await db.get("SELECT account_balance FROM Accounts");
+			await db.close();
+  
+			return res.status(200).json(accountBalance);
+		} catch (err) {
+			return res.status(500).json({ error: err.message });
+		}
+	}
 }
 
-export default function WishlistPage({ balance }) {
-    const [wishlist, setWishlist] = useState([]);
-    const [nameTextBox, setNameTextBox] = useState("");
-    const [priceTextBox, setPriceTextBox] = useState(0);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [rowsPerPage, setRowsPerPage] = useState(10);
-    const [name, setName] = useState([]);
-    const [price, setPrice] = useState([]);
-    const [id, setID] = useState([]);
-    const [totalBalance, setTotalBalance] = useState(0);
-    const [remainingBalances, setRemainingBalances] = useState([]);
-    const [totalPrice, setTotalPrice] = useState(0);
+export default function WishlistsPage({wishlist, 
+										setWishlist, 
+										nameTextBox, 
+										setNameTextBox,
+										priceTextBox,
+										setPriceTextBox,
+										currentPage,
+										setCurrentPage,
+										rowsPerPage,
+										setRowsPerPage,
+										name,
+										setName,
+										price,
+										setPrice,
+										id,
+										setID,
+										totalBalance,
+										setTotalBalance,
+										remainingBalances,
+										setRemainingBalances,
+										totalPrice,
+										setTotalPrice}) {
 
-    const handleRowsPerPageChange = (event) => {
-      setRowsPerPage(parseInt(event.target.value));
-      getWishlistData(
-        currentPage,
-        parseInt(event.target.value)
-      );
-    };
-      
-    const handlePageChange = (newPage) => {
-      setCurrentPage(newPage);
-      getWishlistData(
-        newPage,
-        rowsPerPage
-      );
-    };
 
-    useEffect(() => {
-        fetch('/api/account') 
-            .then(response => response.json())
-            .then(data => { 
-                const sum = data.reduce((total, account) => total + Number(account.account_balance), 0);
-                setTotalBalance(sum);
-            });
-    }, []);  
-
-    useEffect(() => {
-        fetch('/api/wishlist') 
-            .then(response => response.json())
-            .then(data => {
-              console.log(data);
-                const sum = data.reduce((total, item) => total + Number(item.item_price), 0); 
-                setTotalPrice(sum);
-            });
-    }, []);
-  
- 
-    const getWishlistData = async ( 
+	const getWishlistData = async ( 
 		page = 1,
 		rowsPerPage = 10,
 		paginate = true) => {
         const response = await fetch(`/api/wishlist?page=${page}&rowsPerPage=${rowsPerPage}&paginate=${paginate}`);
         const payload = await response.json();
+
+      totalBalance = 300;
+
+        
     
         let newId = [];
         let newName = [];
@@ -104,7 +79,7 @@ export default function WishlistPage({ balance }) {
     }
     
     const postWishlistData = async () => {
-      setRemainingBalance(totalBalance);
+      setRemainingBalances(totalBalance);
         const dataToSend = {
             name: nameTextBox,
             price: priceTextBox
@@ -112,12 +87,9 @@ export default function WishlistPage({ balance }) {
         getWishlistData(1, rowsPerPage);
         const newRemainingBalance = remainingBalances[remainingBalances.length - 1] - priceTextBox;
 
-        // Add the new remaining balance to the array
         setRemainingBalances([...remainingBalances, newRemainingBalance]);
         
-        
         console.log("sending data: ", dataToSend);
-
         console.log("post request sent");
 
         const res = await fetch('/api/wishlist/', {
@@ -128,80 +100,99 @@ export default function WishlistPage({ balance }) {
             body: JSON.stringify(dataToSend)
         });
 
-        const data = await res.json();
-        getWishlistData(1, rowsPerPage);
-
-        setWishlist([...wishlist, {name: "hi", price:" 5"}]);
+        if (res.ok) {
+          setWishlist([...wishlist, { name: nameTextBox, price: priceTextBox }]);
+    
+          getWishlistData(1, rowsPerPage);
+        } else {
+          console.error('Failed to add item to wishlist');
+        }
     }  
 
-    const handleAddButton = (event) => {
-      const pp = parseFloat(priceTextBox);
+  const [refreshTableKey, setRefreshTableKey] = useState(0);
+  const handleAddButton = (event) => {
+    const pp = parseFloat(priceTextBox);
 
-        if (isNaN(pp)) {
-          alert('Price must be a valid number');
-          return;
-        }
-      event.preventDefault();
-      postWishlistData();
-      setNameTextBox('');
-      setPriceTextBox('');
-    }
-
-    useEffect(() => {
-      getWishlistData();
-      }, []);
-
-    useEffect(() => {
-        fetch('/api/wishlist') // Assuming '/api/wishlist' returns your data
-            .then(response => response.json())
-            .then(data => setWishlist(data));
-    }, []);
-
-    const handleRemove = async (id) => {
-      const response = await fetch(`/api/wishlist?id=${id}`, {
-        method: 'DELETE'
-      });
-
-      getWishlistData();
-    
-      if (response.ok) {
-        // Remove the item from the state
-        setWishlist(wishlist.filter(item => item.id !== id));
-      } else {
-        console.error('Failed to remove item');
+      if (isNaN(pp)) {
+        alert('Price must be a valid number');
+        return;
       }
-    };
+    event.preventDefault();
+    postWishlistData();
+    setNameTextBox('');
+    setPriceTextBox('');
 
-    return (
-      <>
-      <div className="text-neutral-800 text-xl font-semibold leading-7 self-stretch">
+    setRefreshTableKey((prevKey) => prevKey + 1);
+  }
+
+  // useEffect(() => {
+  //   getWishlistData();
+  //   }, []);
+
+	// useEffect(() => {
+  //       fetch('/api/wishlist') // Assuming '/api/wishlist' returns your data
+  //           .then(response => response.json())
+  //           .then(data => setWishlist(data));
+  //   }, []);
+	
+	useEffect(() => {
+        fetch('/api/account') 
+            .then(response => response.json())
+            .then(data => { 
+                const sum = data.reduce((total, account) => total + Number(account.account_balance), 0);
+                setTotalBalance(sum);
+
+                getWishlistData();
+            });
+    }, []);  
+
+  useEffect(() => {
+      fetch('/api/wishlist') 
+          .then(response => response.json())
+          .then(data => {
+            console.log(data);
+              const sum = data.reduce((total, item) => total + Number(item.item_price), 0); 
+              setTotalPrice(sum);
+           });
+    }, []);
+	
+	return (
+		<>
+			<div className="text-neutral-800 text-xl font-semibold leading-7 self-stretch mb-4">
           Wishlist
-        </div>
-          <h1>Enter items into your wishlist  </h1>
-          <div>
-              <label for="name">Item name:</label>   
-              <TextField.Root style={{ width: '40%' }} >
-                <TextField.Slot>
-                </TextField.Slot>
-                <TextField.Input 
-                  id="name" 
-                  placeholder="Name"
-                  value= {nameTextBox} 
-                  onChange={(event) => setNameTextBox(event.target.value)}/>
-              </TextField.Root> 
-              <label for="name"> Price:</label>
-              <TextField.Root
-              style={{ width: '40%' }} >
-                <TextField.Slot>
-                </TextField.Slot>
-                <TextField.Input 
-                  id="price" 
-                  placeholder="Price"
-                  value= {priceTextBox} 
-                  onChange={(event) => setPriceTextBox(event.target.value)} />
-              </TextField.Root> 
-            
-              {/* <button onClick={getWishlistData}> Update </button> */}
+      </div>
+      <h1 className="mb-4">Enter items into your wishlist</h1>
+      <div className="flex items-center mb-4">
+        <label htmlFor="name" className="mr-2">
+          Item name:
+        </label>
+        <TextField.Root className="w-1/3">
+          <TextField.Slot></TextField.Slot>
+          <TextField.Input
+            id="name"
+            placeholder="Name"
+            value={nameTextBox}
+            onChange={(event) => setNameTextBox(event.target.value)}
+            className="w-full ml-3"
+          />
+        </TextField.Root>
+      </div>
+      <div className="flex items-center mb-4">
+        <label htmlFor="price" className="mr-2">
+          Price:
+        </label>
+        <TextField.Root className="w-1/3 ml-10">
+          <TextField.Slot></TextField.Slot>
+          <TextField.Input
+            id="price"
+            placeholder="Price"
+            value={priceTextBox}
+            onChange={(event) => setPriceTextBox(event.target.value)}
+            className="w-full ml-3"
+          />
+        </TextField.Root>
+      </div>     
+      <div className="items-center mb-8"> 
                 <Button radius="large"
                 variant="surface"
                 highContrast
@@ -209,72 +200,36 @@ export default function WishlistPage({ balance }) {
                 size="1"
                 onClick={handleAddButton}
                 style={{ marginLeft: "5px" }}> Add </Button>  
-            </div> 
+      </div>
 
-            <div>
-            {wishlist.length > 0 ? (
-              <Table.Root variant="surface">
-                <Table.Header>
-                  <Table.Row>
-                    <Table.ColumnHeaderCell>
-                      <div style={{ display: "flex", alignItems: "center" }}>
-                         
-                      </div>
-                    </Table.ColumnHeaderCell>
-                    <Table.ColumnHeaderCell>
-                      <div style={{ display: "flex", alignItems: "center" }}>
-                        Name
-                      </div>
-                    </Table.ColumnHeaderCell>
-                    <Table.ColumnHeaderCell>
-                      <div style={{ display: "flex", alignItems: "center" }}>
-                        Price
-                      </div>
-                    </Table.ColumnHeaderCell>
-                    <Table.ColumnHeaderCell>
-                      <div style={{ display: "flex", alignItems: "center" }}>
-                        Progress
-                      </div>
-                    </Table.ColumnHeaderCell>
-                  </Table.Row>
-                </Table.Header> 
+      <div className="flex justify-between space-x-4">
+        {/* Total Balances Card */}
+        <div className="bg-purple-200 p-4 rounded-md mb-8 w-1/4">
+          <h2 className="text-xl text-center font-bold mb-2">Total Balance</h2>
+          <p className="text-l text-center">${totalBalance}</p>
+        </div>
 
-                <Table.Body>  
-                  {id.map((wishlist, idx) => (
-                    <Table.Row key={id[idx]}>
-                      <Table.Cell><button onClick={() => handleRemove(id[idx])}>Remove</button></Table.Cell>  
-                      <Table.Cell>{name[idx]}</Table.Cell>
-                      <Table.Cell>{price[idx]}</Table.Cell>
-                      <Table.Cell> <progress value={totalBalance} max={price[idx]} /> <h1>{Math.trunc(Math.min(totalBalance/price[idx]*100, 100), 2)}%, ${totalBalance} / ${price[idx]} </h1></Table.Cell>
-                      <Table.Cell>  {remainingBalances[idx]} </Table.Cell>
-                    </Table.Row>
-                  ))} 
-                </Table.Body>
-              </Table.Root>
+        {/* Total Items Card */}
+        <div className="bg-blue-200 p-4 rounded-md mb-8 w-1/4">
+          <h2 className="text-xl text-center font-bold mb-2">Total Items</h2>
+          <p className="text-l text-center">{wishlist.length}</p>
+        </div>
 
-              
-            ) : (
-              <p>No transactions found.</p>
-            )} 
+        {/* Total Price Card */}
+        <div className="bg-green-200 p-4 rounded-md mb-8 w-1/4">
+          <h2 className="text-xl text-center font-bold mb-2">Total Price</h2>
+          <p className="text-l text-center">${totalPrice}</p>
+        </div>
 
-            <label>
-              Rows per page:
-              <select value={rowsPerPage} onChange={handleRowsPerPageChange}>
-                <option value={10}>10</option>
-                <option value={20}>20</option>
-                <option value={50}>50</option>
-              </select>
-            </label>
-            <button
-              onClick={() => handlePageChange(currentPage - 1)}
-              disabled={currentPage === 1}
-            >
-              Previous
-            </button>
-            <button onClick={() => handlePageChange(currentPage + 1)}>
-              Next
-            </button>
-            </div>
-            </>
-    );
-  };
+        {/* Average Price Card */}
+        <div className="bg-yellow-200 p-4 rounded-md mb-8 w-1/4">
+          <h2 className="text-xl text-center font-bold mb-2">Average Price</h2>
+          <p className="text-l text-center">${Math.trunc(totalPrice/wishlist.length,2)}</p>
+        </div>
+      </div>      
+      
+      <WishlistTable key={refreshTableKey}/>
+		</>
+	);
+	
+}
