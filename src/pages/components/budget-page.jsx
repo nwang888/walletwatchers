@@ -5,9 +5,7 @@ import RecurringTransactions from './budget/recurring-transactions';
 
 export default function BudgetPage() {
   const [isLoading, setIsLoading] = useState(true);
-  const [isRecurringLoading, setIsRecurringLoading] = useState(true);
   const [budgets, setBudgets] = useState([]);
-  const [recurringTransactions, setRecurringTransactions] = useState([]);
   const [categorySums, setCategorySums] = useState([]); 
   const chartRef = useRef(null);
   const barChartRef = useRef(null);
@@ -53,25 +51,6 @@ useEffect(() => {
   };
   getCategorySums();
 }, []);
-
-  // Fetch recurring transactions
-  useEffect(() => {
-    const getRecurringTransactions = async () => {
-      try {
-        const response = await fetch('/api/recurring-transactions');
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const payload = await response.json();
-        setRecurringTransactions(payload);
-      } catch (error) {
-        console.error("Failed to fetch recurring transactions:", error);
-      } finally {
-        setIsRecurringLoading(false);
-      }
-    };
-    getRecurringTransactions();
-  }, []);
 
   useLayoutEffect(() => {
     // Category Spending Chart
@@ -128,56 +107,9 @@ useEffect(() => {
       setBarChartInstance(newBarChartInstance);
     }
 
-    // Budget Chart
-    if (!isLoading && !isRecurringLoading && Array.isArray(budgets) && Array.isArray(recurringTransactions) && !chartInstance) {
-      const budgetLabels = budgets.map(budget => budget.budget_name);
-      const budgetAmounts = budgets.map(budget => budget.budget_amount);
-      const recurringAmounts = recurringTransactions.map(transaction => transaction.transaction_amount);
-      const combinedAmounts = budgetAmounts.concat(recurringAmounts);
-      const combinedLabels = budgetLabels.concat(recurringTransactions.map(transaction => transaction.merchant_name));
-
-      const data = {
-        labels: combinedLabels,
-        datasets: [{
-          label: 'Budget and Recurring Transactions',
-          data: combinedAmounts,
-          backgroundColor: ['#CCDFF1', '#EDDEF3', '#E8F5E4', '#C4E6DE', '#CFEAF2'],
-          hoverOffset: 4
-        }]
-      };
-
-      const config = {
-        type: 'bar',
-        data: data,
-        options: {
-          responsive: true,
-          plugins: {
-            legend: {
-              position: 'top',
-            },
-            title: {
-              display: true,
-              text: 'Budget and Recurring Transactions'
-            }
-          }
-        },
-      };
-
-      const newChartInstance = new Chart(chartRef.current, config);
-      setChartInstance(newChartInstance);
-    }
-    return () => {
-      if (chartInstance) {
-        chartInstance.destroy();
-      }
-    
-      if (barChartInstance) {
-        barChartInstance.destroy();
-      }
-    };
-  }, [isLoading, isRecurringLoading, categorySums, budgets, recurringTransactions]);
+  }, [isLoading, categorySums, budgets]);
   
-  if (isLoading || isRecurringLoading) {
+  if (isLoading) {
     return <div>Loading...</div>;
   }
 
@@ -185,13 +117,6 @@ useEffect(() => {
     <>
       <h1>Budget</h1>
       <div className="w-full p-3 bg-slate-50 rounded-md">
-        <div>
-          {Array.isArray(budgets) && budgets.length > 0 ? (
-            <canvas ref={chartRef} id="budgetChart" />
-          ) : (
-            <div>No budget data to display</div>
-          )}
-        </div>
         <div>
           {categorySums.length > 0 ? (
             <canvas ref={barChartRef} id="categorySpendingChart" />
