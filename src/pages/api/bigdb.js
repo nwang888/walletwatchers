@@ -49,7 +49,7 @@ export default async function instantiateBigDB(req, res) {
             );
         `);
 
-		await db.run(`
+        await db.run(`
             CREATE TABLE IF NOT EXISTS RecurringTransactions (
                 transaction_id VARCHAR(256) NOT NULL,
                 category_primary VARCHAR(256),
@@ -87,6 +87,16 @@ export default async function instantiateBigDB(req, res) {
                 budget_amount INTEGER NOT NULL,
                 PRIMARY KEY (budget_id)
             );
+        `);
+
+		await db.run(`
+            CREATE TABLE IF NOT EXISTS BudgetCategories (
+                category_id INTEGER NOT NULL,
+                category_name VARCHAR(256) NOT NULL,
+                category_budget_percentage DECIMAL(10,2) NOT NULL,
+                PRIMARY KEY (category_id)
+            );
+            
         `);
 
 		await db.close();

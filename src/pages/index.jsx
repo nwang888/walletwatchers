@@ -14,7 +14,8 @@ export default function PlaidLink() {
   const [token, setToken] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Generate Link Token for Plaid Link
+  const [data, setData] = useState([]);
+
   useEffect(() => {
     const createLinkToken = async () => {
       const response = await fetch('/api/create-link-token', {
@@ -26,9 +27,8 @@ export default function PlaidLink() {
     createLinkToken();
   }, []);
 
-  // Exchange public token for Plaid access token
   const onSuccess = useCallback(async (publicToken) => {
-    setIsLoading(true); // starts loading animation
+    setIsLoading(true);
 
     await fetch('/api/exchange-public-token', {
       method: 'POST',
@@ -37,8 +37,7 @@ export default function PlaidLink() {
       },
       body: JSON.stringify({ public_token: publicToken }),
     });
-
-    Router.push('/dash'); // redirects to dashboard after successful login
+    Router.push('/dash');
   }, []);
 
   const { open, ready } = usePlaidLink({
@@ -51,14 +50,13 @@ export default function PlaidLink() {
 
       {
         isLoading ? (
-          <>
-            {/* Loading Component */}
-            <Loading />
-          </>
+          <Loading />
         ) : (
 
+
+
+
           <>
-            {/* Header Component */}
             <Header setPageNum={(num) => {return}}/>
               <div className='mt-[16vh] max-w-[60%] mx-auto'>
                 <motion.p 
@@ -82,8 +80,9 @@ export default function PlaidLink() {
                 </motion.p>
               </div>
 
-              
-              {/* Plaid Link Button */}
+
+
+
               <motion.div 
                 className="flex justify-center mt-7 mb-10"
                 initial={{opacity: 0 }}
@@ -101,7 +100,6 @@ export default function PlaidLink() {
                 </motion.button>
               </motion.div>
 
-              {/* Info Cards */}
               <InfoBoxes />
           </>
         )
