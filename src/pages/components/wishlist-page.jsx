@@ -287,18 +287,10 @@ export default function WishlistsPage(cards_only = false) {
                 </TextField.Root>
             </div>
             <div className="items-center mb-8">
-                <Button
-                    radius="large"
-                    variant="surface"
-                    highContrast
-                    color="orange"
-                    size="1"
-                    onClick={handleAddButton}
-                    style={{ marginLeft: "5px" }}
-                >
-                    {" "}
-                    Add{" "}
-                </Button>
+
+                <button onClick={handleAddButton} className="bg-primary hover:bg-primary-hover text-white font-bold py-2 px-4 rounded">
+                    Add Item
+                </button>
             </div>
 
             <div className="flex justify-between space-x-4">
