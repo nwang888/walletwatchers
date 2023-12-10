@@ -13,18 +13,16 @@ async function getWishlistData({
         driver: sqlite3.Database
     });
 
-    
     const totalRows = await db.get(
 		`SELECT COUNT(*) as count
 		FROM Wishlists`
 	)
-    console.log("page ", page);
 
     const totalPrice = await db.get(
 		`SELECT SUM(item_price) as totalPrice FROM Wishlists`
 	)
-    console.log("totalPrice: ", totalPrice.totalPrice);
 
+    // Price of items that come before the current page 
     const priceBeforePage = await db.get(`
         SELECT SUM(item_price) as priceBeforePage
         FROM (
@@ -33,8 +31,6 @@ async function getWishlistData({
             LIMIT ${(page-1)*rowsPerPage} OFFSET 0
         )
     `);
-
-    console.log("priceBeforePage: ", priceBeforePage.priceBeforePage);
 
     let wishlists;
     if (paginate){
@@ -53,7 +49,6 @@ async function getWishlistData({
     }
 
     await db.close();
-    // console.log(wishlists);
     console.log(totalRows);
 
     return {wishlists: wishlists, totalRows: totalRows.count, totalPrice: totalPrice.totalPrice, priceBeforePage: priceBeforePage.priceBeforePage};
@@ -86,7 +81,6 @@ export default async function handler(req, res) {
             });
 
             const requestData = req.body; // Access data sent in the request body
-            // res.json({ message: "Data received successfully", data: requestData });
 
             console.log(requestData);
 
@@ -128,7 +122,6 @@ export default async function handler(req, res) {
             `,
             [id]
             );
-
             await db.close();
 
             res.status(200).json({ message: `Item with id ${id} deleted.` });
@@ -136,7 +129,6 @@ export default async function handler(req, res) {
             res.status(500).json({ error: err.message });
         }
     } if (req.method === "PUT") {
-        console.log("liked");
         const { id } = req.query;
       
         try {

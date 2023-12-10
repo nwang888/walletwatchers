@@ -45,6 +45,7 @@ export default function WishlistsPage(cards_only = false) {
     const [totalPrice, setTotalPrice] = useState(0);
     const [totalRows, setTotalRows] = useState(0);
 
+    // Gets wishlist data from api/wishlist
     const getWishlistData = async ({
         sort_by = "wishlist_id",
         order = "asc",
@@ -59,6 +60,8 @@ export default function WishlistsPage(cards_only = false) {
         const payload = await response.json();
 
         let remainingBalances = [];
+
+        //Calculates remainingBalance depending on the current page number
         remainingBalances.push(totalBalance - payload.priceBeforePage);
         totalPrice = 0;
 
@@ -78,6 +81,7 @@ export default function WishlistsPage(cards_only = false) {
         setTotalPrice(payload.totalPrice);
     };
 
+    // Handles post request to api/wishlist every time new item is added
     const postWishlistData = async () => {
         setRemainingBalances(totalBalance);
         const dataToSend = {
@@ -108,6 +112,7 @@ export default function WishlistsPage(cards_only = false) {
         getWishlistData(1, rowsPerPage);
     };
 
+    // Handles page change every time Next or Previous is pressed
     const handlePageChange = (newPage) => {
         setCurrentPage(newPage);
         console.log("new page: ", newPage);
@@ -121,6 +126,7 @@ export default function WishlistsPage(cards_only = false) {
     };
 
     const [refreshTableKey, setRefreshTableKey] = useState(0);
+    // Handles add button by calling push request to api/wishlist with text box values
     const handleAddButton = (event) => {
         const pp = parseFloat(priceTextBox);
 
@@ -140,6 +146,7 @@ export default function WishlistsPage(cards_only = false) {
         setRefreshTableKey((prevKey) => prevKey + 1);
     };
 
+    // Handles remove button by calling delete request to api/wishlist with id
     const handleRemove = async (id) => {
         const response = await fetch(`/api/wishlist?id=${id}`, {
             method: "DELETE",
@@ -163,6 +170,7 @@ export default function WishlistsPage(cards_only = false) {
         }
     };
 
+    // Handles like button by calling put request to api/wishlist with id and moves liked items to the top of list
     const handleLike = async (id) => {
         const response = await fetch(`/api/wishlist?id=${id}`, {
             method: "PUT",
@@ -190,15 +198,6 @@ export default function WishlistsPage(cards_only = false) {
                 console.log(sum);
                 setTotalBalance(sum);
                 console.log("total balance here:" + totalBalance);
-
-                // getWishlistData({
-                //     sort_by: "wishlist_id",
-                //     order: "asc",
-                //     page: 1,
-                //     rowsPerPage: 10,
-                //     paginate: true,
-                // });
-                // console.log("total balance: ", totalBalance);
             })
             .catch((error) => {
                 console.error("Error fetching account data:", error);
@@ -469,24 +468,6 @@ export default function WishlistsPage(cards_only = false) {
                                             </h1>{" "}
                                         </Table.Cell>
                                         <Table.Cell>
-                                            {" "}
-                                            {/* <Button
-                                                    onClick={() =>
-                                                        handleLike(
-                                                            wishlist.wishlist_id
-                                                        )
-                                                    }
-                                                    style={{
-                                                        backgroundColor:
-                                                            wishlist.liked
-                                                                ? "red"
-                                                                : "blue",
-                                                    }}
-                                                >
-                                                    {wishlist.liked
-                                                        ? "Unfavorite"
-                                                        : "Favorite"}
-                                                </Button> */}{" "}
                                             <button
                                                 onClick={() =>
                                                     handleLike(
@@ -574,7 +555,6 @@ export default function WishlistsPage(cards_only = false) {
                     </div>
                 )}
             </div>
-            {/* <WishlistTable key={refreshTableKey} /> */}
         </>
     );
 }
