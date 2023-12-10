@@ -276,8 +276,11 @@ export default function WishlistsPage(cards_only = false) {
                 </TextField.Root>
             </div>
             <div className="items-center mb-8">
-
-                <motion.button whileTap={{ scale: 0.95 }} onClick={handleAddButton} className="bg-primary hover:bg-primary-hover text-white font-bold py-2 px-4 rounded">
+                <motion.button
+                    whileTap={{ scale: 0.95 }}
+                    onClick={handleAddButton}
+                    className="bg-primary hover:bg-primary-hover text-white font-bold py-2 px-4 rounded"
+                >
                     Add Item
                 </motion.button>
             </div>
@@ -321,6 +324,16 @@ export default function WishlistsPage(cards_only = false) {
             <div>
                 {wishlist && wishlist.length > 0 ? (
                     <div style={{ flexGrow: 1, overflowY: "auto" }}>
+                        <div className="mb-6">
+                            <h1 className="font-bold mb-3"> Your Wishlist </h1>
+                            <h2>
+                                Remaining balance indicates your account balance
+                                after purchase of the corresponding wishlist
+                                item. Your progress is based on the percentage
+                                balance value. Favorite items to move them to
+                                the top of the table.{" "}
+                            </h2>
+                        </div>
                         <Table.Root variant="surface">
                             <Table.Header>
                                 <Table.Row>
@@ -455,14 +468,19 @@ export default function WishlistsPage(cards_only = false) {
                                         </Table.Cell>
                                         <Table.Cell>
                                             <motion.button>
-                                                <FontAwesomeIcon 
+                                                <FontAwesomeIcon
                                                     icon={faTrashCan}
-                                                    className={'text-accent2 hover:text-danger m-auto'} 
-                                                    onClick={() => handleRemove(wishlist.wishlist_id)}
-                                                    size='2x'
+                                                    className={
+                                                        "text-accent2 hover:text-danger m-auto"
+                                                    }
+                                                    onClick={() =>
+                                                        handleRemove(
+                                                            wishlist.wishlist_id
+                                                        )
+                                                    }
+                                                    size="2x"
                                                 />
                                             </motion.button>
-
                                         </Table.Cell>
                                     </Table.Row>
                                 ))}
@@ -478,24 +496,42 @@ export default function WishlistsPage(cards_only = false) {
                                 }}
                             >
                                 <motion.button
-                                    onClick={() => handlePageChange(currentPage - 1)}
+                                    onClick={() =>
+                                        handlePageChange(currentPage - 1)
+                                    }
                                     whileTap={{ scale: 0.9 }}
                                     disabled={currentPage === 1}
-                                    className={(currentPage === 1 ? "bg-accent2" : "bg-primary hover:bg-primary-hover") + " text-background text-sm font-semibold mx-3 p-3 rounded-lg transition-all"}
+                                    className={
+                                        (currentPage === 1
+                                            ? "bg-accent2"
+                                            : "bg-primary hover:bg-primary-hover") +
+                                        " text-background text-sm font-semibold mx-3 p-3 rounded-lg transition-all"
+                                    }
                                 >
                                     Prev
                                 </motion.button>
 
-                                <div className='my-auto'>
+                                <div className="my-auto">
                                     Page {currentPage} /{" "}
                                     {Math.ceil(totalRows / 10)}{" "}
                                 </div>
 
                                 <motion.button
-                                    onClick={() => handlePageChange(currentPage + 1)}
+                                    onClick={() =>
+                                        handlePageChange(currentPage + 1)
+                                    }
                                     whileTap={{ scale: 0.9 }}
-                                    disabled={currentPage === Math.ceil(totalRows / 10)}
-                                    className={(currentPage === Math.ceil(totalRows / 10) ? "bg-accent2" : "bg-primary hover:bg-primary-hover") + " text-background text-sm font-semibold mx-3 p-3 rounded-lg transition-all"}
+                                    disabled={
+                                        currentPage ===
+                                        Math.ceil(totalRows / 10)
+                                    }
+                                    className={
+                                        (currentPage ===
+                                        Math.ceil(totalRows / 10)
+                                            ? "bg-accent2"
+                                            : "bg-primary hover:bg-primary-hover") +
+                                        " text-background text-sm font-semibold mx-3 p-3 rounded-lg transition-all"
+                                    }
                                 >
                                     Next
                                 </motion.button>
