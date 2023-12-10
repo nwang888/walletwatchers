@@ -364,15 +364,16 @@ export default function WishlistTable({ balance }) {
                 <option value={50}>50</option>
               </select>
             </label>
-            <button
+            <motion.button
+              whileTap={{ scale: 0.95 }}
               onClick={() => handlePageChange(currentPage - 1)}
               disabled={currentPage === 1}
             >
               Previous
-            </button>
-            <button onClick={() => handlePageChange(currentPage + 1)}>
+            </motion.button>
+            <motion.button whileTap={{ scale: 0.95 }} onClick={() => handlePageChange(currentPage + 1)}>
               Next
-            </button>
+            </motion.button>
             </div>
             </>
     );

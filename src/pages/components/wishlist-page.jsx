@@ -288,9 +288,9 @@ export default function WishlistsPage(cards_only = false) {
             </div>
             <div className="items-center mb-8">
 
-                <button onClick={handleAddButton} className="bg-primary hover:bg-primary-hover text-white font-bold py-2 px-4 rounded">
+                <motion.button whileTap={{ scale: 0.95 }} onClick={handleAddButton} className="bg-primary hover:bg-primary-hover text-white font-bold py-2 px-4 rounded">
                     Add Item
-                </button>
+                </motion.button>
             </div>
 
             <div className="flex justify-between space-x-4">

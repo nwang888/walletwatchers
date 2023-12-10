@@ -314,9 +314,9 @@ export default function TransactionsTable(walletID) {
 								10
 							</Button> */}
 
-							<button onClick={() => handleRowsPerPageChange(10)} className={(rowsPerPage === 10 ? "bg-primary" : "bg-accent2") + " hover:bg-primary-hover text-white font-bold py-2 px-4 rounded"}>
+							<motion.button whileTap={{ scale: 0.9 }} onClick={() => handleRowsPerPageChange(10)} className={(rowsPerPage === 10 ? "bg-primary" : "bg-accent2") + " hover:bg-primary-hover text-white font-bold py-2 px-4 rounded"}>
 								10
-							</button>
+							</motion.button>
 						</motion.div>
 						<motion.div
 							className="mx-[10vw]"
@@ -326,9 +326,9 @@ export default function TransactionsTable(walletID) {
 								duration: 0.3
 							}}
 						>
-							<button onClick={() => handleRowsPerPageChange(20)} className={(rowsPerPage === 20 ? "bg-primary" : "bg-accent2") + " hover:bg-primary-hover text-white font-bold py-2 px-4 rounded"}>
+							<motion.button whileTap={{ scale: 0.9 }} onClick={() => handleRowsPerPageChange(20)} className={(rowsPerPage === 20 ? "bg-primary" : "bg-accent2") + " hover:bg-primary-hover text-white font-bold py-2 px-4 rounded"}>
 								20
-							</button>
+							</motion.button>
 						</motion.div>
 						<motion.div
 							className="mx-[10vw]"
@@ -338,9 +338,9 @@ export default function TransactionsTable(walletID) {
 								duration: 0.3
 							}}
 						>
-							<button onClick={() => handleRowsPerPageChange(50)} className={(rowsPerPage === 50 ? "bg-primary" : "bg-accent2") + " hover:bg-primary-hover text-white font-bold py-2 px-4 rounded"}>
+							<motion.button whileTap={{ scale: 0.9 }} onClick={() => handleRowsPerPageChange(50)} className={(rowsPerPage === 50 ? "bg-primary" : "bg-accent2") + " hover:bg-primary-hover text-white font-bold py-2 px-4 rounded"}>
 								50
-							</button>
+							</motion.button>
 						</motion.div>
 					</div>
 				</div>
