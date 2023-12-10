@@ -152,16 +152,9 @@ export default function WishlistsPage(cards_only = false) {
             method: "DELETE",
         });
 
-        totalPrice -= price[id];
-        setTotalPrice(totalPrice);
+        // totalPrice -= price[id - 1];
 
-        getWishlistData({
-            sort_by: "wishlist_id",
-            order: "asc",
-            page: 1,
-            rowsPerPage: 10,
-            paginate: true,
-        });
+        getWishlistData();
 
         if (response.ok) {
             setWishlist(wishlist.filter((item) => item.id !== id));
@@ -422,7 +415,9 @@ export default function WishlistsPage(cards_only = false) {
                                                 color="orange"
                                                 size="1"
                                                 onClick={() =>
-                                                    handleRemove(id[idx])
+                                                    handleRemove(
+                                                        wishlist.wishlist_id
+                                                    )
                                                 }
                                                 style={{ marginLeft: "5px" }}
                                             >
@@ -460,11 +455,12 @@ export default function WishlistsPage(cards_only = false) {
                                                     ),
                                                     2
                                                 )}
-                                                %, ${wishlist.item_price} / $
+                                                %, $
                                                 {Math.max(
                                                     remainingBalances[idx],
                                                     0
                                                 )}{" "}
+                                                / ${wishlist.item_price}{" "}
                                             </h1>{" "}
                                         </Table.Cell>
                                         <Table.Cell>

@@ -117,7 +117,7 @@ export default async function handler(req, res) {
 
             await db.run(
             `
-                DELETE FROM wishlists
+                DELETE FROM Wishlists
                 WHERE wishlist_id = ?
             `,
             [id]
